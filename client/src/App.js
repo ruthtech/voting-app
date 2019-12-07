@@ -1,24 +1,33 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import './App.css';
 
 function App() {
+  const [test, setTest] = useState("default");
+
+  async function fetchAdvice() {
+    try {
+      let response = await axios.get('/api/test');
+      // console.log(response);
+      setTest(response.data.message);
+    } catch ( err ) {
+      console.log(err);
+    }
+  }
+
+  useEffect(() => {
+    // called setState only to trigger this method
+    fetchAdvice();
+  }, []);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
         <p>
-          Edit <code>src/App.js</code> and save to reload.
+          Test is: {test}
         </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+        <p>
+          This is another test.
+        </p>
     </div>
   );
 }
