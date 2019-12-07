@@ -4,7 +4,9 @@
   "description": "Application to enable Canadians to vote electronically",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "npm run server",
+    "server": "node server.js"
   },
   "repository": {
     "type": "git",
@@ -22,7 +24,10 @@
   },
   "homepage": "https://github.com/ruthtech/voting-app#readme",
   "dependencies": {
+    "crypto-js": "^3.1.9-1",
+    "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "mysql": "^2.17.1",
     "nodemon": "^2.0.1"
   }
 }
