@@ -1,0 +1,28 @@
+{
+  "name": "voting-app",
+  "version": "0.8.0",
+  "description": "Application to enable Canadians to vote electronically",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ruthtech/voting-app.git"
+  },
+  "keywords": [
+    "election",
+    "vote",
+    "Canada"
+  ],
+  "author": "Kevin O Davis, Ruth Lee",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ruthtech/voting-app/issues"
+  },
+  "homepage": "https://github.com/ruthtech/voting-app#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "nodemon": "^2.0.1"
+  }
+}
