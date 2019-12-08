@@ -8,8 +8,8 @@ const apiRoutes = require(path.join(__dirname, "controllers", "apiroutes"));
 
 app.listen(port, () => console.log(`Listening on port ${port}`));
 
-app.use(express.static(path.join(__dirname, "client/build")));
-
+// Routes for data from MySQL
+app.use(apiRoutes);
 class Database {
   constructor(config) {
     this.connection = mysql.createConnection(config);
@@ -46,7 +46,7 @@ if (process.env.JAWSDB_URL) {
   });
 }
 
-app.get("https://randomuser.me/api/?results=5000&nat=CA", async (req, res) => {
+app.post("https://randomuser.me/api/?results=5000&nat=CA", async (req, res) => {
   console.log(req);
   const voterInput = [...req];
   // await db.query(`insert into voters(uuid, password, salt, md5, firstname, lastname, age, gender, birthdate, cell, city, country, email,
@@ -55,8 +55,17 @@ app.get("https://randomuser.me/api/?results=5000&nat=CA", async (req, res) => {
   // res.sendFile(path.join(__dirname, "client/build/index.html"));
 });
 
-// Routes
-app.use(apiRoutes);
+// end Routes for data from MySQL
+
+// Serve the React components and assets
+app.use(express.static(path.join(__dirname, "client/build")));
+
+// Since this will match every path that isn't explicitly listed above,
+// make sure that this is listed after the data api routes/endpoints.
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "client/build/index.html"));
+});
+// End Serve the React components and assets
 
 // Close your database connection when Node exits
 process.on("exit", async function(code) {
