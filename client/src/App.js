@@ -12,12 +12,12 @@ import Candidate from "./components/Candidate";
 import Vote from "./components/Vote";
 import VoteConfirm from "./components/VoteConfirm";
 import VoteSubmitted from "./components/VoteSubmitted";
-import Seed from "./components/seed.js";
+// import Seed from "./components/seed.js";
 
 function App() {
   return (
     <div>
-      <Seed />
+      {/* <Seed /> */}
       <Router>
         <div>
           <Route exact path={"/"} component={Login} />

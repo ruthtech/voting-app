@@ -1,6 +1,7 @@
 import React from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
+import "./style.css";
 
 function Login() {
 
@@ -24,7 +25,7 @@ function Login() {
                       <Form.Control type="password" placeholder="Password" />
                     </Form.Group>
 
-                    <Button variant="secondary" type="submit">
+                    <Button variant="secondary" type="submit" className="justify-content-end">
                       Sign in
                     </Button>
                   </Form>
