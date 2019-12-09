@@ -1,7 +1,7 @@
 // import React, { useState, useEffect } from 'react';
-import React from 'react';
+import React from "react";
 // import axios from 'axios';
-import './App.css';
+import "./App.css";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import Login from "./components/Login";
 import Landing from "./components/Landing";
@@ -12,9 +12,12 @@ import Candidate from "./components/Candidate";
 import Vote from "./components/Vote";
 import VoteConfirm from "./components/VoteConfirm";
 import VoteSubmitted from "./components/VoteSubmitted";
+import Seed from "./components/seed.js";
 
 function App() {
   return (
+    <div>
+      <Seed />
       <Router>
         <div>
           <Route exact path={"/"} component={Login} />
@@ -28,8 +31,18 @@ function App() {
           <Route exact path="/votesubmited" component={VoteSubmitted} />
         </div>
       </Router>
-    );
-  }
+    </div>
+  );
+}
+// async function fetchAdvice() {
+//   try {
+//     let response = await axios.get("/api/test");
+//     // console.log(response);
+//     setTest(response.data.message);
+//   } catch (err) {
+//     console.log(err);
+//   }
+// }
 
 export default App;
 

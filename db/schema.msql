@@ -1,0 +1,63 @@
+CREATE TABLE voters (
+  id int(11) NOT NULL AUTO_INCREMENT,
+  createdat datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  uuid varchar(45) DEFAULT NULL,
+  user_password varchar(45) DEFAULT NULL,
+  salt varchar(45) DEFAULT NULL,
+  md5 varchar(45) DEFAULT NULL,
+  title varchar(45) DEFAULT NULL,
+  username varchar(45) DEFAULT NULL,
+  firstname varchar(45) DEFAULT NULL,
+  lastname varchar(45) DEFAULT NULL,
+  age int(3) DEFAULT NULL,
+  gender varchar(45) DEFAULT NULL,
+  birthdate datetime DEFAULT NULL,
+  cell int(11) DEFAULT NULL,
+  city varchar(45) DEFAULT NULL,
+  country varchar(45) DEFAULT NULL,
+  email varchar(45) DEFAULT NULL,
+  idnumber varchar(45) DEFAULT NULL,
+  idtype varchar(45) DEFAULT NULL,
+  nat varchar(45) DEFAULT NULL,
+  phone varchar(45) DEFAULT NULL,
+  picture_large varchar(100) DEFAULT NULL,
+  picture_medium varchar(100) DEFAULT NULL,
+  picture_thumbnail varchar(100) DEFAULT NULL,
+  streetname varchar(45) DEFAULT NULL,
+  streetno varchar(45) DEFAULT NULL,
+  longitude decimal(15,0) DEFAULT NULL,
+  latitude decimal(15,0) DEFAULT NULL,
+  PRIMARY KEY (id),
+  UNIQUE KEY UUID_UNIQUE (uuid)
+);
+
+
+CREATE TABLE candidates(
+  id int(11) NOT NULL AUTO_INCREMENT,
+  createdat datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  firstname  varchar(45) DEFAULT NULL,
+  lastname  varchar(45) DEFAULT NULL,
+  email varchar(45) DEFAULT NULL,
+  gender varchar(45) DEFAULT NULL,
+  personal_url varchar(45) DEFAULT NULL,
+  party_id INT(2) DEFAULT NULL,
+  photo_url varchar(100) DEFAULT NULL,
+  office_phone varchar(45) DEFAULT NULL,
+  office_fax varchar(45) DEFAULT NULL,
+  office_type varchar(45) DEFAULT NULL,
+  office_address varchar(100) DEFAULT NULL,
+  facebook_link varchar(100) DEFAULT NULL,
+  twitter_link varchar(100) DEFAULT NULL,
+  boundary_url varchar(100) DEFAULT NULL,
+  PRIMARY KEY (id)
+  );
+
+  CREATE TABLE parties(
+  id int(11) NOT NULL AUTO_INCREMENT,
+  createdat datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  party_name varchar(100) DEFAULT NULL,
+  party_short_name varchar(50) DEFAULT NULL,
+  party_logo varchar(100) DEFAULT NULL,
+  party_website varchar(100) DEFAULT NULL,
+  PRIMARY KEY (id)
+  );

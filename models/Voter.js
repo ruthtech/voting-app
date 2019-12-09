@@ -1,6 +1,7 @@
 let CryptoJS = require('crypto-js');
 let Connection = require('../config/connection');
 
+
 class Voter {
     constructor(connection) {
       if(connection === undefined) {
