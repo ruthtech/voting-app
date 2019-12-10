@@ -15,23 +15,33 @@ import VoteSubmitted from "./components/VoteSubmitted";
 // import Seed from "./components/seed.js";
 
 function App() {
+  // const UserContext = React.createContext();
+
+  const handleLogin = () => {
+
+  };
+
+  const handleLogout = () => {
+
+  };
+
   return (
-    <div>
-      {/* <Seed /> */}
-      <Router>
-        <div>
-          <Route exact path={"/"} component={Login} />
-          <Route exact path="/landing" component={Landing} />
-          <Route exact path="/editdistrict" component={EditDistrict} />
-          <Route exact path="/editdistrictc" component={EditDistrictConfirm} />
-          <Route exact path="/viewcandidates" component={ViewCandidates} />
-          <Route path="/candidate" component={Candidate} />
-          <Route exact path="/vote" component={Vote} />
-          <Route exact path="/voteconfirm" component={VoteConfirm} />
-          <Route exact path="/votesubmited" component={VoteSubmitted} />
-        </div>
-      </Router>
-    </div>
+    <div class="full-screen">
+        {/* <Seed /> */}
+        <Router>
+          <div class="full-screen">
+            <Route exact path={"/"} component={Login} />
+            <Route exact path="/landing" component={Landing} />
+            <Route exact path="/editdistrict" component={EditDistrict} />
+            <Route exact path="/editdistrictconf" component={EditDistrictConfirm} />
+            <Route exact path="/viewcandidates" component={ViewCandidates} />
+            <Route path="/candidate" render={(props) => <Candidate {...props} />}/>
+            <Route path="/vote" render={(props) => <Vote {...props} />} />
+            <Route path="/voteconfirm" render={(props) => <VoteConfirm {...props} />} />
+            <Route path="/votesubmitted" render={(props) => <VoteSubmitted {...props} />}  />
+          </div>
+        </Router>
+      </div>
   );
 }
 // async function fetchAdvice() {

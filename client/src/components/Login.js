@@ -3,31 +3,33 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import "./style.css";
 
-function Login() {
+function Login(props) {
 
     return (
-        <div className="container" style={{ backgroundColor: "#C4C4C4" }}>
+        <div className="container bg-grey full-screen">
             <div className="row">
-                <div className="col">
+                <div className="col heading">
                     <h1>Canada Votes Online</h1>
                 </div>
             </div>
-            <div className="row">
-                <div className="col pb-3">
+            <div className="row bottom">
+                <div className="col">
                   <Form>
                     <Form.Group controlId="formBasicUUID">
-                      <Form.Label className="font-weight-bold mb-0">UUID</Form.Label>
+                      <Form.Label className="entry-field-label">UUID</Form.Label>
                       <Form.Control type="text" placeholder="Enter uuid" />
                     </Form.Group>
 
                     <Form.Group controlId="formBasicPassword">
-                      <Form.Label className="font-weight-bold mb-0">Password</Form.Label>
+                      <Form.Label className="entry-field-label">Password</Form.Label>
                       <Form.Control type="password" placeholder="Password" />
                     </Form.Group>
 
-                    <Button variant="secondary" type="submit" className="justify-content-end">
-                      Sign in
-                    </Button>
+                    <div className="right-align-div">
+                      <Button variant="secondary" type="submit" >
+                        Sign in
+                      </Button>
+                    </div>
                   </Form>
                 </div>
             </div>
