@@ -1,7 +1,4 @@
-// import React, { useState, useEffect } from 'react';
-import React from "react";
-// import axios from 'axios';
-import "./App.css";
+import React from 'react';
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import Login from "./components/Login";
 import Landing from "./components/Landing";
@@ -12,25 +9,20 @@ import Candidate from "./components/Candidate";
 import Vote from "./components/Vote";
 import VoteConfirm from "./components/VoteConfirm";
 import VoteSubmitted from "./components/VoteSubmitted";
-// import Seed from "./components/seed.js";
+import "./App.css";
 
 function App() {
   // const UserContext = React.createContext();
 
-  const handleLogin = () => {
-
-  };
-
-  const handleLogout = () => {
-
+  const handleValidate = () => {
+    // set this on the context so that every page has access to the user's information
   };
 
   return (
-    <div class="full-screen">
-        {/* <Seed /> */}
+    <div className="full-screen">
         <Router>
-          <div class="full-screen">
-            <Route exact path="/" component={Login} />
+          <div className="full-screen">
+            <Route exact path="/" render={(props) => <Login {...props} handleValidate={handleValidate} /> } />
             <Route exact path="/landing" component={Landing} />
             <Route exact path="/editdistrict" component={EditDistrict} />
             <Route exact path="/editdistrictconf" component={EditDistrictConfirm} />
@@ -44,47 +36,5 @@ function App() {
       </div>
   );
 }
-// async function fetchAdvice() {
-//   try {
-//     let response = await axios.get("/api/test");
-//     // console.log(response);
-//     setTest(response.data.message);
-//   } catch (err) {
-//     console.log(err);
-//   }
-// }
 
 export default App;
-
-// function App() {
-//   const [test, setTest] = useState("default");
-
-//   async function fetchAdvice() {
-//     try {
-//       let response = await axios.get('/api/test');
-//       // console.log(response);
-//       setTest(response.data.message);
-//     } catch ( err ) {
-//       console.log(err);
-//     }
-//   }
-
-//   useEffect(() => {
-//     // called setState only to trigger this method
-//     fetchAdvice();
-//   }, []);
-
-//   return (
-//     <div className="App">
-//         <p>
-//           Test is: {test}
-//         </p>
-//         <p>
-//           This is another test.
-//         </p>
-//     </div>
-//     <Login />
-//   );
-// }
-
-// export default App;

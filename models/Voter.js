@@ -28,20 +28,26 @@ class Voter {
     // If the user's UUID is found, and if their entered password matches what is
     // stored, then return the id of the user. Otherwise return -1.
     async verifyPassword(uuid, password) {
+      // console.log("Voter verifyPassword called");
+      // console.log(uuid);
+      // console.log(password);
+
+      // Since the database doesn't exist yet, grant anyone with the password "password"
+      // access and anyone else is denied.
+      // TO DO FINISH
+      if(password === "password") {
+        return true;
+      }
+
+      return false;
+      // TODO FINISH
+
         // First, find the user with the given email address and get their id
-        let query = 'SELECT id FROM users WHERE email=?';
-        let args = [email];
-        let rows = await this.connection.query(query, args);
-
         // If no such uuid exists, return an empty array
-        if(rows.length === 0) {
-          return {user_id: -1, agent_id: null, display_name: ""};
-        }
-
         let id = rows[0].id;
-        query = 'SELECT salt, password, agent_id, display_name FROM users WHERE id=?';
-        args = [id];
-        rows = await this.connection.query(query, args);
+        let query = 'SELECT salt, password FROM users WHERE id=?';
+        let args = [uuid];
+        let rows = await this.connection.query(query, args);
 
         // Retrieve the salt and hashed password from the database
         let salt = rows[0].salt;
@@ -52,14 +58,13 @@ class Voter {
         
         // Does the hashed password from the database match the new password? If so, it's the same password.
         if (hashedPassword.toString() === dbHashedPassword.toString()) {
-          let agent_id = (rows[0].agent_id == "null") ? null : rows[0].agent_id;
-          return {user_id: id, agent_id: agent_id, display_name: rows[0].display_name};
-        } else {
-          return {user_id: -1, agent_id: null, display_name: ""};
+          return true;
         }
+        
+        return false;
     }
 
-    create(voterInfo) {
+    async create(voterInfo) {
         let query = 'INSERT INTO users (name, address_line1, address_line2, postal_code, city, province, district, UUID, salt, password, hasVoted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
         
         let salt = this.generateRandomSalt();
