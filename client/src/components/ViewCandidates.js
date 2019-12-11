@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import CandidateCard from './CandidateCard';
+import "./style.css";
 
 function ViewCandidates(prop) {
     const [candidates, setCandidates] = useState([]);
@@ -28,7 +29,7 @@ function ViewCandidates(prop) {
     };
 
     return (
-        <div className="container" style={{ backgroundColor: '#C4C4C4' }} >
+        <div className="container bg-grey" >
           <div className="row">
             <CandidateCard
               model={candidates}

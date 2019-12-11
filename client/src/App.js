@@ -30,7 +30,7 @@ function App() {
         {/* <Seed /> */}
         <Router>
           <div class="full-screen">
-            <Route exact path={"/"} component={Login} />
+            <Route exact path="/" component={Login} />
             <Route exact path="/landing" component={Landing} />
             <Route exact path="/editdistrict" component={EditDistrict} />
             <Route exact path="/editdistrictconf" component={EditDistrictConfirm} />

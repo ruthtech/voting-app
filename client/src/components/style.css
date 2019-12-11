@@ -28,3 +28,60 @@
   justify-content: flex-end;
   padding-top: 1rem;
 }
+
+.spread-align-div {
+  display: flex;
+  justify-content: space-around;
+  padding-top: 1rem;
+}
+
+.spread-align-div > Button {
+  width: 30%;
+
+}
+
+.between-align-div {
+  display: flex;
+  justify-content: between;
+  padding-top: 1rem;
+}
+
+.centre-align-div {
+  display: flex;
+  justify-content: center;
+  padding-top: 1rem;
+  margin: 1rem;
+}
+
+/* .centre-vertical {
+  position: absolute;
+  top: 40%;
+  width: 80%;
+} */
+
+.pc {
+  background-color: #244982;
+  color: white;
+}
+
+.green {
+  background-color: #4e9a2f;
+  color: white;
+}
+
+.bloc {
+  background-color: #143d73;
+  color: white;
+}
+
+.liberal {
+  background-color: #cd2003;
+  color: white;
+}
+
+.ndp {
+  background-color: #ec8200;
+  color: white;
+}
+
+

@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import Button from 'react-bootstrap/Button';
 import Image from 'react-bootstrap/Image';
-import { Link } from 'react-router-dom';
+// import { Link } from 'react-router-dom';
 import Card from 'react-bootstrap/Card';
+import "./style.css";
 
 function Candidate(props) {
     const [candidate, setCandidate] = useState([]);
@@ -38,7 +39,7 @@ function Candidate(props) {
     }
 
     return (
-        <div className="container" style={{ backgroundColor: candidate.partyColour, color: '#ffffff' }}>
+        <div className={candidate.party + " container"}>
             <div className="row">
                 <div className="col text-center">
                     <Image src={candidate.pictureURL} />
@@ -51,7 +52,7 @@ function Candidate(props) {
             </div>
             <div className="row">
                 <div className="col">
-                  <Card style={{ backgroundColor: candidate.partyColour, color: '#ffffff' }}>
+                  <Card className={candidate.party}>
                     <Card.Body>
                       <Card.Title>Contact</Card.Title>
                       <Card.Text>Phone: {candidate.phone}</Card.Text>
@@ -64,13 +65,13 @@ function Candidate(props) {
                 </div>
             </div>
             <div className="row">
-                <div className="col d-flex justify-content-center">
+                <div className="col centre-align-div">
                     {/* <Link to={candidate.party_website} /> */}
                     <h2><a href={candidate.party_website}>Conservative Party of Canada</a></h2>
                 </div>
             </div>
             <div className="row p-3">
-                <div className="col d-flex justify-content-around">
+                <div className="col spread-align-div">
                     <Button variant="secondary">View Candidates</Button>
                     <Button variant="secondary">Home</Button>
                 </div>
