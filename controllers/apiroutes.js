@@ -7,17 +7,18 @@ const voter = new Voter();
 
 // Return the user with the UUID and password if the UUID exists and the password
 // is the correct password.
-router.get('/api/:id/:password', async function (req, res) {
+router.get('/api/login/:id/:password', async function (req, res) {
   try {
 
     let user = {
       uuid: req.params.id,
-      isVerified: false
     };
     if(await voter.verifyPassword(req.params.id, req.params.password)) {
       res.status(200);
-      user.isVerified = true;
-      
+      // console.log("apiroutes find user with uuid " + req.params.id);
+      user = mockData.mockUsers.filter( (user) => { return user.uuid == req.params.id} );
+      // console.log("apiroutes found user ");
+      // console.log(user);
     } else {
       res.status(404);
     }
@@ -33,9 +34,14 @@ router.get('/api/:id/:password', async function (req, res) {
 
 // Return all of the candidates for a given district
 router.get('/api/candidates/:district', async function (req, res) {
+  
   try {
     const district = req.params.district;
-    let candidates = mockData.mockCandidates.filter( (candidate) => { return candidate.district === district} );
+    // console.log("/api/candidates/" + district);
+    // console.log(mockData);
+    // console.log(mockData.mockCandidates);
+    let candidates = mockData.mockCandidates.filter( (candidate) => { return candidate.district == district} );
+    // console.log(candidates);
     res.status(200);
     res.send(candidates);
   } catch (err) {
@@ -64,10 +70,26 @@ router.get('/api/candidate/:id', async function (req, res) {
 });
 
 // Given an address, return the district that the address is in 
-router.get('/api/updateaddress/:address/:city/:province', async function (req, res) {
+router.get('/api/findDistrict/:address/:city/:province', async function (req, res) {
   try {
     const province = req.params.province;
-    let districts = mockData.mockDistricts.filter( (district) => { return district.name === province} );
+    let districts = mockData.mockDistricts.filter( (district) => { return district.province == province} );
+    res.status(200);
+    res.send((districts.length < 1) ? {} : districts[0]);
+  } catch (err) {
+    // Internal error on the server side.
+    console.log(err);
+    res.status(500);
+    res.send(err);
+  }
+  return res;
+});
+
+// Given a user, an address and a district, update the user's record to have that address and district. 
+router.put('/api/updateAddress/:id/:address/:city/:province/:district', async function (req, res) {
+  try {
+    const province = req.params.province;
+    let districts = mockData.mockDistricts.filter( (district) => { return district.name == province} );
     res.status(200);
     res.send((districts.length < 1) ? {} : districts[0]);
   } catch (err) {

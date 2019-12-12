@@ -8,13 +8,24 @@ function Login(props) {
     try {
       event.preventDefault();
       uuid = escape(uuid);
-      console.log(`login with  ${uuid} ${password} is verified?`);
-      let query = `/api/${uuid}/${password}`;
+      // console.log(`login with  ${uuid} ${password} is verified?`);
+      let query = `/api/login/${uuid}/${password}`;
       const user = await axios.get(query);
-      // console.log(user);
-      // console.log(`login with  ${uuid} ${password} is verified? ${user.data.isVerified}`);
-      props.handleValidate(user);
-      props.history.push('/landing', user);
+      console.log("Login.js login with uuid " + uuid + " found the following user ");
+      console.log(user);
+      if(user === []) {
+        // User not found.
+        // Stay on this page until a correct uuid and password is entered.
+        // TODO Show error message to user
+      } else {
+        props.handleValidate(user.data[0]);
+
+        // Redirect the user to the landing page
+        props.history.push({
+          pathname: "/landing",
+          user: {details: user}
+        });
+      }
     } catch ( err ) {
       console.log(err);
       props.handleValidate(false);

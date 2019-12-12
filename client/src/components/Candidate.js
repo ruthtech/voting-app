@@ -9,6 +9,7 @@ function Candidate(props) {
     const [candidate, setCandidate] = useState([]);
 
     useEffect(() => {
+        console.log(props);
         loadCandidateInformation(props.candidate.id);
     }, []);
 
@@ -53,13 +54,19 @@ function Candidate(props) {
             <div className="row">
                 <div className="col centre-align-div">
                     {/* <Link to={candidate.party_website} /> */}
-                    <h2><a href={candidate.party_website}>Conservative Party of Canada</a></h2>
+                    <h2><a href={candidate.party_website}>{candidate.party}</a></h2>
                 </div>
             </div>
             <div className="row p-3">
                 <div className="col spread-align-div">
                     <Button variant="secondary">View Candidates</Button>
-                    <Button variant="secondary">Home</Button>
+                    <Button variant="secondary"
+                  onClick={ () => {
+                    props.history.push({
+                    pathname: "/landing",
+                    props: {props}})}}
+                >Home
+                </Button>
                 </div>
             </div>
         </div>
