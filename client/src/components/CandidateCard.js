@@ -8,9 +8,13 @@ function CandidateCard(props) {
   console.log(props);
   
   return props.model.map( (candidate, index) => {
+    console.log(candidate);
     return (
       <div className="ml-3 mt-3 col-12 col-sm-4">
-        <Link to={'/api/candidate/'+candidate.id}> 
+        <Link to={{
+          pathname: '/candidate/',
+          state: {data: candidate}
+          }}> 
         <Card key={index} className={candidate.party}>         
           <Card.Img variant="top" src={candidate.pictureURL}   />
           <Card.Title>{candidate.name}</Card.Title>

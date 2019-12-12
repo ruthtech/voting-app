@@ -9,21 +9,22 @@ function Candidate(props) {
     const [candidate, setCandidate] = useState([]);
 
     useEffect(() => {
-        console.log(props);
-        loadCandidateInformation(props.candidate.id);
+        console.log(props.location.state.data);
+        setCandidate(props.location.state.data);
+        // loadCandidateInformation();
     }, []);
 
-    const loadCandidateInformation = async (candidateId) => {
-        try {
-            let query = `/api/candidate/${candidateId}`;
-            const candidate = await axios.get(query);
-            setCandidate(candidate);
-        }
-        catch( err ) {
-            console.log(err);
-            setCandidate({});
-        }
-    }
+    // const loadCandidateInformation = async (candidateId) => {
+    //     try {
+    //         let query = `/api/candidate/${candidateId}`;
+    //         const candidate = await axios.get(query);
+    //         setCandidate(candidate);
+    //     }
+    //     catch( err ) {
+    //         console.log(err);
+    //         setCandidate({});
+    //     }
+    // }
 
     return (
         <div className={candidate.party + " container"}>
