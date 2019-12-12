@@ -17,31 +17,36 @@ import VoteSubmitted from "./components/VoteSubmitted";
 function App() {
   // const UserContext = React.createContext();
 
-  const handleLogin = () => {
+  const handleLogin = () => {};
 
-  };
-
-  const handleLogout = () => {
-
-  };
+  const handleLogout = () => {};
 
   return (
     <div class="full-screen">
-        {/* <Seed /> */}
-        <Router>
-          <div class="full-screen">
-            <Route exact path={"/"} component={Login} />
-            <Route exact path="/landing" component={Landing} />
-            <Route exact path="/editdistrict" component={EditDistrict} />
-            <Route exact path="/editdistrictconf" component={EditDistrictConfirm} />
-            <Route exact path="/viewcandidates" component={ViewCandidates} />
-            <Route path="/candidate" render={(props) => <Candidate {...props} />}/>
-            <Route path="/vote" render={(props) => <Vote {...props} />} />
-            <Route path="/voteconfirm" render={(props) => <VoteConfirm {...props} />} />
-            <Route path="/votesubmitted" render={(props) => <VoteSubmitted {...props} />}  />
-          </div>
-        </Router>
-      </div>
+      <Router>
+        <div class="full-screen">
+          <Route exact path={"/"} component={Login} />
+          <Route exact path="/landing" component={Landing} />
+          <Route exact path="/editdistrict" component={EditDistrict} />
+          <Route
+            exact
+            path="/editdistrictconf"
+            component={EditDistrictConfirm}
+          />
+          <Route exact path="/viewcandidates" component={ViewCandidates} />
+          <Route path="/candidate" render={props => <Candidate {...props} />} />
+          <Route path="/vote" render={props => <Vote {...props} />} />
+          <Route
+            path="/voteconfirm"
+            render={props => <VoteConfirm {...props} />}
+          />
+          <Route
+            path="/votesubmitted"
+            render={props => <VoteSubmitted {...props} />}
+          />
+        </div>
+      </Router>
+    </div>
   );
 }
 // async function fetchAdvice() {

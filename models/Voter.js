@@ -1,5 +1,6 @@
 let CryptoJS = require('crypto-js');
 let Connection = require('../config/connection');
+let Axios = require(`axios`);
 
 
 class Voter {
@@ -60,8 +61,16 @@ class Voter {
     }
 
     create(voterInfo) {
-        let query = 'INSERT INTO users (name, address_line1, address_line2, postal_code, city, province, district, UUID, salt, password, hasVoted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+        // let query = 'INSERT INTO users (name, address_line1, address_line2, postal_code, city, province, district, UUID, salt, password, hasVoted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+        let chkVoterPopulation = 'select count(*) from voters';
         
+      if (chkVoterPopulation == 0) {
+          const loadVoters = async () => {
+            let response = await Axios.get("https://randomuser.me/api/?results=5000&nat=CA"
+          );
+          console.log("Server called", response);
+        }
+      }
         let salt = this.generateRandomSalt();
         let hashedPassword = this.hashPassword(salt, voterInfo.password);
 
