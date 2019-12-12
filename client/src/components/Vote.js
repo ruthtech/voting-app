@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Button from 'react-bootstrap/Button';
 // import Form from 'react-bootstrap/Form';
 import VoteRow from './VoteRow';
+import axios from 'axios';
 import "./style.css";
 
 function Vote(props) {
@@ -11,25 +12,15 @@ function Vote(props) {
     loadCandidates(props.district);
   }, []);
 
-  const loadCandidates = (district) => {
-    // In production, this will be a call to the server to get the list
-    // of candidates for this district.
+  const loadCandidates = async (district) => {
     try {
-        // const candidates = await axios.get("/viewcandidates?id='W01'");
-        // console.log(candidates);
-        // this.setCandidates(candidates.data);
-        const mockCandidates = [
-            { name: "Lisa M.", pictureURL: "/candidate-pc-photo.jpg", party: "Conservative Party of Canada", district: "W01", partyColour: "#244982", id:"2345"},
-            { name: "Trudeau", pictureURL: "/candidate-pc-photo.jpg", party: "Liberal Party of Canada", district: "W01", partyColour: "#244982", id:"2345"},
-            { name: "Parizeau", pictureURL: "/candidate-pc-photo.jpg", party: "Bloc Quebecois", district: "W01", partyColour: "#244982", id:"2345"},
-            { name: "Singh", pictureURL: "/candidate-pc-photo.jpg", party: "NDP", district: "W01", partyColour: "#244982", id:"2345"},
-            { name: "Willie B.", pictureURL: "/candidate-green-photo.jpg", party: "Green Party of Canada", district: "W01", partyColour: "#4e9a2f", id:"1234"}
-        ];
-        setCandidates(mockCandidates);
+      const candidates = await axios.get(`/candidates?district=${district}`);
+      console.log(candidates);
+      setCandidates(candidates.data);
     }
     catch( err ) {
         console.log(err);
-        this.setCandidates([]);
+        setCandidates([]);
     }
   };
 

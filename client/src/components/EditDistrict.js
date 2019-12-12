@@ -16,7 +16,6 @@ function EditDistrict() {
             </div>
             <div className="row bottom">
               <div className="col">
-                <p>This is a test. This is still a test. Do not pass Go. Do not collect $200.</p>
                 <Form>
                     <Form.Group controlId="formBasicUUID">
                       <Form.Label className="entry-field-label">Address</Form.Label>
