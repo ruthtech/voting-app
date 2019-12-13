@@ -1,19 +1,13 @@
 const express = require("express");
 const path = require("path");
-const Connection = require("../config/connection");
-
-const mongoose = require("mongoose");
-const Schema = mongoose.Schema;
-const Voter = require("./models/Voter");
-const Candidate = require("./models/Candidate");
-const District = require("./models/District");
-const Party = require("./models/Party");
+const Connection = require("./config/connection");
 
 const bodyParser = require("body-parser");
 
 const app = express();
 const port = process.env.PORT || 5000;
-const apiRoutes = require(path.join(__dirname, "controllers", "apiroutes"));
+const apiRoutes = require(path.join(__dirname, "routes", "apiroutes"));
+const db = require("./models");
 
 app.listen(port, () => console.log(`Listening on port ${port}`));
 
@@ -71,8 +65,6 @@ app.use(bodyParser.json());
 //     database: "online_voter_db"
 //   });
 // }
-
-const db = require("./models");
 
 // Serve the React components and assets
 app.use(express.static(path.join(__dirname, "client/build")));

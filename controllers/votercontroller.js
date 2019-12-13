@@ -1,10 +1,10 @@
 const mongoose = require("mongoose");
-Voter = mongoose.model("Voter");
+db = require("./models");
 Candidate = mongoose.model("Candidate");
 
 exports.verifyUser = async function(req, res) {
   if (
-    (await Voter.findOne({
+    (await db.Voter.findOne({
       login: { username: req.params.username, password: req.params.password }
     }).length) > 0
   ) {
@@ -15,15 +15,15 @@ exports.verifyUser = async function(req, res) {
 };
 
 exports.createNewVoter = async function(req, res) {
-  let newVoter = new Voter(voterInfo);
+  let newVoter = new db.Voter(voterInfo);
   let result = await newVoter.save();
 
-  return result;
+  res.send(result);
 };
 
 exports.updateVote = async function(req, res) {
-  let newVoteTally = await Voter.findOneAndUpdate(
-    { uuid: candidateID },
+  let result = await db.Voter.findOneAndUpdate(
+    { uuid: req.params.uuid },
     {
       $set: {
         "name.title": req.body.title,
@@ -39,17 +39,19 @@ exports.updateVote = async function(req, res) {
       }
     }
   );
+  res.send(result);
 };
 
 exports.enterVote = async function(req, res) {
-  let newVoteTally = await Candidate.findOneAndUpdate(
-    { _id: candidateID },
+  let newVoteTally = await db.Candidate.findOneAndUpdate(
+    { _id: req.params.candidateID },
     { $inc: { votes_for: 1 } }
   );
+  res.send(newVoteTally);
 };
 
 exports.findCandidates = async function(req, res) {
-  let voterPostalCode = await Voter.find(
+  let voterPostalCode = await db.Voter.find(
     { uuid: req.params.uuid },
     { "location.postcode": 1 }
   );
@@ -58,7 +60,7 @@ exports.findCandidates = async function(req, res) {
     `https://represent.opennorth.ca/postcodes/${voterPostalCode}/?sets=federal-electoral-districts&format=json`
   );
 
-  let candidateList = await Candidate.find({
+  let candidateList = await db.Candidate.find({
     district_name: data.candidates_centroid[0].district_name
   });
   res.send(candidateList);

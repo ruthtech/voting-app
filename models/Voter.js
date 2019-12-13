@@ -1,5 +1,5 @@
-let CryptoJS = require("crypto-js");
-let db = require("../config/connection");
+const mongoose = require("mongoose");
+const Schema = mongoose.Schema;
 
 const voterSchema = new Schema({
   _id: [Schema.Types.ObjectId],
@@ -69,4 +69,5 @@ const voterSchema = new Schema({
   hasvoted: { type: String }
 });
 
-module.exports = mongoose.model("Voter", voterSchema);
+const Voter = mongoose.model("Voter", voterSchema);
+module.exports = Voter;
