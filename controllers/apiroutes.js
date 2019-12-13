@@ -1,14 +1,19 @@
 const express = require("express");
 const router = express.Router();
+const Voter = require("../models/Voter");
 
-const Voter = require(`Voter`);
+const voter = new Voter();
 
-router.post("/api/:id/:password", async function(req, res) {
+router.get("/api/:id/:password", async function(req, res) {
   try {
+    // console.log("api route for verifying password has been hit");
+    // console.log(req.params.id);
+    // console.log(req.params.password);
     res.status(200);
-    res.send(
-      await userDBAccess.verifyPassword(req.params.id, req.params.password)
-    );
+    const user = {
+      isVerified: await voter.verifyPassword(req.params.id, req.params.password)
+    };
+    res.send(user);
   } catch (err) {
     // Internal error on the server side.
     console.log(err);
@@ -31,4 +36,5 @@ router.get("/api/test", async function(req, res) {
   return res;
 });
 
+router.get("/api/findcandidates/:uuid", async);
 module.exports = router;

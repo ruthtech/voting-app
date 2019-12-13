@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Button from 'react-bootstrap/Button';
-import Form from 'react-bootstrap/Form';
+// import Form from 'react-bootstrap/Form';
 import VoteRow from './VoteRow';
 import "./style.css";
 
@@ -35,7 +35,7 @@ function Vote(props) {
 
 
   return (
-    <div className="container" style={{ backgroundColor: "#C4C4C4" }}>
+    <div className="container bg-grey full-screen">
       <div className="row pt-3">
         <div className="col">
           <h1>Vote in District {props.district}</h1>
@@ -48,8 +48,8 @@ function Vote(props) {
               />
           </div>
       </div>
-      <div className="row pb-3">
-          <div className="col d-flex justify-content-end">
+      <div className="row bottom">
+          <div className="col right-align-div">
             <Button variant="secondary" type="submit">
               Vote
             </Button>
