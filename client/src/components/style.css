@@ -2,6 +2,10 @@
   background-color: #C4C4C4;
 }
 
+.bg-map {
+  background-image: url('/sample-toronto-map.jpg');
+}
+
 .full-screen {
   height: 100%;
 }
@@ -42,7 +46,7 @@
 
 .between-align-div {
   display: flex;
-  justify-content: between;
+  justify-content: space-between;
   padding-top: 1rem;
 }
 

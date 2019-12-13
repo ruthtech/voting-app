@@ -1,42 +1,30 @@
 import React, { useState, useEffect } from 'react';
 import Button from 'react-bootstrap/Button';
 import Image from 'react-bootstrap/Image';
-// import { Link } from 'react-router-dom';
 import Card from 'react-bootstrap/Card';
+import axios from 'axios';
 import "./style.css";
 
 function Candidate(props) {
     const [candidate, setCandidate] = useState([]);
 
     useEffect(() => {
-        loadCandidateInformation(candidate.id);
+        console.log(props.location.state.data);
+        setCandidate(props.location.state.data);
+        // loadCandidateInformation();
     }, []);
 
-    const loadCandidateInformation = (candidateId) => {
-        // In production, this will be a call to the server to get the details
-        // for a particular candidate
-        try {
-            const mockCandidate = { 
-                name: "Lisa M.", 
-                pictureURL: "/candidate-pc-photo.jpg", 
-                party: "Conservative Party of Canada", 
-                district: "W01", 
-                partyColour: "#244982", 
-                id:"2345", 
-                phone: "1-800-100-1000",
-                address: "1 Anywhere St",
-                email: "lisam@pc.ca",
-                twitter: "@lisam-pc",
-                website: "http://lisam.pc.ca",
-                party_website: "http://www.pc.ca"
-            };
-            setCandidate(mockCandidate);
-        }
-        catch( err ) {
-            console.log(err);
-            this.setCandidate({});
-        }
-    }
+    // const loadCandidateInformation = async (candidateId) => {
+    //     try {
+    //         let query = `/api/candidate/${candidateId}`;
+    //         const candidate = await axios.get(query);
+    //         setCandidate(candidate);
+    //     }
+    //     catch( err ) {
+    //         console.log(err);
+    //         setCandidate({});
+    //     }
+    // }
 
     return (
         <div className={candidate.party + " container"}>
@@ -67,13 +55,19 @@ function Candidate(props) {
             <div className="row">
                 <div className="col centre-align-div">
                     {/* <Link to={candidate.party_website} /> */}
-                    <h2><a href={candidate.party_website}>Conservative Party of Canada</a></h2>
+                    <h2><a href={candidate.party_website}>{candidate.party}</a></h2>
                 </div>
             </div>
             <div className="row p-3">
                 <div className="col spread-align-div">
                     <Button variant="secondary">View Candidates</Button>
-                    <Button variant="secondary">Home</Button>
+                    <Button variant="secondary"
+                  onClick={ () => {
+                    props.history.push({
+                    pathname: "/landing",
+                    props: {props}})}}
+                >Home
+                </Button>
                 </div>
             </div>
         </div>

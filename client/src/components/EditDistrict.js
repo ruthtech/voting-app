@@ -1,11 +1,28 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Form from 'react-bootstrap/Form';
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import Button from 'react-bootstrap/Button';
+import axios from 'axios';
 import "./style.css";
 
-function EditDistrict() {
+function EditDistrict(props) {
+  const [address, setAddress] = useState();
+  const [city, setCity] = useState();
+  const [province, setProvince] = useState();
+
+  const handleFormSubmit = async (event) => {
+    let newDistrict = await axios.get(`/api/findDistrict/${address}/${city}/${province}`);
+    let user = { ...props.user.data };
+    user.address = address;
+    user.city = city;
+    user.province = province;
+    user.district = newDistrict;
+
+    props.history.push({
+      pathname: "/editdistrictconfirm",
+      user: user});
+  }
 
     return (
         <div className="container bg-grey full-screen">
@@ -16,20 +33,19 @@ function EditDistrict() {
             </div>
             <div className="row bottom">
               <div className="col">
-                <p>This is a test. This is still a test. Do not pass Go. Do not collect $200.</p>
                 <Form>
                     <Form.Group controlId="formBasicUUID">
                       <Form.Label className="entry-field-label">Address</Form.Label>
-                      <Form.Control type="text" placeholder="Enter address" />
+                      <Form.Control type="text" placeholder="Enter address" onChange={event => setAddress(event.target.value)}/>
                     </Form.Group>
 
                     <Form.Group controlId="formBasicPassword">
                       <Form.Label className="entry-field-label">City</Form.Label>
-                      <Form.Control type="text" placeholder="Enter city" />
+                      <Form.Control type="text" placeholder="Enter city" onChange={event => setCity(event.target.value)}/>
                     </Form.Group>
 
-                    <DropdownButton id="provinceDropdown" title="Province/Territory" variant="secondary">
-                    <Dropdown.Item >Alberta</Dropdown.Item>
+                    <DropdownButton id="provinceDropdown" title="Province/Territory" variant="secondary" onChange={event => setProvince(event.target.value)}>
+                        <Dropdown.Item >Alberta</Dropdown.Item>
                         <Dropdown.Item >British Columbia</Dropdown.Item>
                         <Dropdown.Item >Manitoba</Dropdown.Item>
                         <Dropdown.Item >New Brunswick</Dropdown.Item>
@@ -45,7 +61,7 @@ function EditDistrict() {
                     </DropdownButton>
 
                     <div className="right-align-div">
-                      <Button variant="secondary" type="submit" >
+                      <Button variant="secondary" type="submit" onClick={(event) => {handleFormSubmit(event)}}>
                         Save
                       </Button>
                     </div>

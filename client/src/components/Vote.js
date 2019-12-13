@@ -2,55 +2,57 @@ import React, { useState, useEffect } from 'react';
 import Button from 'react-bootstrap/Button';
 // import Form from 'react-bootstrap/Form';
 import VoteRow from './VoteRow';
+import axios from 'axios';
 import "./style.css";
 
 function Vote(props) {
   const [candidates, setCandidates] = useState([]);
+  const [selectedCandidate, setSelectedCandidate] = useState();
 
   useEffect(() => {
-    loadCandidates(props.district);
+    loadCandidates(props.user.district);
   }, []);
 
-  const loadCandidates = (district) => {
-    // In production, this will be a call to the server to get the list
-    // of candidates for this district.
+  const loadCandidates = async (district) => {
     try {
-        // const candidates = await axios.get("/viewcandidates?id='W01'");
-        // console.log(candidates);
-        // this.setCandidates(candidates.data);
-        const mockCandidates = [
-            { name: "Lisa M.", pictureURL: "/candidate-pc-photo.jpg", party: "Conservative Party of Canada", district: "W01", partyColour: "#244982", id:"2345"},
-            { name: "Trudeau", pictureURL: "/candidate-pc-photo.jpg", party: "Liberal Party of Canada", district: "W01", partyColour: "#244982", id:"2345"},
-            { name: "Parizeau", pictureURL: "/candidate-pc-photo.jpg", party: "Bloc Quebecois", district: "W01", partyColour: "#244982", id:"2345"},
-            { name: "Singh", pictureURL: "/candidate-pc-photo.jpg", party: "NDP", district: "W01", partyColour: "#244982", id:"2345"},
-            { name: "Willie B.", pictureURL: "/candidate-green-photo.jpg", party: "Green Party of Canada", district: "W01", partyColour: "#4e9a2f", id:"1234"}
-        ];
-        setCandidates(mockCandidates);
+      const candidates = await axios.get(`/candidates?district=${district}`);
+      console.log(candidates);
+      setCandidates(candidates.data);
     }
     catch( err ) {
         console.log(err);
-        this.setCandidates([]);
+        setCandidates([]);
     }
   };
+
+  const handleFormSelect = async (event) => {
+    setSelectedCandidate(event.target.value);
+  }
 
 
   return (
     <div className="container bg-grey full-screen">
       <div className="row pt-3">
         <div className="col">
-          <h1>Vote in District {props.district}</h1>
+          <h1>Vote in District {props.user.district}</h1>
         </div>
       </div>
       <div className="row pt-3 pb-3">
           <div className="col">
               <VoteRow
                 model={candidates}
+                handleFormSelect={handleFormSelect}
               />
           </div>
       </div>
       <div className="row bottom">
           <div className="col right-align-div">
-            <Button variant="secondary" type="submit">
+            <Button variant="secondary" type="submit" onClick={
+              props.history.push({
+                pathname: "/voteconfirm",
+                candidate: {selectedCandidate}
+              })
+            }>
               Vote
             </Button>
           </div>

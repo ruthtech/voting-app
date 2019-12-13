@@ -10,7 +10,7 @@ function VoteRow(props) {
       <InputGroup key={index} className="pb-3">
         <Form.Control plaintext readOnly className="bg-white text-right pr-3" defaultValue={candidate.name + '/' + candidate.party} />
         <InputGroup.Append>
-          <InputGroup.Radio name="votingGroup" aria-label={candidate.name + '/' + candidate.party} />
+          <InputGroup.Radio name="votingGroup" aria-label={candidate.name + '/' + candidate.party} onSelect={(event) => props.handleFormSelect(event)}/>
         </InputGroup.Append>
       </InputGroup>
     );
