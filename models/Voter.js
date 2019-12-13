@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const voterSchema = new Schema({
-  _id: [Schema.Types.ObjectId],
+  // _id: [Schema.Types.ObjectId],
   gender: {
     type: String,
     trim: true
@@ -20,13 +20,7 @@ const voterSchema = new Schema({
     city: { type: String },
     state: { type: String },
     country: { type: String },
-    postcode: {
-      type: String,
-      validate: [
-        ({ length }) => (length = 7),
-        "Password must be 7 characters including a space between e.g. X9X 9X9."
-      ]
-    },
+    postcode: { type: String },
     coordinates: {
       latitude: { type: Number },
       longitude: { type: Number }
@@ -56,7 +50,7 @@ const voterSchema = new Schema({
   },
   phone: { type: String },
   cell: { type: String },
-  id: {
+  idtype: {
     name: { type: String },
     value: { type: String }
   },
@@ -69,5 +63,5 @@ const voterSchema = new Schema({
   hasvoted: { type: String }
 });
 
-const Voter = mongoose.model("Voter", voterSchema);
+let Voter = mongoose.model("Voter", voterSchema);
 module.exports = Voter;

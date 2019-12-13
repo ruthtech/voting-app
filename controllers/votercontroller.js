@@ -1,20 +1,20 @@
 const mongoose = require("mongoose");
-db = require("./models");
+db = require("../models");
 Candidate = mongoose.model("Candidate");
+axios = require("axios");
 
-exports.verifyUser = async function(req, res) {
-  if (
-    (await db.Voter.findOne({
-      login: { username: req.params.username, password: req.params.password }
-    }).length) > 0
-  ) {
-    return true;
+exports.verifyUser = async function(username, password) {
+  let data = await db.Voter.findOne({
+    "login.username": username,
+    "login.password": password
+  });
+  if (!data) {
+    return false;
   }
-
-  return false;
+  return data;
 };
 
-exports.createNewVoter = async function(req, res) {
+exports.createNewVoter = async function(voterInfo) {
   let newVoter = new db.Voter(voterInfo);
   let result = await newVoter.save();
 
@@ -22,7 +22,7 @@ exports.createNewVoter = async function(req, res) {
 };
 
 exports.updateVote = async function(req, res) {
-  let result = await db.Voter.findOneAndUpdate(
+  let result = await db.voters.findOneAndUpdate(
     { uuid: req.params.uuid },
     {
       $set: {
@@ -50,18 +50,13 @@ exports.enterVote = async function(req, res) {
   res.send(newVoteTally);
 };
 
-exports.findCandidates = async function(req, res) {
-  let voterPostalCode = await db.Voter.find(
-    { uuid: req.params.uuid },
-    { "location.postcode": 1 }
-  );
-
+exports.findCandidates = async function(postalcode) {
   let data = await axios.get(
-    `https://represent.opennorth.ca/postcodes/${voterPostalCode}/?sets=federal-electoral-districts&format=json`
+    `https://represent.opennorth.ca/postcodes/${postalcode}/?sets=federal-electoral-districts&format=json`
   );
-
   let candidateList = await db.Candidate.find({
-    district_name: data.candidates_centroid[0].district_name
+    district_name: data.data.candidates_centroid[0].district_name
   });
-  res.send(candidateList);
+  console.log("Candidate list is ", candidateList);
+  return candidateList;
 };

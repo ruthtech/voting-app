@@ -1,33 +1,18 @@
 const express = require("express");
 const router = express.Router();
 const db = require("../models");
-var product = require("../controllers/votercontroller");
+var voter = require("../controllers/votercontroller");
 
 // const voter = new Voter();
 
-router.get("/api/:username/:password", async function(req, res) {
+router.get("/api/login/:username/:password", async function(req, res) {
   try {
-    // console.log("api route for verifying password has been hit");
-    // console.log(req.params.id);
-    // console.log(req.params.password);
-    res.status(200);
     const user = {
-      isVerified: await db.Voter.verifyPassword(
+      isVerified: await voter.verifyUser(
         req.params.username,
         req.params.password
       )
     };
-    if (await voter.verifyPassword(req.params.id, req.params.password)) {
-      res.status(200);
-      // console.log("apiroutes find user with uuid " + req.params.id);
-      user = mockData.mockUsers.filter(user => {
-        return user.uuid == req.params.id;
-      });
-      // console.log("apiroutes found user ");
-      // console.log(user);
-    } else {
-      res.status(404);
-    }
     res.send(user);
   } catch (err) {
     // Internal error on the server side.
@@ -39,15 +24,19 @@ router.get("/api/:username/:password", async function(req, res) {
 });
 
 // Return all of the candidates for a given district
-router.get("/api/candidates/:district", async function(req, res) {
+router.get("/api/candidates/:postalcode", async function(req, res) {
+  console.log("The Candidates are /api/candidates/:postalcode");
   try {
-    const district = req.params.district;
+    const candidates = {
+      candidateList: await voter.findCandidates(req.params.postalcode)
+    };
+    console.log("The Candidates are ", candidates);
     // console.log("/api/candidates/" + district);
     // console.log(mockData);
     // console.log(mockData.mockCandidates);
-    let candidates = mockData.mockCandidates.filter(candidate => {
-      return candidate.district == district;
-    });
+    // let candidates = mockData.mockCandidates.filter(candidate => {
+    //   return candidate.district == district;
+    // });
     // console.log(candidates);
     res.status(200);
     res.send(candidates);
@@ -61,22 +50,22 @@ router.get("/api/candidates/:district", async function(req, res) {
 });
 
 // Return the candidate with the given id
-router.get("/api/candidate/:id", async function(req, res) {
-  try {
-    const id = req.params.id;
-    let candidates = mockData.mockCandidates.filter(candidate => {
-      return candidate.id === id;
-    });
-    res.status(200);
-    res.send(candidates.length < 1 ? {} : candidates[0]);
-  } catch (err) {
-    // Internal error on the server side.
-    console.log(err);
-    res.status(500);
-    res.send(err);
-  }
-  return res;
-});
+// router.get("/api/candidate/:id", async function(req, res) {
+//   try {
+//     const id = req.params.id;
+//     let candidates = mockData.mockCandidates.filter(candidate => {
+//       return candidate.id === id;
+//     });
+//     res.status(200);
+//     res.send(candidates.length < 1 ? {} : candidates[0]);
+//   } catch (err) {
+//     // Internal error on the server side.
+//     console.log(err);
+//     res.status(500);
+//     res.send(err);
+//   }
+//   return res;
+// });
 
 // CHANGE BELOW THIS LINE
 // Given an address, return the district that the address is in

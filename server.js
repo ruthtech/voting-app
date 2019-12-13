@@ -9,8 +9,6 @@ const port = process.env.PORT || 5000;
 const apiRoutes = require(path.join(__dirname, "routes", "apiroutes"));
 const db = require("./models");
 
-app.listen(port, () => console.log(`Listening on port ${port}`));
-
 // Routes for data from MySQL
 app.use(apiRoutes);
 // console.log("Server is loading apiroutes");
@@ -82,3 +80,5 @@ app.get("*", (req, res) => {
 process.on("exit", async function(code) {
   return console.log(`About to exit with code ${code}`);
 });
+
+app.listen(port, () => console.log(`Listening on port ${port}`));

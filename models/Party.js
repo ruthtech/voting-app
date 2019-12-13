@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 const partySchema = new Schema({
   _id: [Schema.Types.ObjectId],
-  id: { type: Number },
+  party_id: { type: Number },
   party_name: { type: String },
   party_short_name: { type: String },
   party_logo: { type: String },
