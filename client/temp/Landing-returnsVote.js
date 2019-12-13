@@ -5,41 +5,42 @@ import UserContext from '../utils/UserContext';
 import EditDistrict from "./EditDistrict";
 import ViewCandidates from './ViewCandidates';
 import Vote from './Vote';
-import LoadingSpinner from './LoadingSpinner';
+import Test from './Test';
 import "./style.css";
 
 
 function Landing() {
     console.log("Landing");
-    const [voter, setVoter] = useState(null);
+    const [editDistrict, setEditDistrict] = useState(null);
+    const [viewCandidates, setViewCandidates] = useState(null);
+    const [vote, setVote] = useState(null);
     const [subcomponent, setSubcomponent] = useState(null);
-    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        console.log("useEffect");
-        setSubcomponent(renderDefault());
-        console.log(subcomponent);
-    }, [voter]);
+        console.log("new subcomponent edit district");
+        setSubcomponent(<EditDistrict />);
+    }, [editDistrict]);
 
-    function renderDefault() {
-        console.log("renderDefault");
-        if(voter == null) {
-            // Not ready to render yet
-            console.log("voter is null, returning");
-            return;
-        }
+    useEffect(() => {
+        console.log("new subcomponent view candidates");
+        setSubcomponent(<ViewCandidates />);
+    }, [viewCandidates]);
 
+    useEffect(() => {
+        console.log("new subcomponent vote");
+        setSubcomponent(<Vote />);
+    }, [vote]);
 
-        setLoading(false);
-        return (
+    function renderDefault(user) {
+        setSubcomponent(
             <div className="container bg-map full-screen">
                 <div className="row">
-                    <div className="col mt-3 w-100">
+                    <div className="mt-3">
                     <Form className="bg-white">
                         <Form.Group className="between-align-div" controlId="editElectoralDistrict">
-                        <Form.Label>Your district is {voter.district}</Form.Label>
+                        <Form.Label>Your district is {user.district}</Form.Label>
                         <Button variant="secondary" 
-                            onClick={ () => { setSubcomponent(<EditDistrict />) }}>
+                            onClick={ () => { setEditDistrict(true) }}>
                             Edit</Button>
                         </Form.Group>
                     </Form>                
@@ -48,10 +49,10 @@ function Landing() {
                 <div className="row bottom">
                     <div className="col spread-align-div">
                         <Button variant="secondary" 
-                            onClick={ () => { setSubcomponent(<ViewCandidates />) }}>
+                            onClick={ () => { setViewCandidates(true) } }>
                             View Candidates</Button>
                         <Button variant="secondary"
-                            onClick={ () => { setSubcomponent(<Vote />) } }>
+                            onClick={ () => { setVote(true) } }>
                             Vote</Button>
                     </div>
                 </div>
@@ -63,11 +64,13 @@ function Landing() {
       <UserContext.Consumer>
       {
           ({user}) => {
-            // Can't set this on function load because we need to know 
-            // the user's data.
-            setVoter(user);
+            if(subcomponent === null) {
+              // Can't set this on function load because we need to know 
+              // the user's data.
+              setSubcomponent(renderDefault(user));
+            }
             console.log(subcomponent);
-            return loading ? <LoadingSpinner /> : subcomponent;
+            return subcomponent;
           }
       }
       </UserContext.Consumer>  

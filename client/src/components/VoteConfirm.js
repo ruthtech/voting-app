@@ -1,11 +1,14 @@
 import React from 'react';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
+import UserContext from '../utils/UserContext';
 import "./style.css";
 
 function VoteConfirm(props) {
 
     return (
+        <UserContext.Consumer>
+        {  
         <div className={props.party + " container full-screen"}>
             <div className="row">
                 <div className="col">
@@ -35,6 +38,8 @@ function VoteConfirm(props) {
                 </div>
             </div>
         </div>
+        }
+        </UserContext.Consumer>
     );
 }
 

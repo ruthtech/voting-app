@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react';
 import CandidateCard from './CandidateCard';
 import axios from 'axios';
 import Button from 'react-bootstrap/Button';
+import UserContext from '../utils/UserContext';
 import "./style.css";
 
 function ViewCandidates(props) {
@@ -28,6 +29,8 @@ function ViewCandidates(props) {
     };
 
     return (
+      <UserContext.Consumer>
+        {
         <div className="container bg-grey" >
           <div className="row">
             <CandidateCard
@@ -46,6 +49,8 @@ function ViewCandidates(props) {
             </div>
           </div>
         </div>
+       }
+      </UserContext.Consumer>
     );
 }
 

@@ -64,8 +64,6 @@ app.post("https://randomuser.me/api/?results=5000&nat=CA", async (req, res) => {
 // Serve the React components and assets
 app.use(express.static(path.join(__dirname, "client/build")));
 
-console.log("")
-
 // Since this will match every path that isn't explicitly listed above,
 // make sure that this is listed after the data api routes/endpoints.
 app.get("*", (req, res) => {

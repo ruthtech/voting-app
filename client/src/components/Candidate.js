@@ -3,6 +3,7 @@ import Button from 'react-bootstrap/Button';
 import Image from 'react-bootstrap/Image';
 import Card from 'react-bootstrap/Card';
 import axios from 'axios';
+import UserContext from '../utils/UserContext';
 import "./style.css";
 
 function Candidate(props) {
@@ -11,22 +12,11 @@ function Candidate(props) {
     useEffect(() => {
         console.log(props.location.state.data);
         setCandidate(props.location.state.data);
-        // loadCandidateInformation();
     }, []);
 
-    // const loadCandidateInformation = async (candidateId) => {
-    //     try {
-    //         let query = `/api/candidate/${candidateId}`;
-    //         const candidate = await axios.get(query);
-    //         setCandidate(candidate);
-    //     }
-    //     catch( err ) {
-    //         console.log(err);
-    //         setCandidate({});
-    //     }
-    // }
-
     return (
+        <UserContext.Consumer>
+        {  
         <div className={candidate.party + " container"}>
             <div className="row">
                 <div className="col text-center">
@@ -54,7 +44,6 @@ function Candidate(props) {
             </div>
             <div className="row">
                 <div className="col centre-align-div">
-                    {/* <Link to={candidate.party_website} /> */}
                     <h2><a href={candidate.party_website}>{candidate.party}</a></h2>
                 </div>
             </div>
@@ -71,6 +60,8 @@ function Candidate(props) {
                 </div>
             </div>
         </div>
+       }
+        </UserContext.Consumer>
     );
 }
 

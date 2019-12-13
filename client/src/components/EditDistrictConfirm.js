@@ -3,6 +3,7 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import axios from 'axios';
 import "./style.css";
+import UserContext from '../utils/UserContext';
 
 function EditDistrictConfirm(props) {
     const handleFormSubmit = async (event) => {
@@ -11,6 +12,8 @@ function EditDistrictConfirm(props) {
     };
 
     return (
+      <UserContext.Consumer>
+        {
       <div className="container bg-grey full-screen">
         <div className="row">
           <div className="col">
@@ -41,6 +44,8 @@ function EditDistrictConfirm(props) {
           </div>
         </div>
       </div>
+     }
+     </UserContext.Consumer>
     );
 }
 

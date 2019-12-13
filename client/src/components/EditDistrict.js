@@ -4,6 +4,7 @@ import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import Button from 'react-bootstrap/Button';
 import axios from 'axios';
+import UserContext from '../utils/UserContext';
 import "./style.css";
 
 function EditDistrict(props) {
@@ -25,6 +26,8 @@ function EditDistrict(props) {
   }
 
     return (
+      <UserContext.Consumer>
+        {
         <div className="container bg-grey full-screen">
             <div className="row">
                 <div className="col">
@@ -69,6 +72,8 @@ function EditDistrict(props) {
               </div>
             </div>
         </div>
+        }
+        </UserContext.Consumer>
     );
 }
 

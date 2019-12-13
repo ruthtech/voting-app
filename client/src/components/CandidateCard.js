@@ -1,6 +1,7 @@
 import React from 'react';
 import Card from 'react-bootstrap/Card';
 import { Link } from 'react-router-dom';
+import UserContext from '../utils/UserContext';
 import "./style.css";
 
 function CandidateCard(props) {
@@ -10,6 +11,8 @@ function CandidateCard(props) {
   return props.model.map( (candidate, index) => {
     console.log(candidate);
     return (
+      <UserContext.Consumer>
+      {
       <div className="ml-3 mt-3 col-12 col-sm-4">
         <Link to={{
           pathname: '/candidate/',
@@ -24,6 +27,8 @@ function CandidateCard(props) {
         </Card>
         </Link>
       </div>
+      }
+      </UserContext.Consumer>
     );
   });
 }

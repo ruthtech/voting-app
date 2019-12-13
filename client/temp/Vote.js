@@ -11,36 +11,36 @@ import "./style.css";
 
 function Vote() {
   const [candidates, setCandidates] = useState(null);
-  const [selectedCandidate, setSelectedCandidate] = useState(null);
+  const [selectedCandidate, setSelectedCandidate] = useState();
   const [loading, setLoading] = useState(true);
-  const [voter, setVoter] = useState(null);
+  const [voter, setVoter] = useState();
 
-  useEffect( () => {
+  useEffect( async () => {
     console.log("Vote useEffect");
-    async function loadCandidates() {
-      try {
-        if(voter === null) {
-          // Not ready to load candidates until we know what district the user is in
-          console.log("Vote loadCandidates no voter yet");
-          return;
-        }
-  
-        if(loading) {
-          console.log("Vote loadCandidates voter is ", voter);
-          const candidates = await axios.get(`/api/candidates/${voter.district}`);
-          console.log("Vote loadCandidates after ", candidates);
-          setCandidates(candidates.data);
-          setLoading(false);
-        }
-      }
-      catch( err ) {
-          console.log(err);
-          setCandidates([]);
-      }
-    };
-    loadCandidates();  
+    await loadCandidates();
   }, [voter]);
 
+  const loadCandidates = async () => {
+    try {
+      if(voter === undefined) {
+        // Not ready to load candidates until we know what district the user is in
+        console.log("Vote loadCandidates no voter yet");
+        return;
+      }
+
+      if(loading) {
+        console.log("Vote loadCandidates voter is ", voter);
+        const candidates = await axios.get(`/api/candidates/${voter.district}`);
+        console.log("Vote loadCandidates after ", candidates);
+        setLoading(false);
+        setCandidates(candidates.data);
+      }
+    }
+    catch( err ) {
+        console.log(err);
+        setCandidates([]);
+    }
+  };
 
   const handleFormSelect = async (event) => {
     setSelectedCandidate(event.target.value);
@@ -90,11 +90,9 @@ function Vote() {
     <UserContext.Consumer>
     {
       ({user}) => {
-        console.log("Vote in render. user is ", user);
         setVoter(user);
         console.log("Vote in render. voter is ", voter);
         console.log("Vote in render. candidates are ", candidates);
-        console.log("Vote in render, loading is ", loading);
         return loading ? <LoadingSpinner /> : renderDefault();
       }
       

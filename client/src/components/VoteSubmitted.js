@@ -1,11 +1,14 @@
 import React from 'react';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
+import UserContext from '../utils/UserContext';
 import './style.css';
 
 function VoteSubmitted(props) {
 
     return (
+        <UserContext.Consumer>
+        {  
         <div className={props.party + " container"} >
             <div className="row">
                 <div className="col">
@@ -34,6 +37,8 @@ function VoteSubmitted(props) {
                 </div>
             </div>
         </div>
+        }
+        </UserContext.Consumer>
     );
 }
 
