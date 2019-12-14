@@ -25,19 +25,12 @@ router.get("/api/login/:username/:password", async function(req, res) {
 
 // Return all of the candidates for a given district
 router.get("/api/candidates/:postalcode", async function(req, res) {
-  console.log("The Candidates are /api/candidates/:postalcode");
   try {
     const candidates = {
-      candidateList: await voter.findCandidates(req.params.postalcode)
+      candidateList: await voter.findCandidates(
+        req.params.postalcode.replace(/\s/g, "")
+      )
     };
-    console.log("The Candidates are ", candidates);
-    // console.log("/api/candidates/" + district);
-    // console.log(mockData);
-    // console.log(mockData.mockCandidates);
-    // let candidates = mockData.mockCandidates.filter(candidate => {
-    //   return candidate.district == district;
-    // });
-    // console.log(candidates);
     res.status(200);
     res.send(candidates);
   } catch (err) {
@@ -49,6 +42,23 @@ router.get("/api/candidates/:postalcode", async function(req, res) {
   return res;
 });
 
+// Vote for a candidate and log event that user has voted
+router.post("/api/voter/:voterid/:candidateId", async function(req, res) {
+  try {
+    const tallyVote = {
+      votecast: await voter.enterVote(req.body.voterid, req.body.candidateId)
+    };
+  } catch (err) {
+    console.log(err);
+    res.send(err);
+  }
+});
+
+//
+router.post("/api/run/simulator", async function(req, res) {
+  console.log("Running Simulator");
+  voter.runSimulation();
+});
 // Return the candidate with the given id
 // router.get("/api/candidate/:id", async function(req, res) {
 //   try {
@@ -91,7 +101,7 @@ router.get("/api/findDistrict/:address/:city/:province", async function(
 
 // Given a user, an address and a district, update the user's record to have that address and district.
 router.put(
-  "/api/updateAddress/:id/:address/:city/:province/:district",
+  "/api/updateAddress/:id/:streetno/:streetname/:city/:province/:district",
   async function(req, res) {
     try {
       const province = req.params.province;

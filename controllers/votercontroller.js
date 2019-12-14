@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 db = require("../models");
-Candidate = mongoose.model("Candidate");
+// Candidate = mongoose.model("Candidate");
 axios = require("axios");
 
 exports.verifyUser = async function(username, password) {
@@ -22,7 +22,7 @@ exports.createNewVoter = async function(voterInfo) {
 };
 
 exports.updateVote = async function(req, res) {
-  let result = await db.voters.findOneAndUpdate(
+  let result = await db.Voter.findOneAndUpdate(
     { uuid: req.params.uuid },
     {
       $set: {
@@ -42,10 +42,15 @@ exports.updateVote = async function(req, res) {
   res.send(result);
 };
 
-exports.enterVote = async function(req, res) {
+exports.enterVote = async function(voter, candidateid) {
   let newVoteTally = await db.Candidate.findOneAndUpdate(
-    { _id: req.params.candidateID },
+    { _id: candidateid },
     { $inc: { votes_for: 1 } }
+  );
+
+  let voteCast = await db.Voter.findOneAndUpdate(
+    { _id: voterid },
+    { $set: { hasvoted: true } }
   );
   res.send(newVoteTally);
 };
@@ -58,5 +63,55 @@ exports.findCandidates = async function(postalcode) {
     district_name: data.data.candidates_centroid[0].district_name
   });
   console.log("Candidate list is ", candidateList);
+  //   for (i = 0; i < candidateList.length; i++) {
+  //     let apiData = await axios.get(
+  //       `https://represent.opennorth.ca/candidates/?last_name=${candidateList[i].last_name}&first_name=${candidateList[i].first_name}&format=json`
+  //     );
+  //      console.log("Source is ", apiData.data.objects);
+  //      console.log("The Data is ", apiData);
+  //      districtCandidates.push(apiData.offices);
+  //   }
+  //      console.log("New candidate list is ", districtCandidates);
   return candidateList;
+};
+
+exports.runSimulation = async function() {
+  for await (const voterList of db.Voter.findOne()) {
+    let postcode = voterList.location.postcode.replace(/\s/g, "");
+    await setInterval(async function() {
+      //   await console.log(
+      //     `https://represent.opennorth.ca/postcodes/${postcode}/?sets=federal-electoral-districts&format=json`
+      //   );
+      let district = await axios.get(
+        `https://represent.opennorth.ca/postcodes/${postcode}/?sets=federal-electoral-districts&format=json`
+      );
+      await console.log(
+        "District is ",
+        district.data.candidates_centroid[0].district_name
+      );
+
+      //   let candidateList = await db.Candidate.find({
+      //     district_name: district.data.candidates_centroid[0].district_name
+      //   });
+      //   console.log("Candidate list is ", candidateList);
+
+      //   if (candidateList.length > 0) {
+      //     let newVoteTally = await db.Candidate.findOneAndUpdate(
+      //       {
+      //         _id:
+      //           candidateList[Math.floor(Math.random() * candidateList.length)]
+      //             ._id
+      //       },
+      //       { $inc: { votes_for: 1 } }
+      //     );
+
+      //     let voteCast = await db.Voter.findOneAndUpdate(
+      //       { _id: voterList._id },
+      //       { $set: { hasvoted: true } }
+      //     );
+      // Math.floor(Math.random() * candidateList.length);
+      //   }
+      console.log(voterList.name);
+    }, 60000);
+  }
 };
