@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import Button from 'react-bootstrap/Button';
-// import Form from 'react-bootstrap/Form';
 import VoteRow from './VoteRow';
 import axios from 'axios';
 import UserContext from '../utils/UserContext';
@@ -14,7 +13,7 @@ import "./style.css";
 function Vote() {
   const [candidates, setCandidates] = useState(null);
   const [selectedCandidate, setSelectedCandidate] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [activeComponentId, setActiveComponentId] = useState(0); // 0 for the loading spinner, 1 for the page listing all of the voting rows, and 2 for vote confirm
   const [voter, setVoter] = useState(null);
 
   useEffect( () => {
@@ -27,12 +26,12 @@ function Vote() {
           return;
         }
   
-        if(loading) {
+        if(activeComponentId === 0) {
           console.log("Vote loadCandidates voter is ", voter);
           const candidates = await axios.get(`/api/candidates/${voter.district}`);
           console.log("Vote loadCandidates after ", candidates);
           setCandidates(candidates.data);
-          setLoading(false);
+          setActiveComponentId(1);
         }
       }
       catch( err ) {
@@ -46,7 +45,7 @@ function Vote() {
             { name: "J. Trudeau", pictureURL: "/candidate-pc-photo.jpg", party: "Liberal Party of Canada", district: "W01", id:"5678", phone: "1-800-500-5000", address: "5 Anywhere St", email: "trudeau@liberal.ca", twitter: "@trudeau-liberal", website: "http://trudeau.liberal.ca", party_website: "http://www.liberal.ca" },
           ];
           setCandidates(mockCandidates); // FOR TESTING ONLY
-          setLoading(false); // FOR TESTING ONLY
+          setActiveComponentId(1); // FOR TESTING ONLY
 
       }
     };
@@ -54,10 +53,17 @@ function Vote() {
   }, [voter]);
 
 
-  const handleFormSelect = async (event) => {
-    setSelectedCandidate(event.target.value);
-  }
+  const handleFormSelect = async (candidate) => {
+    console.log("Vote, candidate selected, candidate is ", candidate);
+    setSelectedCandidate(candidate);
+  };
 
+  // Active Component Id 0
+  const renderLoading = () => {
+    return <LoadingSpinner />;
+  };
+
+  // Active Component Id 1
   const renderDefault = () => {
     console.log("Vote renderDefault ", candidates);
     return  (
@@ -78,33 +84,51 @@ function Vote() {
         <div className="row bottom">
             <div className="col right-align-div">
               <Button variant="secondary" type="submit" onClick={
-                () => { 
-                  return <VoteConfirm candidate={selectedCandidate} />
-                 }
-              }>
+                () => { setActiveComponentId(2) }}>
                 Vote
               </Button>
             </div>
         </div>
     </div>
     );
-  }
+  };
+
+  // Active Component Id 2
+  const renderVoteConfirm = () => {
+    return <VoteConfirm candidate={selectedCandidate} />
+  };
+
+  const renderActiveComponent = () => {
+    switch(activeComponentId) {
+      case(0): {
+        return renderLoading();
+      }
+
+      case(2): {
+        return renderVoteConfirm();
+      }
+
+      case(2):
+      default: {
+        return renderDefault();
+      }
+    }
+  };
 
   return (
     <UserContext.Consumer>
     {
       ({user}) => {
-        console.log("Vote in render. user is ", user);
+        // console.log("Vote in render. user is ", user);
         setVoter(user);
-        console.log("Vote in render. voter is ", voter);
-        console.log("Vote in render. candidates are ", candidates);
-        console.log("Vote in render, loading is ", loading);
-        return loading ? <LoadingSpinner /> : renderDefault();
+        // console.log("Vote in render. voter is ", voter);
+        // console.log("Vote in render. candidates are ", candidates);
+        // console.log("Vote in render, loading is ", loading);
+        return renderActiveComponent();
       }
-      
-  }
-  </UserContext.Consumer>
-    );
+    }
+    </UserContext.Consumer>
+  );
 }
 
 export default Vote;

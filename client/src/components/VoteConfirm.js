@@ -1,15 +1,20 @@
-import React from 'react';
-import Form from 'react-bootstrap/Form';
+import React, { useState } from 'react';
+import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
 import UserContext from '../utils/UserContext';
+import Vote from "./Vote";
+import VoteSubmitted from "./VoteSubmitted";
 import "./style.css";
 
 function VoteConfirm(props) {
+    const [activeComponentId, setActiveComponentId] = useState(0); // 0 is for default, 1 is for edit/go back, 2 is for save/confirm
+    const [candidate, setCandidate] = useState(props.candidate);
+    console.log("VoteConfirm candidate is ", candidate);
 
-    return (
-        <UserContext.Consumer>
-        {  
-        <div className={props.party + " container full-screen"}>
+    // Active Component Id 0
+    const renderDefault = () => {
+      return (
+        <div className={"bg-grey container full-screen"}>
             <div className="row">
                 <div className="col">
                     <h1>You are voting for</h1>
@@ -17,13 +22,12 @@ function VoteConfirm(props) {
             </div>
             <div className="row">
                 <div className="col">
-                  <Form>
-                    <Form.Group controlId="voteForCandidate">
-                      <Form.Label>{props.name}</Form.Label>
-                      <Form.Label>{props.party}</Form.Label>
-                      <Form.Control as="textarea" rows="3" disabled />
-                    </Form.Group>
-                  </Form>                
+                  <Card>
+                    <Card.Body>
+                      <Card.Title>{candidate.name}</Card.Title>
+                      <Card.Text>{candidate.party}</Card.Text>
+                    </Card.Body>
+                  </Card>
                 </div>
             </div>
             <div className="row pt-3">
@@ -33,13 +37,47 @@ function VoteConfirm(props) {
             </div>
             <div className="row bottom">
                 <div className="col spread-align-div">
-                    <Button variant="secondary">Edit</Button>
-                    <Button variant="secondary">Confirm</Button>
+                    <Button variant="secondary" onClick={() => {setActiveComponentId(1)}}>Edit</Button>
+                    <Button variant="secondary" onClick={() => {setActiveComponentId(2)}}>Confirm</Button>
                 </div>
             </div>
         </div>
+      );
+    }
+
+    // active component id 1
+    const renderEditVote = () => {
+        return <Vote />;
+    }
+
+    // active component id 2
+    const renderConfirm = () => {
+        return <VoteSubmitted candidate={candidate}/>;
+    }
+
+    const renderActiveComponent = () => {
+        switch(activeComponentId) {
+            case(1): {
+                return renderEditVote();
+            }
+
+            case(2): {
+                return renderConfirm();
+            }
+
+            case(0):
+            default: {
+                return renderDefault();
+            }
         }
-        </UserContext.Consumer>
+    }
+
+    return (
+      <UserContext.Consumer>
+      {
+        ({user}) => renderActiveComponent()
+      }
+      </UserContext.Consumer>
     );
 }
 

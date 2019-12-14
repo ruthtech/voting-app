@@ -16,16 +16,16 @@ function Landing() {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        console.log("useEffect");
+        // console.log("useEffect");
         setSubcomponent(renderDefault());
-        console.log(subcomponent);
+        // console.log(subcomponent);
     }, [voter]);
 
     function renderDefault() {
-        console.log("renderDefault");
+        // console.log("renderDefault");
         if(voter == null) {
             // Not ready to render yet
-            console.log("voter is null, returning");
+            // console.log("voter is null, returning");
             return;
         }
 
@@ -66,7 +66,7 @@ function Landing() {
             // Can't set this on function load because we need to know 
             // the user's data.
             setVoter(user);
-            console.log(subcomponent);
+            // console.log(subcomponent);
             return loading ? <LoadingSpinner /> : subcomponent;
           }
       }

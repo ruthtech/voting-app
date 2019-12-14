@@ -4,13 +4,13 @@ import axios from 'axios';
 import Button from 'react-bootstrap/Button';
 import UserContext from '../utils/UserContext';
 import LoadingSpinner from './LoadingSpinner';
-import Vote from './Vote';
+import Landing from './Landing';
 import "./style.css";
 
 function ViewCandidates() {
     const [candidates, setCandidates] = useState([]);
     const [voter, setVoter] = useState(null);
-    const [loading, setLoading] = useState(true);
+    const [activeComponentId, setActiveComponentId] = useState(0); // 0 for Loading, 1 for Landing, 2 for list of candidates
     console.log("viewcandidates");
 
     useEffect(() => {
@@ -23,12 +23,12 @@ function ViewCandidates() {
             return;
           }
   
-          if(loading) {
+          if(activeComponentId === 0) {
             console.log(`/api/candidates/${voter.district}`);
             const candidates = await axios.get(`/api/candidates/${voter.district}`);
             console.log("View Candidates found ", candidates);
             setCandidates(candidates.data);
-            setLoading(false);
+            setActiveComponentId(2);
           }
         }
         catch( err ) {
@@ -44,7 +44,7 @@ function ViewCandidates() {
               { name: "J. Trudeau", pictureURL: "/candidate-pc-photo.jpg", party: "Liberal Party of Canada", district: "W01", id:"5678", phone: "1-800-500-5000", address: "5 Anywhere St", email: "trudeau@liberal.ca", twitter: "@trudeau-liberal", website: "http://trudeau.liberal.ca", party_website: "http://www.liberal.ca" },
             ];
             setCandidates(mockCandidates); // FOR TESTING ONLY
-            setLoading(false); // FOR TESTING ONLY
+            setActiveComponentId(2); // FOR TESTING ONLY
         }
       }
       loadCandidates();
@@ -60,7 +60,7 @@ function ViewCandidates() {
           </div>
           <div className="row p-3">
             <div className="col spread-align-div">
-                <Button variant="secondary" onClick={ () => { return <Vote /> } }>
+                <Button variant="secondary" onClick={ () => { setActiveComponentId(1) } }>
                 Home
                 </Button>
             </div>
@@ -69,13 +69,30 @@ function ViewCandidates() {
       );
     }
 
+    const renderActiveComponent = () => {
+      switch(activeComponentId) {
+        case(0): {
+          return <LoadingSpinner />;
+        }
+
+        case(1): {
+          return <Landing />;
+        }
+
+        case(2):
+        default: {
+          return renderDefault();
+        }
+      }
+    }
+
     return (
       <UserContext.Consumer>
        {
          ({user}) => {
            setVoter(user);
 
-           return loading ? <LoadingSpinner /> : renderDefault();
+           return renderActiveComponent();
          }
        }
       </UserContext.Consumer>

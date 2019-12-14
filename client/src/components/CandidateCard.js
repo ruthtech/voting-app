@@ -34,12 +34,12 @@ function CandidateCard(props) {
         <Card.Text>
         {candidate.party}
         </Card.Text>
-        <a href="#" className="btn btn-secondary" 
+        <button className="btn btn-secondary" 
           onClick={(event) => {
             setSelectedCandidate(candidate);
             setActiveComponentId(2);
           }}>
-          View {candidate.name}</a>
+          View {candidate.name}</button>
       </Card>
       </div>
     );
