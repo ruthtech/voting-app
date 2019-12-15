@@ -7,7 +7,7 @@ import axios from 'axios';
 import './style.css';
 
 function VoteSubmitted(props) {
-    const [candidate, setCandidate] = useState(props.candidate);
+    const [candidate] = useState(props.candidate);
     const [activeComponentId, setActiveComponentId] = useState(0); // 0 means the confirmation message, 1 means landing page
     console.log("VoteSubmitted props is ", props);
     console.log("VoteSubmitted candidate is ", candidate);
@@ -16,7 +16,7 @@ function VoteSubmitted(props) {
     // Tell the server to mark this user as having voted and increment the candidate's # of votes by 1.
     const submitVote = async (user, candidate) => {
       try {
-        const voted = await axios.put(`/api/vote/${user.uuid}/${candidate.id}`);
+        await axios.put(`/api/vote/${user.uuid}/${candidate.id}`);
       }
       catch( err ) {
         console.log(err);    
@@ -31,13 +31,13 @@ function VoteSubmitted(props) {
     // active id 0
     const renderDefault = () => {
         return (
-            <div className={"bg-grey container full-screen"} >
+            <div className={"container-fluid bg-grey full-screen"} >
                 <div className="row">
                     <div className="col">
                         <h1>You voted for</h1>
                     </div>
                 </div>
-                <div className="row">
+                <div className="row pb-3">
                     <div className="col">
                     <Card>
                         <Card.Body>
@@ -47,14 +47,14 @@ function VoteSubmitted(props) {
                     </Card>
                     </div>
                 </div>
-                <div className="row">
+                <div className="row pt-3">
                     <div className="col">
                         <h2>Thank you! Your vote has been registered.</h2>
                     </div>
                 </div>
                 <div className="row bottom">
                     <div className="col right-align-div">
-                        <Button variant="secondary" onClick={() => {setActiveComponentId(1)}}>Home</Button>
+                        <Button variant="secondary w-50" onClick={() => {setActiveComponentId(1)}}>Home</Button>
                     </div>
                 </div>
             </div>

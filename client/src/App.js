@@ -5,8 +5,8 @@ import UserContext from './utils/UserContext';
 import "./App.css";
 
 function App() {
-//  const [user, setUser] = useState( null );
-  const [user, setUser] = useState( { name: "A. Smith", uuid: 1, district: "W01"}); // FOR TESTING
+  const [user, setUser] = useState( null );
+//  const [user, setUser] = useState( { name: "A. Smith", uuid: 1, district: "W01", city: "Toronto", province: "Ontario", address: "1 Anywhere St"}); // FOR TESTING
 
   let component = null;
   if(user != null) {

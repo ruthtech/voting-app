@@ -1,15 +1,17 @@
 import React, {useState, useEffect} from 'react';
-import CandidateCard from './CandidateCard';
 import axios from 'axios';
 import Button from 'react-bootstrap/Button';
 import UserContext from '../utils/UserContext';
 import LoadingSpinner from './LoadingSpinner';
 import Landing from './Landing';
+import CandidateDetails from './CandidateDetails';
+import Card from 'react-bootstrap/Card';
 import "./style.css";
 
 function ViewCandidates() {
     const [candidates, setCandidates] = useState([]);
     const [voter, setVoter] = useState(null);
+    const [selectedCandidate, setSelectedCandidate] = useState(null); 
     const [activeComponentId, setActiveComponentId] = useState(0); // 0 for Loading, 1 for Landing, 2 for list of candidates
     console.log("viewcandidates");
 
@@ -52,20 +54,54 @@ function ViewCandidates() {
 
     const renderDefault = () => {
       return (
-        <div className="container bg-grey" >
-          <div className="row">
-            <CandidateCard
-              model={candidates}
-            />
+        <div className="container-fluid bg-grey">
+          <div className="row ">
+            {
+             candidates.map( (candidate) => {
+               console.log(candidate)
+               return renderCandidateThumbnail(candidate);
+             })
+            }
           </div>
-          <div className="row p-3">
-            <div className="col spread-align-div">
+          <div className="row mt-3 pb-3">
+            <div className="col text-right">
                 <Button variant="secondary" onClick={ () => { setActiveComponentId(1) } }>
                 Home
                 </Button>
             </div>
           </div>
       </div>
+      );
+    }
+
+    const renderHome = () => {
+      console.log("CandidateCard going home");
+      return (
+        <Landing />
+      );
+    }
+  
+    const renderCandidateDetails = (candidate) => {
+      return <CandidateDetails candidate={candidate} handleSelectCandidate={setSelectedCandidate}/>
+    };
+  
+    const renderCandidateThumbnail = (candidate) => {
+      return (
+        <div key={candidate.id} className="col-12 col-sm-4 mt-3">
+        <Card className={candidate.party}>         
+          <Card.Img variant="top" src={candidate.pictureURL}   />
+          <Card.Title>{candidate.name}</Card.Title>
+          <Card.Text>
+          {candidate.party}
+          </Card.Text>
+          <button className="btn btn-secondary" 
+            onClick={(event) => {
+              setSelectedCandidate(candidate);
+              setActiveComponentId(3);
+            }}>
+            View {candidate.name}</button>
+        </Card>
+        </div>
       );
     }
 
@@ -76,7 +112,17 @@ function ViewCandidates() {
         }
 
         case(1): {
-          return <Landing />;
+          return renderHome();
+        }
+
+        case(3): {
+          return renderCandidateDetails(selectedCandidate);
+        }
+
+        case(4): {
+          return candidates.map( (candidate) => {
+            return renderCandidateThumbnail(candidate);
+          });
         }
 
         case(2):

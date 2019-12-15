@@ -17,21 +17,21 @@ function Vote() {
   const [voter, setVoter] = useState(null);
 
   useEffect( () => {
-    console.log("Vote useEffect");
+    // console.log("Vote useEffect");
     async function loadCandidates() {
       try {
         if(voter === null) {
           // Not ready to load candidates until we know what district the user is in
-          console.log("Vote loadCandidates no voter yet");
+          // console.log("Vote loadCandidates no voter yet");
           return;
         }
   
         if(activeComponentId === 0) {
-          console.log("Vote loadCandidates voter is ", voter);
+          // console.log("Vote loadCandidates voter is ", voter);
           const candidates = await axios.get(`/api/candidates/${voter.district}`);
-          console.log("Vote loadCandidates after ", candidates);
+          // console.log("Vote loadCandidates after ", candidates);
           setCandidates(candidates.data);
-          setActiveComponentId(1);
+          setActiveComponentId(2);
         }
       }
       catch( err ) {
@@ -45,7 +45,7 @@ function Vote() {
             { name: "J. Trudeau", pictureURL: "/candidate-pc-photo.jpg", party: "Liberal Party of Canada", district: "W01", id:"5678", phone: "1-800-500-5000", address: "5 Anywhere St", email: "trudeau@liberal.ca", twitter: "@trudeau-liberal", website: "http://trudeau.liberal.ca", party_website: "http://www.liberal.ca" },
           ];
           setCandidates(mockCandidates); // FOR TESTING ONLY
-          setActiveComponentId(1); // FOR TESTING ONLY
+          setActiveComponentId(2); // FOR TESTING ONLY
 
       }
     };
@@ -65,9 +65,9 @@ function Vote() {
 
   // Active Component Id 1
   const renderDefault = () => {
-    console.log("Vote renderDefault ", candidates);
+    // console.log("Vote renderDefault ", candidates);
     return  (
-      <div className="container bg-grey full-screen">
+      <div className="container-fluid bg-grey full-screen">
         <div className="row pt-3">
           <div className="col">
             <h1>Vote in District {voter.district}</h1>
@@ -83,8 +83,8 @@ function Vote() {
         </div>
         <div className="row bottom">
             <div className="col right-align-div">
-              <Button variant="secondary" type="submit" onClick={
-                () => { setActiveComponentId(2) }}>
+              <Button variant="secondary w-50" type="submit" onClick={
+                () => { setActiveComponentId(1) }} disabled={selectedCandidate===null}>
                 Vote
               </Button>
             </div>
@@ -104,7 +104,7 @@ function Vote() {
         return renderLoading();
       }
 
-      case(2): {
+      case(1): {
         return renderVoteConfirm();
       }
 

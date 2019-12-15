@@ -8,19 +8,19 @@ import "./style.css";
 
 function VoteConfirm(props) {
     const [activeComponentId, setActiveComponentId] = useState(0); // 0 is for default, 1 is for edit/go back, 2 is for save/confirm
-    const [candidate, setCandidate] = useState(props.candidate);
+    const [candidate] = useState(props.candidate);
     console.log("VoteConfirm candidate is ", candidate);
 
     // Active Component Id 0
     const renderDefault = () => {
       return (
-        <div className={"bg-grey container full-screen"}>
-            <div className="row">
+        <div className={"container-fluid bg-grey full-screen"}>
+            <div className="row pb-3">
                 <div className="col">
                     <h1>You are voting for</h1>
                 </div>
             </div>
-            <div className="row">
+            <div className="row pb-3 text-center">
                 <div className="col">
                   <Card>
                     <Card.Body>
@@ -36,9 +36,11 @@ function VoteConfirm(props) {
                 </div>
             </div>
             <div className="row bottom">
-                <div className="col spread-align-div">
-                    <Button variant="secondary" onClick={() => {setActiveComponentId(1)}}>Edit</Button>
-                    <Button variant="secondary" onClick={() => {setActiveComponentId(2)}}>Confirm</Button>
+                <div className="col">
+                    <Button variant="secondary w-100" onClick={() => {setActiveComponentId(1)}}>Edit</Button>
+                </div>
+                <div className="col">
+                    <Button variant="secondary w-100" onClick={() => {setActiveComponentId(2)}}>Confirm</Button>
                 </div>
             </div>
         </div>

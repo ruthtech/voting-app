@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import UserContext from '../utils/UserContext';
 import EditDistrict from "./EditDistrict";
@@ -10,17 +9,17 @@ import "./style.css";
 
 
 function Landing() {
-    console.log("Landing");
+    // console.log("Landing");
     const [voter, setVoter] = useState(null);
-    const [subcomponent, setSubcomponent] = useState(null);
-    const [loading, setLoading] = useState(true);
+    const [activeComponentId, setActiveComponentId] = useState(1); // 0 is render default, 1 is LoadingSpinner, 2 is edit district, 3 is View Candidates, 4 is Vote
 
     useEffect(() => {
         // console.log("useEffect");
-        setSubcomponent(renderDefault());
+        setActiveComponentId(0);
         // console.log(subcomponent);
     }, [voter]);
 
+    // active component id 0
     function renderDefault() {
         // console.log("renderDefault");
         if(voter == null) {
@@ -30,34 +29,79 @@ function Landing() {
         }
 
 
-        setLoading(false);
+        setActiveComponentId(0);
         return (
-            <div className="container bg-map full-screen">
+            <div className="container-fluid bg-map full-screen">
                 <div className="row">
-                    <div className="col mt-3 w-100">
-                    <Form className="bg-white">
-                        <Form.Group className="between-align-div" controlId="editElectoralDistrict">
-                        <Form.Label>Your district is {voter.district}</Form.Label>
-                        <Button variant="secondary" 
-                            onClick={ () => { setSubcomponent(<EditDistrict />) }}>
-                            Edit</Button>
-                        </Form.Group>
-                    </Form>                
+                    <div className="col-8 col-sm-9 mt-3 ml-3 bg-white text-center pt-2">
+                       Your district is {voter.district}
+                    </div>
+                    <div className="col-3 col-sm-2 mt-3">
+                      <Button variant="secondary w-100" 
+                              onClick={ () => { setActiveComponentId(2) }}>
+                         Edit</Button>
                     </div>
                 </div>
-                <div className="row bottom">
-                    <div className="col spread-align-div">
-                        <Button variant="secondary" 
-                            onClick={ () => { setSubcomponent(<ViewCandidates />) }}>
+                <div className="row pb-3 bottom">
+                    <div className="col">
+                        <Button variant="secondary w-100" 
+                            onClick={ () => { setActiveComponentId(3) }}>
                             View Candidates</Button>
-                        <Button variant="secondary"
-                            onClick={ () => { setSubcomponent(<Vote />) } }>
+                    </div>
+                    <div className="col">
+                        <Button variant="secondary w-100"
+                            onClick={ () => { setActiveComponentId(4) }}>
                             Vote</Button>
                     </div>
                 </div>
             </div>
         );
     }
+
+    // active component 1
+    const renderLoading = () => {
+        return <LoadingSpinner />;
+    };
+
+    // active component 2
+    const renderEditDistrict = () => {
+        return <EditDistrict />;
+    };
+
+    // active component 3
+    const renderViewCandidates = () => {
+        return <ViewCandidates />;
+    }
+
+    // active component 4
+    const renderVote = () => {
+        return <Vote />;
+    }
+
+    const renderActiveComponent = () => {
+        switch(activeComponentId) {
+            case(4): {
+                return renderVote();
+            }
+
+            case(3): {
+                return renderViewCandidates();
+            }
+
+            case(2): {
+                return renderEditDistrict();
+            }
+
+            case(1): {
+                return renderLoading();
+            }
+
+            case(0):
+            default: {
+                return renderDefault();
+            }
+        }
+    };
 
     return (
       <UserContext.Consumer>
@@ -66,8 +110,7 @@ function Landing() {
             // Can't set this on function load because we need to know 
             // the user's data.
             setVoter(user);
-            // console.log(subcomponent);
-            return loading ? <LoadingSpinner /> : subcomponent;
+            return renderActiveComponent();
           }
       }
       </UserContext.Consumer>  

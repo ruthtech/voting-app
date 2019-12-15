@@ -36,7 +36,7 @@ function Login() {
       <UserContext.Consumer>
       {
         ({handleLogin}) =>
-        <div className="container bg-grey full-screen">
+        <div className="container-fluid bg-grey full-screen">
             <div className="row">
                 <div className="col heading">
                     <h1>Canada Votes Online</h1>
