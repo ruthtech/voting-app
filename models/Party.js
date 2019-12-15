@@ -9,6 +9,6 @@ const partySchema = new Schema({
   party_logo: { type: String },
   party_website: { type: String }
 });
-const Party = mongoose.model("Party", partySchema);
+const Party = mongoose.model("Party", partySchema, "Party");
 
 module.exports = Party;

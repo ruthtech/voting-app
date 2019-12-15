@@ -63,5 +63,5 @@ const voterSchema = new Schema({
   hasvoted: { type: String }
 });
 
-let Voter = mongoose.model("Voter", voterSchema);
+let Voter = mongoose.model("Voter", voterSchema, "Voter");
 module.exports = Voter;

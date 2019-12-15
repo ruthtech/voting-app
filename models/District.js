@@ -8,6 +8,6 @@ const districtSchema = new Schema({
   district_name_french: { type: String },
   population: { type: Number }
 });
-const District = mongoose.model("District", districtSchema);
+const District = mongoose.model("District", districtSchema, "District");
 
 module.exports = District;

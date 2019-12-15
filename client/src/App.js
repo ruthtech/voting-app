@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Login from "./components/Login";
 import Landing from "./components/Landing";
 import UserContext from './utils/UserContext';
+import LoadingSpinner from './components/LoadingSpinner';
 import "./App.css";
 
 function App() {

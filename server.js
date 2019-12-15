@@ -8,6 +8,7 @@ const app = express();
 const port = process.env.PORT || 5000;
 const apiRoutes = require(path.join(__dirname, "routes", "apiroutes"));
 const db = require("./models");
+const mongoose = require('mongoose');
 
 // Routes for data from MySQL
 app.use(apiRoutes);
@@ -17,6 +18,10 @@ app.use(apiRoutes);
 // Parse response?
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+
+let databaseUrl = "voting";
+mongoose.connect(process.env.MONGODB_URI || `mongodb://localhost/${databaseUrl}`, { useNewUrlParser: true,  useUnifiedTopology: true});
+
 
 // if (process.env.MONGODB_URI) {
 //   mongoose.connect(
