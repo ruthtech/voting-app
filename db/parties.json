@@ -1,0 +1,150 @@
+{ 
+    "_id" : ObjectId("5df2661627fc8c21ea7f1c40"), 
+    "partyid" : NumberInt(1), 
+    "party_name" : "Bloc Québécois", 
+    "party_short_name" : "Bloc Québécois", 
+    "party_logo" : "https://www.elections.ca/pol/par/images/bloc.gif", 
+    "party_website" : "www.blocquebecois.org"
+}
+{ 
+    "_id" : ObjectId("5df2661627fc8c21ea7f1c41"), 
+    "partyid" : NumberInt(2), 
+    "party_name" : "Conservative Party of Canada", 
+    "party_short_name" : "Conservative", 
+    "party_logo" : "https://www.elections.ca/pol/par/images/cp.gif", 
+    "party_website" : "www.conservative.ca"
+}
+{ 
+    "_id" : ObjectId("5df2661627fc8c21ea7f1c42"), 
+    "partyid" : NumberInt(3), 
+    "party_name" : "Green Party of Canada", 
+    "party_short_name" : "Green Party", 
+    "party_logo" : "https://www.elections.ca/pol/par/images/green.gif", 
+    "party_website" : "www.greenparty.ca"
+}
+{ 
+    "_id" : ObjectId("5df2661627fc8c21ea7f1c43"), 
+    "partyid" : NumberInt(4), 
+    "party_name" : "Liberal Party of Canada", 
+    "party_short_name" : "Liberal", 
+    "party_logo" : "https://www.elections.ca/pol/par/images/lib.jpg", 
+    "party_website" : "www.liberal.ca"
+}
+{ 
+    "_id" : ObjectId("5df2661627fc8c21ea7f1c44"), 
+    "partyid" : NumberInt(5), 
+    "party_name" : "New Democratic Party", 
+    "party_short_name" : "NDP-New Democratic Party", 
+    "party_logo" : "https://www.elections.ca/pol/par/images/ndp.gif", 
+    "party_website" : "www.ndp.ca"
+}
+{ 
+    "_id" : ObjectId("5df292d627fc8c21ea7f1c8a"), 
+    "partyid" : NumberInt(6), 
+    "party_name" : "Forces et Démocratie",
+    "party_logo" : "https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/ForceetD%C3%A9mocratie.jpeg/320px-ForceetD%C3%A9mocratie.jpeg"
+}
+{ 
+    "_id" : ObjectId("5df292d627fc8c21ea7f1c8c"), 
+    "partyid" : NumberInt(7), 
+    "party_name" : "Communist Party of Canada",
+    "party_logo" : ""
+}
+{ 
+    "_id" : ObjectId("5df292d627fc8c21ea7f1c8d"), 
+    "partyid" : NumberInt(8), 
+    "party_name" : "Christian Heritage Party of Canada",
+    "party_logo" : ""
+}
+{ 
+    "_id" : ObjectId("5df292d627fc8c21ea7f1c8f"), 
+    "partyid" : NumberInt(9), 
+    "party_name" : "Marxist-Leninist Party of Canada",
+    "party_logo" : ""
+}
+{ 
+    "_id" : ObjectId("5df292d627fc8c21ea7f1c90"), 
+    "partyid" : NumberInt(10), 
+    "party_name" : "Rhinoceros Party",
+    "party_logo" : ""
+}
+{ 
+    "_id" : ObjectId("5df292d627fc8c21ea7f1c91"), 
+    "partyid" : NumberInt(11), 
+    "party_name" : "Libertarian Party of Canada",
+    "party_logo" : ""
+}
+{ 
+    "_id" : ObjectId("5df292d627fc8c21ea7f1c93"), 
+    "partyid" : NumberInt(12), 
+    "party_name" : "Alliance of the North"
+}
+{ 
+    "_id" : ObjectId("5df292d627fc8c21ea7f1c94"), 
+    "partyid" : NumberInt(13), 
+    "party_name" : "United Party of Canada",
+    "party_logo" : ""
+}
+{ 
+    "_id" : ObjectId("5df292d627fc8c21ea7f1c95"), 
+    "partyid" : NumberInt(14), 
+    "party_name" : "Animal Alliance Environment Voters Party of Canada",
+    "party_logo" : ""
+}
+{ 
+    "_id" : ObjectId("5df292d627fc8c21ea7f1c96"), 
+    "partyid" : NumberInt(15), 
+    "party_name" : "Canadian Action Party",
+    "party_logo" : ""
+}
+{ 
+    "_id" : ObjectId("5df292d627fc8c21ea7f1c97"), 
+    "partyid" : NumberInt(16), 
+    "party_name" : "Progressive Canadian Party",
+    "party_logo" : ""
+}
+{ 
+    "_id" : ObjectId("5df292d627fc8c21ea7f1c98"), 
+    "partyid" : NumberInt(17), 
+    "party_name" : "Marijuana Party"
+}
+{ 
+    "_id" : ObjectId("5df292d627fc8c21ea7f1c99"), 
+    "partyid" : NumberInt(18), 
+    "party_name" : "Pirate Party of Canada",
+    "party_logo" : ""
+}
+{ 
+    "_id" : ObjectId("5df292d627fc8c21ea7f1c9a"), 
+    "partyid" : NumberInt(19), 
+    "party_name" : "Party for Accountability, Competency and Transparency",
+    "party_logo" : ""
+}
+{ 
+    "_id" : ObjectId("5df292d627fc8c21ea7f1c9b"), 
+    "partyid" : NumberInt(20), 
+    "party_name" : "Seniors Party of Canada",
+    "party_logo" : ""
+}
+{ 
+    "_id" : ObjectId("5df292d627fc8c21ea7f1c9c"), 
+    "partyid" : NumberInt(21), 
+    "party_name" : "The Bridge Party of Canada",
+    "party_logo" : ""
+}
+{ 
+    "_id" : ObjectId("5df292d627fc8c21ea7f1c9d"), 
+    "partyid" : NumberInt(22), 
+    "party_name" : "Canada Party",
+    "party_logo" : ""
+}
+{ 
+    "_id" : ObjectId("5df292d627fc8c21ea7f1c9e"), 
+    "partyid" : NumberInt(23), 
+    "party_name" : "Democratic Advancement Party of Canada",
+    "party_logo" : ""
+}
+{ 
+    "_id" : ObjectId("5df292d627fc8c21ea7f1c8e"), 
+    "party_name" : "Independent"
+}
