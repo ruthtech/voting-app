@@ -1,17 +1,44 @@
 const mongoose = require("mongoose");
+mongoose.Promise = Promise;
 db = require("../models");
 // Candidate = mongoose.model("Candidate");
 axios = require("axios");
 
 exports.verifyUser = async function(username, password) {
-  let data = await db.Voter.findOne({
-    "login.username": username,
-    "login.password": password
-  });
-  if (!data) {
+  console.log("username is " + username + " and password is " + password);
+  let data;
+  try {
+    console.log("db is ", db);
+    console.log("db.Voter is ", db.Voter);
+    data = await db.Voter.findOne({
+      "login.username": username,
+      "login.password": password
+    }).exec();
+    console.log("data is ", data);
+
+    console.log("Trying to count records ");
+    let test = await db.Voter.countDocuments().exec();
+    console.log(test);
+    console.log("What records does it find?");
+    test = await db.Voter.find().exec();
+    console.log(test);
+    console.log("Trying to find just the username ");
+    findOne = db.Voter.findOne({"login.username": username});
+    console.log("findOne is a ", findOne);
+    findOne = findOne.exec();
+    console.log("After calling exec(), findOne is ", findOne);
+    console.log("So let's await ...");
+    let testAgain = await findOne;
+    console.log("testAgain is ", testAgain);
+
+    if (!data) {
+      return false;
+    }
+    return data;
+  } catch ( err ) {
+    console.log(err);
     return false;
   }
-  return data;
 };
 
 exports.createNewVoter = async function(voterInfo) {
