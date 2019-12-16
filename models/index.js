@@ -1,6 +1,6 @@
 module.exports = {
-  Voter: require("./Voter"),
-  Candidate: require("./Candidates"),
-  District: require("./District"),
-  Party: require("./Party")
+  voter: require("./Voter"),
+  candidate: require("./Candidates"),
+  district: require("./District"),
+  party: require("./Party")
 };

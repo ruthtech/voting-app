@@ -1,12 +1,10 @@
-const mongoose = require("mongoose");
-mongoose.Promise = Promise;
 db = require("../models");
 axios = require("axios");
 
 exports.verifyUser = async function(username, password) {
   let data;
   try {
-    data = await db.Voter.findOne({
+    data = await db.voter.findOne({
       "login.username": username,
       "login.password": password
     }).exec();
@@ -40,14 +38,14 @@ exports.verifyUser = async function(username, password) {
 };
 
 exports.createNewVoter = async function(voterInfo) {
-  let newVoter = new db.Voter(voterInfo);
+  let newVoter = new db.voter(voterInfo);
   let result = await newVoter.save();
 
   res.send(result);
 };
 
 exports.updateVote = async function(req, res) {
-  let result = await db.Voter.findOneAndUpdate(
+  let result = await db.voter.findOneAndUpdate(
     { uuid: req.params.uuid },
     {
       $set: {
@@ -68,12 +66,12 @@ exports.updateVote = async function(req, res) {
 };
 
 exports.enterVote = async function(voter, candidateid) {
-  let newVoteTally = await db.Candidate.findOneAndUpdate(
+  let newVoteTally = await db.candidate.findOneAndUpdate(
     { _id: candidateid },
     { $inc: { votes_for: 1 } }
   );
 
-  let voteCast = await db.Voter.findOneAndUpdate(
+  let voteCast = await db.voter.findOneAndUpdate(
     { _id: voterid },
     { $set: { hasvoted: true } }
   );
@@ -84,7 +82,7 @@ exports.findCandidates = async function(postalcode) {
   let data = await axios.get(
     `https://represent.opennorth.ca/postcodes/${postalcode}/?sets=federal-electoral-districts&format=json`
   );
-  let candidateList = await db.Candidate.find({
+  let candidateList = await db.candidate.find({
     district_name: data.data.candidates_centroid[0].district_name
   });
   // console.log("Candidate list is ", candidateList);
@@ -101,7 +99,7 @@ exports.findCandidates = async function(postalcode) {
 };
 
 exports.runSimulation = async function() {
-  for await (const voterList of db.Voter.findOne()) {
+  for await (const voterList of db.voter.findOne()) {
     let postcode = voterList.location.postcode.replace(/\s/g, "");
     await setInterval(async function() {
       //   await console.log(
@@ -115,13 +113,13 @@ exports.runSimulation = async function() {
         district.data.candidates_centroid[0].district_name
       );
 
-      //   let candidateList = await db.Candidate.find({
+      //   let candidateList = await db.candidate.find({
       //     district_name: district.data.candidates_centroid[0].district_name
       //   });
       //   console.log("Candidate list is ", candidateList);
 
       //   if (candidateList.length > 0) {
-      //     let newVoteTally = await db.Candidate.findOneAndUpdate(
+      //     let newVoteTally = await db.candidate.findOneAndUpdate(
       //       {
       //         _id:
       //           candidateList[Math.floor(Math.random() * candidateList.length)]
@@ -130,7 +128,7 @@ exports.runSimulation = async function() {
       //       { $inc: { votes_for: 1 } }
       //     );
 
-      //     let voteCast = await db.Voter.findOneAndUpdate(
+      //     let voteCast = await db.voter.findOneAndUpdate(
       //       { _id: voterList._id },
       //       { $set: { hasvoted: true } }
       //     );
@@ -143,7 +141,7 @@ exports.runSimulation = async function() {
 
 exports.updateAddress = async function(username, streetNo, streetName, city, province, postalCode) {
   try {
-    let data = await db.Voter.findOneAndUpdate(
+    let data = await db.voter.findOneAndUpdate(
       { "location.username": username },
       {
         $set: {
@@ -156,7 +154,7 @@ exports.updateAddress = async function(username, streetNo, streetName, city, pro
       }
     ).exec();
 
-    data = await db.Voter.findOne({
+    data = await db.voter.findOne({
       "login.username": username
     }).exec();
 
