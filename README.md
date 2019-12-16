@@ -11,21 +11,21 @@ A browser. Chrome was used for testing.
 1. Go to https://github.com/ruthtech/voting-app and click on the "Clone or Download" button. 
 2. Choose "Download ZIP". 
 3. Unzip into a directory. If you're on Windows, open File Explorer and navigate to the download directory. Select the ZIP file, right click, and choose "Extract All". Accept the default location.
-4. Once the file is unzipped, navigate to portfolio-master and use your browser to open index.html.
+4. Once the file is unzipped, navigate to voting-app-master and use your browser to open index.html.
 
 
 ## Running the tests
 
-
 Manual tests were run as documented below.
 
 ### Invalid Input Tested
-1. 
-2. 
+1. Wrong password entered
+2. Wrong userid entered
 
 ### Function Tests
-1. 
-2. 
+1. Can user edit their address?
+2. Can user vote? 
+3. Can user view candidates for their district?
 
 ## Deployment
 View this application working on Heroku.  
@@ -42,7 +42,9 @@ View this application working on Heroku.
 * React
 * Create-React-App
 * MongoDB
-
+* Mongoose
+* Figma https://www.figma.com
+* Trello https://trello.com/
 
 ## Contributing
 This project is not open to contributions.
