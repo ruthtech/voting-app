@@ -1,6 +1,5 @@
 const express = require("express");
 const path = require("path");
-const Connection = require("./config/connection");
 
 const bodyParser = require("body-parser");
 
