@@ -27,8 +27,23 @@ Manual tests were run as documented below.
 2. Can user vote? 
 3. Can user view candidates for their district?
 
+View these tasks being executed:
+
+1. Voter logs in, views their local candidates, and votes.
+![./demo/viewCandidatesAndVote.gif](./demo/viewCandidatesAndVote.gif)
+
+2. Voter logs in and edits their address (which could change their voting district)
+![./demo/editDistrict.gif](./demo/editDistrict.gif)
+
+3. Our Figma board shows the plan that we had to execute.
+![./demo/figma.gif](./demo/figma.gif)
+
+4. Our Trello board shows our Kanban
+![./demo/trello.jpg](./demo/trello.jpg)
+
+
 ## Deployment
-View this application working on Heroku.  
+View this application on Heroku.  https://arcane-mountain-21933.herokuapp.com/
 
 ## Built With
 * [Visual Studio Code] https://code.visualstudio.com/docs/setup/setup-overview
