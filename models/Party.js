@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require("./mongoose_connection");
 const Schema = mongoose.Schema;
 
 const partySchema = new Schema({

@@ -7,8 +7,7 @@ const bodyParser = require("body-parser");
 const app = express();
 const port = process.env.PORT || 5000;
 const apiRoutes = require(path.join(__dirname, "routes", "apiroutes"));
-const db = require("./models");
-const mongoose = require('mongoose');
+// const mongoose = require('./models/mongoose_connection');
 
 // Routes for data from MySQL
 app.use(apiRoutes);
@@ -19,8 +18,8 @@ app.use(apiRoutes);
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-let databaseUrl = "voting";
-mongoose.connect(process.env.MONGODB_URI || `mongodb://localhost/${databaseUrl}`, { useNewUrlParser: true,  useUnifiedTopology: true});
+// let databaseUrl = "voting";
+// mongoose.connect(process.env.MONGODB_URI || `mongodb://localhost/${databaseUrl}`, { useNewUrlParser: true,  useUnifiedTopology: true});
 
 
 // if (process.env.MONGODB_URI) {
