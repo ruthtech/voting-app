@@ -16,7 +16,8 @@ function VoteSubmitted(props) {
     // Tell the server to mark this user as having voted and increment the candidate's # of votes by 1.
     const submitVote = async (user, candidate) => {
       try {
-        await axios.put(`/api/vote/${user.uuid}/${candidate.id}`);
+        console.log(`/api/voter/${user.uuid}/${candidate.id}`);
+        await axios.put(`/api/voter/${user.uuid}/${candidate.id}`);
       }
       catch( err ) {
         console.log(err);    
@@ -41,8 +42,8 @@ function VoteSubmitted(props) {
                     <div className="col">
                     <Card>
                         <Card.Body>
-                        <Card.Title>{candidate.name}</Card.Title>
-                        <Card.Text>{candidate.party}</Card.Text>
+                        <Card.Title>{candidate.first_name} {candidate.last_name}</Card.Title>
+                        <Card.Text>{candidate.party_affiliation}</Card.Text>
                         </Card.Body>
                     </Card>
                     </div>

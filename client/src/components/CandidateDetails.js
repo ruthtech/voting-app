@@ -11,21 +11,50 @@ function Candidate(props) {
     const [candidate] = useState(props.candidate);
     const [activeComponentId, setActiveComponentId] = useState(0); // 0 is for candidate details, 1 is for list of candidates, 2 is for Landing
 
+    const getPartyWebsite = (party_affiliation) => {
+        switch(party_affiliation) {
+            case('Conservative Party of Canada'): {
+                return "http://www.conservative.ca";
+            }
+
+            case('Green Party of Canada'): {
+                return "http://greenparty.ca";
+            }
+
+            case('Liberal Party of Canada'): {
+                return "http://www.liberal.ca";
+            }
+
+            case("New Democratic Party"): {
+                return "http://www.ndp.ca";
+            }
+
+            case("Bloc Québécois"): {
+                return "http://blocquebecois.org";
+            }
+
+            default: {
+                console.log("party is ", party_affiliation);
+                return "https://www.elections.ca/content.aspx?section=pol&dir=par&document=index&lang=e"; // indicate no party website by directing them to the general Elections Canada web site listing all of them
+            }
+        }
+    }
+
     // Active component Id 0
     const renderCandidateDetails = () => {
         return (
             <div className="container-fluid full-screen bg-grey">
                 <div className="row">
-                    <div className="col text-center">
+                    {/* <div className="col text-center">
                         <Image src={candidate.pictureURL} />
-                    </div>
+                    </div> */}
                     <div className="col">
-                        <h1>{candidate.name}</h1>
-                        <h5>{candidate.party}</h5>
-                        <h5>{candidate.district}</h5>
+                        <h1>{candidate.first_name} {candidate.last_name}</h1>
+                        <h5>{candidate.party_affiliation}</h5>
+                        <h5>{candidate.district_name}</h5>
                     </div>
                 </div>
-                <div className="row">
+                {/* <div className="row">
                   <div className="col">
                     <Card className={candidate.party}>
                       <Card.Body>
@@ -38,10 +67,15 @@ function Candidate(props) {
                       </Card.Body>
                     </Card>
                   </div>
+                </div> */}
+                <div className="row">
+                    <div className="col centre-align-div">
+                        <h4><a href={getPartyWebsite(candidate.party_affiliation)}>{candidate.party_affiliation}</a></h4>
+                    </div>
                 </div>
                 <div className="row">
                     <div className="col centre-align-div">
-                        <h2><a href={candidate.party_website}>{candidate.party}</a></h2>
+                        <h4><a href="https://www.elections.ca/content.aspx?section=pol&dir=par&document=index&lang=e">Elections Canada Registered Political Parties</a></h4>
                     </div>
                 </div>
                 <div className="row p-3 bottom">

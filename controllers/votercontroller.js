@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
 mongoose.Promise = Promise;
 db = require("../models");
-// Candidate = mongoose.model("Candidate");
 axios = require("axios");
 
 exports.verifyUser = async function(username, password) {
@@ -12,10 +11,28 @@ exports.verifyUser = async function(username, password) {
       "login.password": password
     }).exec();
 
+    console.log(data);
     if (!data) {
+      console.log("DEBUG username is " + username + " and password is " + password);
       return false;
     }
-    return data;
+
+
+    let postalcode = data.location.postcode.replace(/\s/g, ""); // Does this need %20 to be substituted for the space?
+    console.log("Trying to find district with postal code ");
+    console.log(`https://represent.opennorth.ca/postcodes/${postalcode}/?sets=federal-electoral-districts&format=json`);
+
+    // Now we need to find out what district this user is in
+    let districtData = await axios.get(
+      `https://represent.opennorth.ca/postcodes/${postalcode}/?sets=federal-electoral-districts&format=json`
+    );
+
+    let district = districtData.data.candidates_centroid[0].district_name;
+
+    let dataClone = { ...data };
+    dataClone._doc.location.district = district;
+    console.log("data clone is ", dataClone);
+    return dataClone;
   } catch ( err ) {
     console.log(err);
     return false;
@@ -70,7 +87,7 @@ exports.findCandidates = async function(postalcode) {
   let candidateList = await db.Candidate.find({
     district_name: data.data.candidates_centroid[0].district_name
   });
-  console.log("Candidate list is ", candidateList);
+  // console.log("Candidate list is ", candidateList);
   //   for (i = 0; i < candidateList.length; i++) {
   //     let apiData = await axios.get(
   //       `https://represent.opennorth.ca/candidates/?last_name=${candidateList[i].last_name}&first_name=${candidateList[i].first_name}&format=json`
@@ -123,3 +140,45 @@ exports.runSimulation = async function() {
     }, 60000);
   }
 };
+
+exports.updateAddress = async function(username, streetNo, streetName, city, province, postalCode) {
+  try {
+    let data = await db.Voter.findOneAndUpdate(
+      { "location.username": username },
+      {
+        $set: {
+          "location.street.number": streetNo,
+          "name.location.street.": streetName,
+          "location.city": city,
+          "location.state": province,
+          "location.postcode": postalCode
+        }
+      }
+    ).exec();
+
+    data = await db.Voter.findOne({
+      "login.username": username
+    }).exec();
+
+    let postalcode = data.location.postcode.replace(/\s/g, ""); // Does this need %20 to be substituted for the space?
+    console.log("Trying to find district with postal code ");
+    console.log(`https://represent.opennorth.ca/postcodes/${postalcode}/?sets=federal-electoral-districts&format=json`);
+
+    // Now we need to find out what district this user is in
+    let districtData = await axios.get(
+      `https://represent.opennorth.ca/postcodes/${postalcode}/?sets=federal-electoral-districts&format=json`
+    );
+
+    let district = districtData.data.candidates_centroid[0].district_name;
+
+    let dataClone = { ...data };
+    dataClone._doc.location.district = district;
+    // Send back the user that was just updated
+    console.log("data clone is ", dataClone);
+    return dataClone;
+  } catch ( error ) {
+    console.log(error);
+    return false;
+  }
+};
+

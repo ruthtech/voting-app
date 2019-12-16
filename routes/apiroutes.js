@@ -13,6 +13,7 @@ router.get("/api/login/:username/:password", async function(req, res) {
         req.params.password
       )
     };
+    // console.log("apiroutes Does user have a distrct? ", user);
     res.send(user);
   } catch (err) {
     // Internal error on the server side.
@@ -78,38 +79,21 @@ router.post("/api/run/simulator", async function(req, res) {
 // });
 
 // CHANGE BELOW THIS LINE
-// Given an address, return the district that the address is in
-router.get("/api/findDistrict/:address/:city/:province", async function(
-  req,
-  res
-) {
-  try {
-    const province = req.params.province;
-    let districts = mockData.mockDistricts.filter(district => {
-      return district.province == province;
-    });
-    res.status(200);
-    res.send(districts.length < 1 ? {} : districts[0]);
-  } catch (err) {
-    // Internal error on the server side.
-    console.log(err);
-    res.status(500);
-    res.send(err);
-  }
-  return res;
-});
-
 // Given a user, an address and a district, update the user's record to have that address and district.
-router.put(
-  "/api/updateAddress/:id/:streetno/:streetname/:city/:province/:district",
+router.put("/api/updateAddress/:username/:streetno/:streetname/:city/:province/:postalCode",
   async function(req, res) {
     try {
+      const username = req.params.username;
+      const streetNo = req.params.streetno;
+      const streetName = req.params.streetname;
+      const city = req.params.city;
       const province = req.params.province;
-      let districts = mockData.mockDistricts.filter(district => {
-        return district.name == province;
-      });
+      const postalCode = req.params.postalCode; 
+
+      let user = await voter.updateAddress(username, streetNo, streetName, city, province, postalCode);
+
       res.status(200);
-      res.send(districts.length < 1 ? {} : districts[0]);
+      res.send(user);
     } catch (err) {
       // Internal error on the server side.
       console.log(err);
@@ -120,17 +104,5 @@ router.put(
   }
 );
 
-// router.get('/api/test', async function (req, res) {
-//   try {
-//     res.status(200);
-//     res.send({ message: "Test received from express."});
-//   } catch (err) {
-//     // Internal error on the server side.
-//     console.log(err);
-//     res.status(500);
-//     res.send(err);
-//   }
-//   return res;
-// });
 
 module.exports = router;

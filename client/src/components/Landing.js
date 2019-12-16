@@ -27,6 +27,7 @@ function Landing() {
             // console.log("voter is null, returning");
             return;
         }
+        console.log("Landing renderDefault, voter is ", voter);
 
 
         setActiveComponentId(0);
@@ -34,7 +35,7 @@ function Landing() {
             <div className="container-fluid bg-map full-screen">
                 <div className="row">
                     <div className="col-8 col-sm-9 mt-3 ml-3 bg-white text-center pt-2">
-                       Your district is {voter.district}
+                       Your district is {voter._doc.location.district}
                     </div>
                     <div className="col-3 col-sm-2 mt-3">
                       <Button variant="secondary w-100" 

@@ -19,11 +19,16 @@ function Login() {
       const user = await axios.get(query);
       console.log("Login.js login with username " + username + " found the following user ");
       console.log(user);
-      if(user !== []) {
-        // If user is empty either the UUID was not found or the password is incorrect.
+      console.log("user district is " + user.data.isVerified.district);
+      if(!user.data.isVerified) {
+        // Either the UUID was not found or the password is incorrect.
         // The page will continue to show this Login page until a user is found & verified.
-        handleLogin(user.data.isVerified);
+        handleLogin(null);
+        return;
       }
+
+      // Success
+      handleLogin(user.data.isVerified);
     } catch ( err ) {
       console.log(err);
 

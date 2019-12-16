@@ -8,9 +8,9 @@ function VoteRow(props) {
   return props.model.map( (candidate, index) => {
     return (
       <InputGroup key={index} className="pb-3">
-        <Form.Control plaintext readOnly className="bg-white text-right pr-3" defaultValue={candidate.name + '/' + candidate.party} />
+        <Form.Control plaintext readOnly className="bg-white text-right pr-3" defaultValue={candidate.last_name + ", " + candidate.first_name + ' / ' + candidate.party_affiliation} />
         <InputGroup.Append>
-          <InputGroup.Radio name="votingGroup" aria-label={candidate.name + '/' + candidate.party} onChange={() => props.handleFormSelect(candidate)}/>
+          <InputGroup.Radio name="votingGroup" aria-label={candidate.last_name + ", " + candidate.first_name + ' / ' + candidate.party_affiliation} onChange={() => props.handleFormSelect(candidate)}/>
         </InputGroup.Append>
       </InputGroup>
     );

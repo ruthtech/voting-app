@@ -24,8 +24,8 @@ function VoteConfirm(props) {
                 <div className="col">
                   <Card>
                     <Card.Body>
-                      <Card.Title>{candidate.name}</Card.Title>
-                      <Card.Text>{candidate.party}</Card.Text>
+                      <Card.Title>{candidate.first_name} {candidate.last_name}</Card.Title>
+                      <Card.Text>{candidate.party_affiliation}</Card.Text>
                     </Card.Body>
                   </Card>
                 </div>

@@ -9,10 +9,12 @@ import EditDistrictConfirm from './EditDistrictConfirm';
 import "./style.css";
 
 function EditDistrict() {
+  const [voter, setVoter] = useState();
+  const [streetNo, setStreetNo] = useState();
   const [address, setAddress] = useState();
   const [city, setCity] = useState();
   const [province, setProvince] = useState();
-  const [voter, setVoter] = useState();
+  const [postalCode, setPostalCode] = useState();
   const [activeComponentId, setActiveComponentId] = useState(0); // 0 means render default form, 1 means EditDistrictConfirm
 
   const handleFormSubmit = async (event) => {
@@ -21,13 +23,13 @@ function EditDistrict() {
       let eAddress = escape(address);
       let eCity = escape(city);
       // province is already escaped because it's the id of the dropdown field
-      // console.log(`${voter.uuid}/${eAddress}/${eCity}/${province}/`);
+      voter.streetNo = streetNo;
       voter.address = eAddress;
       voter.city = eCity;
       voter.province = province;
+      voter.postalCode = postalCode.replace(/\s/g, "");
+      console.log("EditDistrict, setting Voter ", voter);
       setVoter(voter);
-      // let newDistrict = await axios.get(`/api/findDistrict/${eAddress}/${eCity}/${province}`);
-      // await axios.put(`/api/updateAddress/${voter.uuid}/${eAddress}/${eCity}/${province}/${newDistrict}`);
     } catch( err ) {
       console.log(err);
     }
@@ -51,14 +53,22 @@ function EditDistrict() {
           <div className="row pb-3">
             <div className="col ">
               <Form>
-                  <Form.Group controlId="formBasicUUID">
+                  <Form.Group controlId="formBasicAddress">
+                    <Form.Label id="streetNoLabel" className="entry-field-label">Street Number</Form.Label>
+                    <Form.Control id="streetNo" type="number" onChange={event => setStreetNo(event.target.value)}/>
+
                     <Form.Label className="entry-field-label">Address</Form.Label>
-                    <Form.Control type="text" placeholder="Enter address" onChange={event => setAddress(event.target.value)}/>
+                    <Form.Control type="text" onChange={event => setAddress(event.target.value)}/>
                   </Form.Group>
 
-                  <Form.Group controlId="formBasicPassword">
+                  <Form.Group controlId="formBasicCity">
                     <Form.Label className="entry-field-label">City</Form.Label>
-                    <Form.Control type="text" placeholder="Enter city" onChange={event => setCity(event.target.value)}/>
+                    <Form.Control type="text" onChange={event => setCity(event.target.value)}/>
+                  </Form.Group>
+
+                  <Form.Group controlId="formBasicPostalcode">
+                    <Form.Label className="entry-field-label">Postal Code</Form.Label>
+                    <Form.Control type="text" onChange={event => setPostalCode(event.target.value)}/>
                   </Form.Group>
 
                   <Form.Group controlId="provinces" className="right-align-div">
@@ -114,10 +124,11 @@ function EditDistrict() {
         {
           ({user}) => {
             setVoter(user);
+
             return renderActiveComponent();
           }
         }
-        </UserContext.Consumer>
+      </UserContext.Consumer>
     );
 }
 
