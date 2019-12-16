@@ -60,6 +60,7 @@ View this application on Heroku.  https://arcane-mountain-21933.herokuapp.com/
 * Mongoose
 * Figma https://www.figma.com
 * Trello https://trello.com/
+* Studio 3T https://studio3t.com/
 
 ## Contributing
 This project is not open to contributions.
@@ -68,7 +69,8 @@ This project is not open to contributions.
 This project does not use versions at this time. 
 
 ## Authors
-Kevin O Davis, Ruth Lee
+Kevin O Davis [https://github.com/kevin-on-davis]
+Ruth Lee [https://github.com/ruthtech]
 
 ## License
 MIT
