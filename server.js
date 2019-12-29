@@ -1,71 +1,90 @@
 const express = require("express");
 const path = require("path");
 
-const bodyParser = require("body-parser");
+const port = process.env.PORT || 5000;
 
 const app = express();
-const port = process.env.PORT || 5000;
-const apiRoutes = require(path.join(__dirname, "routes", "apiroutes"));
-// const mongoose = require('./models/mongoose_connection');
+
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+
+const apiRoutes = require("./routes/apiroutes");
+
+
+// const VoterModel = require('./models/Voter');
+// const PartyModel = require('./models/Party');
+
+// const verifyUser = async (username, password) => {
+//   let data;
+//   try {
+//     data = await VoterModel.findOne({
+//       "login.username": username,
+//       "login.password": password
+//     }).exec();
+
+//     console.log(data);
+//     if (!data) {
+//       console.log("DEBUG username is " + username + " and password is " + password);
+//       return false;
+//     }
+//     return data;
+//   } catch ( err ) {
+//     console.log(err);
+//     return false;
+//   }
+// };
+
+
+// try {
+//   app.get("/", async (req, res) => {
+//     try {
+//       PartyModel.find({})
+//       .then(doc => {
+//         console.log("then ", doc)
+//       })
+//       .catch(err => {
+//         console.error("error ", err);
+//       });
+//       res.status(200);
+//       const party = await PartyModel.find({});
+//       console.log("user ", party);
+//       res.send(party);
+//     } catch (err) {
+//       // Internal error on the server side.
+//       console.log(err);
+//       res.status(500);
+//       res.send(err);
+//     }
+//   });
+
+//   app.get("/api/login/:username/:password", async (req, res) => {
+//     try {
+//       const foundUser = await verifyUser(req.params.username, req.params.password);
+//       console.log(foundUser);
+//       const user = {
+//         isVerified: foundUser
+//       };
+//       console.log(user);
+//       res.status(200);
+//       res.send(user);
+//     } catch (err) {
+//       // Internal error on the server side.
+//       console.log(err);
+//       res.status(500);
+//       res.send(err);
+//     }
+//     return res;
+//   });
+// } catch(err){
+//   console.error( `oops error: ${err}`);
+// };
 
 // Routes for data from MySQL
 app.use(apiRoutes);
-// console.log("Server is loading apiroutes");
-// console.log(apiRoutes);
 
 // Parse response?
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
-
-// let databaseUrl = "voting";
-// mongoose.connect(process.env.MONGODB_URI || `mongodb://localhost/${databaseUrl}`, { useNewUrlParser: true,  useUnifiedTopology: true});
-
-
-// if (process.env.MONGODB_URI) {
-//   mongoose.connect(
-//     process.env.MONGODB_URI || "mongodb://localhost:27017/online_voters_db",
-//     {
-//       useNewUrlParser: true,
-//       useFindAndModify: false
-//     }
-//   );
-// }
-
-// class Database {
-//   constructor(config) {
-//     this.connection = mysql.createConnection(config);
-//   }
-//   query(sql, args) {
-//     return new Promise((resolve, reject) => {
-//       this.connection.query(sql, args, (err, rows) => {
-//         if (err) return reject(err);
-//         resolve(rows);
-//       });
-//     });
-//   }
-//   close() {
-//     return new Promise((resolve, reject) => {
-//       this.connection.end(err => {
-//         if (err) return reject(err);
-//         resolve();
-//       });
-//     });
-//   }
-// }
-
-// //adding JAWSDB connection if else
-// if (process.env.JAWSDB_URL) {
-//   db = new Database(process.env.JAWSDB_URL);
-// } else {
-//   db = new Database({
-//     host: "localhost",
-//     port: 3306,
-//     user: "root",
-//     // Kevins root password: "IamTheBoxGhost1971",
-//     password: "IamTheBoxGhost1971",
-//     database: "online_voter_db"
-//   });
-// }
+//app.use(bodyParser.urlencoded({ extended: true }));
+//app.use(bodyParser.json());
 
 // Serve the React components and assets
 app.use(express.static(path.join(__dirname, "client/build")));

@@ -2,7 +2,7 @@ const mongoose = require("./mongoose_connection");
 const Schema = mongoose.Schema;
 
 const voterSchema = new Schema({
-  // _id: [Schema.Types.ObjectId],
+  _id: [Schema.Types.ObjectId],
   gender: {
     type: String,
     trim: true
@@ -63,5 +63,5 @@ const voterSchema = new Schema({
   hasvoted: { type: String }
 });
 
-let voter = mongoose.model("voter", voterSchema);
-module.exports = voter;
+let VoterModel = mongoose.model("VoterModel", voterSchema, "voter"); // model name, schema, collection name
+module.exports = VoterModel;

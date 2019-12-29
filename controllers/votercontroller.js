@@ -1,10 +1,14 @@
-db = require("../models");
+const VoterModel = require('../models/Voter');
+const PartyModel = require('../models/Party');
+const DistrictModel = require('../models/District');
+const CandidateModel = require('../models/Candidates');
+
 axios = require("axios");
 
 exports.verifyUser = async function(username, password) {
   let data;
   try {
-    data = await db.voter.findOne({
+    data = await VoterModel.findOne({
       "login.username": username,
       "login.password": password
     }).exec();
@@ -25,7 +29,8 @@ exports.verifyUser = async function(username, password) {
       `https://represent.opennorth.ca/postcodes/${postalcode}/?sets=federal-electoral-districts&format=json`
     );
 
-    let district = districtData.data.candidates_centroid[0].district_name;
+    console.log("districtData is ", districtData);
+    let district = districtData.data.representatives_centroid[0].district_name;
 
     let dataClone = { ...data };
     dataClone._doc.location.district = district;
@@ -37,41 +42,43 @@ exports.verifyUser = async function(username, password) {
   }
 };
 
-exports.createNewVoter = async function(voterInfo) {
-  let newVoter = new db.voter(voterInfo);
-  let result = await newVoter.save();
+// We won't create a new voter
+// exports.createNewVoter = async function(voterInfo) {
+//   let newVoter = new VoterModel(voterInfo);
+//   let result = await newVoter.save();
 
-  res.send(result);
-};
+//   res.send(result);
+// };
 
-exports.updateVote = async function(req, res) {
-  let result = await db.voter.findOneAndUpdate(
-    { uuid: req.params.uuid },
-    {
-      $set: {
-        "name.title": req.body.title,
-        "name.first": req.body.first_name,
-        "name.last": req.body.last_name,
-        "name.gender": req.body.gender,
-        "location.street.number": req.body.street_no,
-        "name.location.street.": req.body.street_name,
-        "location.city": req.body.city,
-        "location.state": req.body.province,
-        "location.postcode": req.body.postalcode,
-        "location.country": req.body.country
-      }
-    }
-  );
-  res.send(result);
-};
+// User can't update their vote. Once it's cast then that's it. 
+// exports.updateVote = async function(req, res) {
+//   let result = await VoterModel.findOneAndUpdate(
+//     { uuid: req.params.uuid },
+//     {
+//       $set: {
+//         "name.title": req.body.title,
+//         "name.first": req.body.first_name,
+//         "name.last": req.body.last_name,
+//         "name.gender": req.body.gender,
+//         "location.street.number": req.body.street_no,
+//         "name.location.street.": req.body.street_name,
+//         "location.city": req.body.city,
+//         "location.state": req.body.province,
+//         "location.postcode": req.body.postalcode,
+//         "location.country": req.body.country
+//       }
+//     }
+//   );
+//   res.send(result);
+// };
 
 exports.enterVote = async function(voter, candidateid) {
-  let newVoteTally = await db.candidate.findOneAndUpdate(
+  let newVoteTally = await CandidateModel.findOneAndUpdate(
     { _id: candidateid },
     { $inc: { votes_for: 1 } }
   );
 
-  let voteCast = await db.voter.findOneAndUpdate(
+  let voteCast = await VoterModel.findOneAndUpdate(
     { _id: voterid },
     { $set: { hasvoted: true } }
   );
@@ -82,7 +89,7 @@ exports.findCandidates = async function(postalcode) {
   let data = await axios.get(
     `https://represent.opennorth.ca/postcodes/${postalcode}/?sets=federal-electoral-districts&format=json`
   );
-  let candidateList = await db.candidate.find({
+  let candidateList = await CandidateModel.find({
     district_name: data.data.candidates_centroid[0].district_name
   });
   // console.log("Candidate list is ", candidateList);
@@ -99,7 +106,7 @@ exports.findCandidates = async function(postalcode) {
 };
 
 exports.runSimulation = async function() {
-  for await (const voterList of db.voter.findOne()) {
+  for await (const voterList of VoterModel.findOne()) {
     let postcode = voterList.location.postcode.replace(/\s/g, "");
     await setInterval(async function() {
       //   await console.log(
@@ -141,7 +148,7 @@ exports.runSimulation = async function() {
 
 exports.updateAddress = async function(username, streetNo, streetName, city, province, postalCode) {
   try {
-    let data = await db.voter.findOneAndUpdate(
+    let data = await VoterModel.findOneAndUpdate(
       { "location.username": username },
       {
         $set: {
@@ -154,7 +161,7 @@ exports.updateAddress = async function(username, streetNo, streetName, city, pro
       }
     ).exec();
 
-    data = await db.voter.findOne({
+    data = await VoterModel.findOne({
       "login.username": username
     }).exec();
 
@@ -172,7 +179,7 @@ exports.updateAddress = async function(username, streetNo, streetName, city, pro
     let dataClone = { ...data };
     dataClone._doc.location.district = district;
     // Send back the user that was just updated
-    console.log("data clone is ", dataClone);
+    // console.log("data clone is ", dataClone);
     return dataClone;
   } catch ( error ) {
     console.log(error);

@@ -12,6 +12,6 @@ const candidateSchema = new Schema({
   middle_initial: { type: String },
   votes_for: { type: String }
 });
-const candidate = mongoose.model("candidate", candidateSchema);
+const CandidateModel = mongoose.model("CandidateModel", candidateSchema, "candidate"); // model name, schema, collection name
 
-module.exports = candidate;
+module.exports = CandidateModel;
