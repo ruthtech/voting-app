@@ -2,12 +2,10 @@ import React, { useState } from 'react';
 import Login from "./components/Login";
 import Landing from "./components/Landing";
 import UserContext from './utils/UserContext';
-import LoadingSpinner from './components/LoadingSpinner';
-import "./App.css";
+// import LoadingSpinner from './components/LoadingSpinner';
 
 function App() {
   const [user, setUser] = useState( null );
-//  const [user, setUser] = useState( { name: "A. Smith", uuid: 1, district: "W01", city: "Toronto", province: "Ontario", address: "1 Anywhere St"}); // FOR TESTING
 
   let component = null;
   if(user != null) {

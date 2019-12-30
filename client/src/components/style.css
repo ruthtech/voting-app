@@ -1,18 +1,51 @@
+html, body, #root, .full-screen {
+  height: 100%!important;
+  width: 100%!important;
+}
+
+.full-screen {
+  display: flex;
+  flex-direction: column;
+}
+
+body {
+  background-color: #F2F2F2!important;
+  overflow: auto!important;
+}
+
 .bg-grey {
   background-color: #C4C4C4;
 }
 
-.bg-map {
-  background-image: url('/fredericton-south.jpg');
+.bg-almostWhite {
+  background-color: #F2F2F2;
 }
 
-.full-screen {
-  height: 100%;
+.flag-block {
+  justify-content: center!important;
+}
+
+@media (max-width: 575px) {
+  .flag-block > img {
+    display: block;
+    width: 100%;
+  }
+
+  .heading > h1 {
+    font-size: 2.0rem!important;
+  }
+}
+
+@media (min-width: 576px) {
+  .flag-block > img {
+    display: block;
+    width: 576px;
+  }
 }
 
 .heading {
   text-align: center!important;
-  padding: 5rem 1rem;
+  padding-top: 1rem!important;
 }
 
 .entry-field-label {
@@ -21,38 +54,14 @@
   font-size: 1.5rem;
 }
 
-.bottom {
-  position: absolute;
-  bottom: 5rem;
-  width: 100%;
+.bottom-page {
+  padding-bottom: 2rem!important;
+  margin-top: auto!important;
 }
 
 .right-align-div {
   display: flex;
   justify-content: flex-end;
-  padding-top: 1rem;
-}
-
-.spread-align-div {
-  display: flex;
-  justify-content: space-around;
-  padding-top: 1rem;
-}
-
-.spread-align-div > Button {
-  width: 30%;
-
-}
-
-.bottom-auto {
-  margin-top: auto;
-  width: 540px;
-  display: block;
-}
-
-.between-align-div {
-  display: flex;
-  justify-content: space-between;
   padding-top: 1rem;
 }
 
@@ -63,12 +72,7 @@
   margin: 1rem;
 }
 
-/* .centre-vertical {
-  position: absolute;
-  top: 40%;
-  width: 80%;
-} */
-
+/* Start political party colours */
 .pc {
   background-color: #244982;
   color: white;
@@ -93,3 +97,4 @@
   background-color: #ec8200;
   color: white;
 }
+/* End political party colours */

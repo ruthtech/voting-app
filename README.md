@@ -46,21 +46,30 @@ View these tasks being executed:
 View this application on Heroku.  https://arcane-mountain-21933.herokuapp.com/
 
 ## Built With
-* [Visual Studio Code] https://code.visualstudio.com/docs/setup/setup-overview
-* [Visual Studio Code Extension "Open in Browser"] 
-  * Open VS Code.
-  * Open the extensions pane and search for open in browser.
-  * Select the version written by TechER and click Install.
-* [Google Chrome] (https://www.google.com/chrome/browser/desktop/index.html)
-* Bootstrap
-  * [Bootstrap] (https://getbootstrap.com)
-* React
-* Create-React-App
-* MongoDB
-* Mongoose
-* Figma https://www.figma.com
-* Trello https://trello.com/
-* Studio 3T https://studio3t.com/
+Development Tools:
+  * [Visual Studio Code](https://code.visualstudio.com/docs/setup/setup-overview)
+  * [Visual Studio Code Extension "Open in Browser"] 
+    * Open VS Code.
+    * Open the extensions pane and search for open in browser.
+    * Select the version written by TechER and click Install.
+  * [Google Chrome](https://www.google.com/chrome/browser/desktop/index.html)
+  * [Figma](https://www.figma.com)
+  * [Trello](https://trello.com/)
+
+Front end:
+  * [Bootstrap](https://getbootstrap.com)
+  * [React-Bootstrap](https://react-bootstrap.github.io/)
+  * [React](https://reactjs.org/)
+  * [Create-React-App](https://github.com/facebook/create-react-app)
+
+Back end:
+  * [MongoDB](https://www.mongodb.com/)
+  * [Mongoose](https://www.npmjs.com/package/mongoose)
+  * [Studio 3T](https://studio3t.com/)
+  * [dotenv](https://www.npmjs.com/package/dotenv)
+  * [axios](https://www.npmjs.com/package/axios)
+  * [express](https://www.npmjs.com/package/express)
+
 
 ## Contributing
 This project is not open to contributions.
@@ -69,8 +78,19 @@ This project is not open to contributions.
 This project does not use versions at this time. 
 
 ## Authors
-Kevin O Davis [https://github.com/kevin-on-davis]
-Ruth Lee [https://github.com/ruthtech]
+* Kevin O Davis [https://github.com/kevin-on-davis]
+   * Investigation into opennorth to find the information about political candidates
+   * Investigation into random.me to generate information for population of database
+   * Database: creation of MongoDB database and collections, initialization of MongoDB from random.me data, creation of the Mongoose models, debugged database and models
+   * Server endpoint implementations: verify voter, enter vote, find candidates, run simulation
+
+
+* Ruth Lee [https://github.com/ruthtech]
+   * Front end (React, Bootstrap, React-Bootstrap, create-react-app)
+   * Deployment to Heroku
+   * Server: created express server skeleton for Kevin to change the api routes to be populated from the database rather than mock data
+   * Server endpoint implementation: update address, added district information to verify voter 
+   * Database: debugged the Mongoose connection and models
 
 ## License
 MIT
@@ -78,4 +98,8 @@ MIT
 ## Acknowledgments
 Thanks to the following:
 * [U of T Coding Bootcamp] https://bootcamp.learn.utoronto.ca/coding/
+* Icon of Canada flag (circle) made by [Roundicons](https://www.flaticon.com/authors/roundicons) from [Flaticon](https://www.flaticon.com/)
+* Canada flag on the login page made by [Freepik](https://www.flaticon.com/authors/freepik) from [Flaticon](https://www.flaticon.com)
+
+
   

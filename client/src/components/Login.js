@@ -1,9 +1,11 @@
 // import React from 'react';
 import React, { useState } from 'react';
 import Button from 'react-bootstrap/Button';
+import Image from 'react-bootstrap/Image';
 import Form from 'react-bootstrap/Form';
 import axios from 'axios';
 import UserContext from '../utils/UserContext';
+import CanadaFlag from './assets/media/canada-flag.svg';
 import "./style.css";
 
 function Login() {
@@ -41,13 +43,16 @@ function Login() {
       <UserContext.Consumer>
       {
         ({handleLogin}) =>
-        <div className="container-fluid bg-grey full-screen">
+        <div className="container-fluid bg-almostWhite full-screen">
+            <div className="row flag-block ">
+              <Image className="bg-white" src={CanadaFlag} alt="Canada Flag" />
+            </div>
             <div className="row">
                 <div className="col heading">
                     <h1>Canada Votes Online</h1>
                 </div>
             </div>
-            <div className="row bottom">
+            <div className="row bottom-page">
                 <div className="col">
                   <Form>
                     <Form.Group controlId="formBasicUUID">
