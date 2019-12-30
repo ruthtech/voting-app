@@ -26,7 +26,7 @@ const voterSchema = new Schema({
       longitude: { type: Number }
     },
     timezone: {
-      offset: { type: Number },
+      offset: { type: String },
       description: { type: String }
     }
   },

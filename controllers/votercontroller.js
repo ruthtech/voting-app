@@ -13,7 +13,7 @@ exports.verifyUser = async function(username, password) {
       "login.password": password
     }).exec();
 
-    console.log(data);
+    //console.log(data);
     if (!data) {
       console.log("DEBUG username is " + username + " and password is " + password);
       return false;
@@ -21,20 +21,20 @@ exports.verifyUser = async function(username, password) {
 
 
     let postalcode = data.location.postcode.replace(/\s/g, ""); // Does this need %20 to be substituted for the space?
-    console.log("Trying to find district with postal code ");
-    console.log(`https://represent.opennorth.ca/postcodes/${postalcode}/?sets=federal-electoral-districts&format=json`);
+    //console.log("Trying to find district with postal code ");
+    //console.log(`https://represent.opennorth.ca/postcodes/${postalcode}/?sets=federal-electoral-districts&format=json`);
 
     // Now we need to find out what district this user is in
     let districtData = await axios.get(
       `https://represent.opennorth.ca/postcodes/${postalcode}/?sets=federal-electoral-districts&format=json`
     );
 
-    console.log("districtData is ", districtData);
+    //console.log("districtData is ", districtData);
     let district = districtData.data.representatives_centroid[0].district_name;
 
     let dataClone = { ...data };
     dataClone._doc.location.district = district;
-    console.log("data clone is ", dataClone);
+    //console.log("data clone is ", dataClone);
     return dataClone;
   } catch ( err ) {
     console.log(err);
@@ -90,7 +90,7 @@ exports.findCandidates = async function(postalcode) {
     `https://represent.opennorth.ca/postcodes/${postalcode}/?sets=federal-electoral-districts&format=json`
   );
   let candidateList = await CandidateModel.find({
-    district_name: data.data.candidates_centroid[0].district_name
+    district_name: data.data.representatives_centroid[0].district_name
   });
   // console.log("Candidate list is ", candidateList);
   //   for (i = 0; i < candidateList.length; i++) {
@@ -117,11 +117,11 @@ exports.runSimulation = async function() {
       );
       await console.log(
         "District is ",
-        district.data.candidates_centroid[0].district_name
+        district.data.representatives_centroid[0].district_name
       );
 
       //   let candidateList = await db.candidate.find({
-      //     district_name: district.data.candidates_centroid[0].district_name
+      //     district_name: district.data.representatives_centroid[0].district_name
       //   });
       //   console.log("Candidate list is ", candidateList);
 
@@ -147,34 +147,32 @@ exports.runSimulation = async function() {
 };
 
 exports.updateAddress = async function(username, streetNo, streetName, city, province, postalCode) {
+  let errorMessage = '';
+  let data;
+  let districtData;
   try {
-    let data = await VoterModel.findOneAndUpdate(
-      { "location.username": username },
-      {
-        $set: {
-          "location.street.number": streetNo,
-          "name.location.street.": streetName,
-          "location.city": city,
-          "location.state": province,
-          "location.postcode": postalCode
-        }
-      }
-    ).exec();
+    const filter = { "login.username": username };
+    const update = {
+      "location.street.number": streetNo,
+      "location.street.name": streetName,
+      "location.city": city,
+      "location.state": province,
+      "location.postcode": postalCode
+    };
 
-    data = await VoterModel.findOne({
-      "login.username": username
-    }).exec();
+    data = await VoterModel.findOneAndUpdate(filter, update).exec();
+
+    data = await VoterModel.findOne(filter).exec();
 
     let postalcode = data.location.postcode.replace(/\s/g, ""); // Does this need %20 to be substituted for the space?
-    console.log("Trying to find district with postal code ");
-    console.log(`https://represent.opennorth.ca/postcodes/${postalcode}/?sets=federal-electoral-districts&format=json`);
+    errorMessage = `https://represent.opennorth.ca/postcodes/${postalcode}/?sets=federal-electoral-districts&format=json`;
 
     // Now we need to find out what district this user is in
     let districtData = await axios.get(
       `https://represent.opennorth.ca/postcodes/${postalcode}/?sets=federal-electoral-districts&format=json`
     );
 
-    let district = districtData.data.candidates_centroid[0].district_name;
+    district = districtData.data.representatives_centroid[0].district_name;
 
     let dataClone = { ...data };
     dataClone._doc.location.district = district;
@@ -182,6 +180,12 @@ exports.updateAddress = async function(username, streetNo, streetName, city, pro
     // console.log("data clone is ", dataClone);
     return dataClone;
   } catch ( error ) {
+    console.log("error when update address");
+    console.log("data retrieved was ", data);
+    console.log("districtData was ", districtData);
+    console.log("Trying to find district with postal code ");
+    console.log(errorMessage);
+
     console.log(error);
     return false;
   }
