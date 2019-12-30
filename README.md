@@ -81,16 +81,23 @@ This project does not use versions at this time.
 * Kevin O Davis [https://github.com/kevin-on-davis]
    * Investigation into opennorth to find the information about political candidates
    * Investigation into random.me to generate information for population of database
-   * Database: creation of MongoDB database and collections, initialization of MongoDB from random.me data, creation of the Mongoose models, debugged database and models
-   * Server endpoint implementations: verify voter, enter vote, find candidates, run simulation
+   * Database: 
+      * creation of MongoDB database and collections
+      * initialization of MongoDB from random.me data
+      * creation of the Mongoose models
+      * debugged database and models
+   * Server: 
+      * endpoint implementations: verify voter, enter vote, find candidates, run simulation
 
 
 * Ruth Lee [https://github.com/ruthtech]
    * Front end (React, Bootstrap, React-Bootstrap, create-react-app)
    * Deployment to Heroku
-   * Server: created express server skeleton for Kevin to change the api routes to be populated from the database rather than mock data
-   * Server endpoint implementation: update address, added district information to verify voter 
-   * Database: debugged the Mongoose connection and models
+   * Server: 
+       * created express server skeleton for Kevin to change the api routes to be populated from the database rather than mock data. 
+       * endpoint implementations: update address, added district information to verify voter 
+   * Database: 
+       * debugged the Mongoose connection and models
 
 ## License
 MIT
