@@ -93,7 +93,7 @@ This project does not use versions at this time.
        * created express server skeleton for Kevin to change the api routes to be populated from the database rather than the mock data. 
        * endpoint implementations: update address in MongoDB, added district information to verify voter, calculated latitude and longitude and added to user
    * Database/Mongoose:
-       * Assisted Kevin debugging the connection to MongoDB, fixed a cast error in the Mongoose model (changed type fron number to string)
+       * Assisted Kevin debugging and modifying the connection to MongoDB/Mongoose for Heroku
    * Deployment to Heroku
 
 ## License
