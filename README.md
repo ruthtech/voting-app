@@ -23,22 +23,18 @@ Manual tests were run as documented below.
 2. Wrong userid entered
 
 ### Function Tests
-1. Can user edit their address?
-2. Can user vote? 
-3. Can user view candidates for their district?
+1. Can user log in?
+2. Can user edit their address and see the map update?
+3. Can user vote? 
+4. Can user view candidates for their district?
 
-View these tasks being executed:
 
-1. Voter logs in, views their local candidates, and votes.
-![./demo/viewCandidatesAndVote.gif](./demo/viewCandidatesAndVote.gif)
+Navigate to https://arcane-mountain-21933.herokuapp.com/ and log in with userid "happyfrog374" and password "technics".
 
-2. Voter logs in and edits their address (which could change their voting district)
-![./demo/editDistrict.gif](./demo/editDistrict.gif)
-
-3. Our Figma board shows the plan that we had to execute.
+Our Figma board shows the plan that we had to execute.
 ![./demo/figma.gif](./demo/figma.gif)
 
-4. Our Trello board shows our Kanban
+Our Trello board shows our Kanban
 ![./demo/trello.jpg](./demo/trello.jpg)
 
 
