@@ -18,7 +18,6 @@ function EditDistrict() {
   const [activeComponentId, setActiveComponentId] = useState(0); // 0 means render default form, 1 means EditDistrictConfirm
 
   const handleFormSubmit = async (event) => {
-//    console.log("EditDistrict handleFormSubmit");
     try {
       let eAddress = escape(address);
       let eCity = escape(city);
@@ -28,7 +27,6 @@ function EditDistrict() {
       voter.city = eCity;
       voter.province = province;
       voter.postalCode = postalCode.replace(/\s/g, "");
-      console.log("EditDistrict, setting Voter ", voter);
       setVoter(voter);
     } catch( err ) {
       console.log(err);
@@ -37,7 +35,6 @@ function EditDistrict() {
 
   // active component id 1
   const renderConfirm = () => {
-    // console.log("renderConfirm, voter is ", voter);
     return <EditDistrictConfirm user={voter}/>
   };
 
@@ -106,7 +103,6 @@ function EditDistrict() {
   };
 
   const renderActiveComponent = () => {
-    // console.log("renderActiveComponent, id is ", activeComponentId)
     switch(activeComponentId) {
       case(1): {
         return renderConfirm();

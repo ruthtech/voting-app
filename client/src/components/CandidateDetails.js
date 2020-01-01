@@ -34,7 +34,6 @@ function Candidate(props) {
             }
 
             default: {
-                console.log("party is ", party_affiliation);
                 return "https://www.elections.ca/content.aspx?section=pol&dir=par&document=index&lang=e"; // indicate no party website by directing them to the general Elections Canada web site listing all of them
             }
         }
@@ -78,7 +77,7 @@ function Candidate(props) {
                         <h4><a href="https://www.elections.ca/content.aspx?section=pol&dir=par&document=index&lang=e">Elections Canada Registered Political Parties</a></h4>
                     </div>
                 </div>
-                <div className="row p-3 bottom">
+                <div className="row p-3">
                     <div className="col">
                         <Button variant="secondary w-100" onClick={ () => { setActiveComponentId(1) }}>View Candidates</Button>
                     </div>
@@ -97,7 +96,6 @@ function Candidate(props) {
 
     // Active component id 2
     const renderHome = () => {
-        console.log("CandidateDetails going home");
         return (
           <Landing />
         );

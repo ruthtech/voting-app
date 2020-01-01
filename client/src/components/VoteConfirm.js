@@ -35,7 +35,7 @@ function VoteConfirm(props) {
                     <h1>Is this correct?</h1>
                 </div>
             </div>
-            <div className="row bottom">
+            <div className="row">
                 <div className="col">
                     <Button variant="secondary w-100" onClick={() => {setActiveComponentId(1)}}>Edit</Button>
                 </div>

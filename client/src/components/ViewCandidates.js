@@ -13,10 +13,8 @@ function ViewCandidates() {
     const [voter, setVoter] = useState(null);
     const [selectedCandidate, setSelectedCandidate] = useState(null); 
     const [activeComponentId, setActiveComponentId] = useState(0); // 0 for Loading, 1 for Landing, 2 for list of candidates
-    console.log("viewcandidates");
 
     useEffect(() => {
-      console.log("ViewCandidates useEffect");
       async function loadCandidates() {
         try {
           if(voter === null) {
@@ -27,9 +25,9 @@ function ViewCandidates() {
   
           if(activeComponentId === 0) {
             let postcode = voter._doc.location.postcode.replace(/\s/g, "");
-            console.log(`/api/candidates/${postcode}`);
+            // console.log(`/api/candidates/${postcode}`);
             const candidates = await axios.get(`/api/candidates/${postcode}`);
-            console.log("View Candidates found ", candidates);
+            // console.log("View Candidates found ", candidates);
             setCandidates(candidates.data.candidateList);
             setActiveComponentId(2);
           }
@@ -43,13 +41,12 @@ function ViewCandidates() {
     }, [voter]);
 
     const renderDefault = () => {
-      console.log("ViewCandidates, candidates are: ", candidates);
       return (
         <div className="container-fluid bg-grey">
           <div className="row ">
             {
              candidates.map( (candidate) => {
-               console.log(candidate)
+              //  console.log(candidate)
                return renderCandidateThumbnail(candidate);
              })
             }

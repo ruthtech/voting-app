@@ -53,7 +53,7 @@ function VoteSubmitted(props) {
                         <h2>Thank you! Your vote has been registered.</h2>
                     </div>
                 </div>
-                <div className="row bottom">
+                <div className="row">
                     <div className="col right-align-div">
                         <Button variant="secondary w-50" onClick={() => {setActiveComponentId(1)}}>Home</Button>
                     </div>

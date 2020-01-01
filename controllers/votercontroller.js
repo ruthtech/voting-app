@@ -6,41 +6,126 @@ const CandidateModel = require('../models/Candidates');
 axios = require("axios");
 
 exports.verifyUser = async function(username, password) {
-  let data;
+  let data = null;
+  let location = null;
   try {
     data = await VoterModel.findOne({
       "login.username": username,
       "login.password": password
     }).exec();
 
-    //console.log(data);
     if (!data) {
-      console.log("DEBUG username is " + username + " and password is " + password);
+      console.log("DEBUG no user found for username " + username);
       return false;
     }
 
+    // Send back the user that was just found with its calculated district, latitude, and longitude
+    location = await loadDistrictAndLocation(data);
+    let dataClone = cloneData(data, location);
 
-    let postalcode = data.location.postcode.replace(/\s/g, ""); // Does this need %20 to be substituted for the space?
-    //console.log("Trying to find district with postal code ");
-    //console.log(`https://represent.opennorth.ca/postcodes/${postalcode}/?sets=federal-electoral-districts&format=json`);
-
-    // Now we need to find out what district this user is in
-    let districtData = await axios.get(
-      `https://represent.opennorth.ca/postcodes/${postalcode}/?sets=federal-electoral-districts&format=json`
-    );
-
-    //console.log("districtData is ", districtData);
-    let district = districtData.data.representatives_centroid[0].district_name;
-
-    let dataClone = { ...data };
-    dataClone._doc.location.district = district;
-    //console.log("data clone is ", dataClone);
     return dataClone;
   } catch ( err ) {
+    console.log("error when find/verify user ");
+    console.log("data retrieved was ", data);
+    console.log("location data was ", location);
     console.log(err);
     return false;
   }
 };
+
+exports.updateAddress = async function(username, streetNo, streetName, city, province, postalCode) {
+  let data = null;
+  let location = null;
+  try {
+    const filter = { "login.username": username };
+    const update = {
+      "location.street.number": streetNo,
+      "location.street.name": streetName,
+      "location.city": city,
+      "location.state": province,
+      "location.postcode": postalCode
+    };
+
+    data = await VoterModel.findOneAndUpdate(filter, update).exec();
+
+    // Now that we've updated the record, retrieve it so that we can return it to the UI.
+    data = await VoterModel.findOne(filter).exec();
+
+    // Unfortunately the randomuser.me data doesn't know the district name, nor does its
+    // random latitude and longitude exist. However, given a valid address, we can
+    // calculate these. 
+    location = await loadDistrictAndLocation(data);
+
+    // Send back the user that was just updated with its new district, latitude, and longitude
+    let dataClone = cloneData(data, location);
+    return dataClone;
+  } catch ( error ) {
+    console.log("error when update address");
+    console.log("data retrieved was ", data);
+    console.log("location data was ", location);
+
+    console.log(error);
+    return false;
+  }
+};
+
+
+// Given a retrieved user from the database, calculate the following:
+//    1. Based on their address, which district they vote in.
+//    2. The latitude and longitude of their address. (Random.me generates nonsense for those fields, just like the postal code is nonsense.)
+// 
+async function loadDistrictAndLocation(data) {
+  let location = {
+    district: "",
+    districtURL: "", // for debugging
+    districtData: null, // for debugging
+    latitude: 0,
+    longitude: 0,
+    latLongURL: "" // for debugging
+  }
+  try {
+   // First, find the postal code
+   let postalcode = data.location.postcode.replace(/\s/g, ""); 
+   location.districtURL = `https://represent.opennorth.ca/postcodes/${postalcode}/?sets=federal-electoral-districts&format=json`;
+
+   // Now we need to find out what district this postal code is in
+   location.districtData = await axios.get(location.districtURL);
+
+   // And from that we get the district name.
+   location.district = location.districtData.data.representatives_centroid[0].district_name;
+
+   // Now to find the latitude and longitude
+   const eAddress = escape(data.location.street.number + " " + data.location.street.name);
+   const eCity = escape(data.location.city);
+   const eProvince = escape(data.location.state);
+
+   // Address may contain characters that need to be converted for the URL
+   // Address may not exist
+   const TOKEN = "pk.eyJ1IjoiZXNjaGVyZmFuIiwiYSI6ImNrMXdid2lyNTAwNmkzbW93bTNpMHE4N3YifQ.7Jg5xKMsj7Y29BJG74q7Aw";
+   const URLstart = `https://api.mapbox.com/geocoding/v5/mapbox.places/`;
+   const cityProvinceCountry = `.json?place=${eCity}&region=${eProvince}&country=CA`;
+   const otherParms = `&access_token=${TOKEN}&cachebuster=1571367145365&autocomplete=true`;
+ 
+   location.latLongURL = `${URLstart}${eAddress}${cityProvinceCountry}${otherParms}`;
+ 
+   let response =  await axios.get(location.latLongURL);
+   location.longitude = response.data.features[0].geometry.coordinates[0];
+   location.latitude = response.data.features[0].geometry.coordinates[1];
+   
+   return location;
+  } catch (err) {
+    console.log("loadDistrictAndLocation ", location);
+    console.log(err);
+  }
+}
+
+function cloneData(data, location) {
+  let dataClone = { ...data };
+  dataClone._doc.location.district = location.district;
+  dataClone._doc.location.coordinates.latitude = location.latitude;
+  dataClone._doc.location.coordinates.longitude = location.longitude;
+  return dataClone;
+}
 
 // We won't create a new voter
 // exports.createNewVoter = async function(voterInfo) {
@@ -146,48 +231,4 @@ exports.runSimulation = async function() {
   }
 };
 
-exports.updateAddress = async function(username, streetNo, streetName, city, province, postalCode) {
-  let errorMessage = '';
-  let data;
-  let districtData;
-  try {
-    const filter = { "login.username": username };
-    const update = {
-      "location.street.number": streetNo,
-      "location.street.name": streetName,
-      "location.city": city,
-      "location.state": province,
-      "location.postcode": postalCode
-    };
-
-    data = await VoterModel.findOneAndUpdate(filter, update).exec();
-
-    data = await VoterModel.findOne(filter).exec();
-
-    let postalcode = data.location.postcode.replace(/\s/g, ""); // Does this need %20 to be substituted for the space?
-    errorMessage = `https://represent.opennorth.ca/postcodes/${postalcode}/?sets=federal-electoral-districts&format=json`;
-
-    // Now we need to find out what district this user is in
-    let districtData = await axios.get(
-      `https://represent.opennorth.ca/postcodes/${postalcode}/?sets=federal-electoral-districts&format=json`
-    );
-
-    district = districtData.data.representatives_centroid[0].district_name;
-
-    let dataClone = { ...data };
-    dataClone._doc.location.district = district;
-    // Send back the user that was just updated
-    // console.log("data clone is ", dataClone);
-    return dataClone;
-  } catch ( error ) {
-    console.log("error when update address");
-    console.log("data retrieved was ", data);
-    console.log("districtData was ", districtData);
-    console.log("Trying to find district with postal code ");
-    console.log(errorMessage);
-
-    console.log(error);
-    return false;
-  }
-};
 

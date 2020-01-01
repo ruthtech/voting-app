@@ -1,122 +1,139 @@
-import React, { useState, useEffect } from 'react';
-import Button from 'react-bootstrap/Button';
+import React, { Component } from "react";
 import UserContext from '../utils/UserContext';
+import 'mapbox-gl/dist/mapbox-gl.css';
+import "./style.css";
+import mapboxgl from 'mapbox-gl';
+import Button from 'react-bootstrap/Button';
 import EditDistrict from "./EditDistrict";
 import ViewCandidates from './ViewCandidates';
 import Vote from './Vote';
-import LoadingSpinner from './LoadingSpinner';
-import "./style.css";
+
+mapboxgl.accessToken = "pk.eyJ1IjoiZXNjaGVyZmFuIiwiYSI6ImNrMXdid2lyNTAwNmkzbW93bTNpMHE4N3YifQ.7Jg5xKMsj7Y29BJG74q7Aw";
 
 
-function Landing() {
-    // console.log("Landing");
-    const [voter, setVoter] = useState(null);
-    const [activeComponentId, setActiveComponentId] = useState(1); // 0 is render default, 1 is LoadingSpinner, 2 is edit district, 3 is View Candidates, 4 is Vote
+// const ottawaLat = 45.416667;
+// const ottawaLong = -75.7;
 
-    useEffect(() => {
-        // console.log("useEffect");
-        setActiveComponentId(0);
-        // console.log(subcomponent);
-    }, [voter]);
+class Landing extends Component {
+  // Setting the component's initial state
+  state = {
+    activeComponentId: 0,
+    map: null
+  };
 
-    // active component id 0
-    function renderDefault() {
-        // console.log("renderDefault");
-        if(voter == null) {
-            // Not ready to render yet
-            // console.log("voter is null, returning");
-            return;
-        }
-        console.log("Landing renderDefault, voter is ", voter);
+  componentDidMount() {
+    if(this.state.activeComponentId === 0) {
+      // Is this the component with the map?
+      let voter = this.context.user;
+      const voterLatitude = voter._doc.location.coordinates.latitude;
+      const voterLongitude = voter._doc.location.coordinates.longitude;
 
-
-        setActiveComponentId(0);
-        return (
-            <div className="container-fluid bg-map full-screen">
-                <div className="row">
-                    <div className="col-8 col-sm-9 mt-3 ml-3 bg-white text-center pt-2">
-                       Your district is {voter._doc.location.district}
-                    </div>
-                    <div className="col-3 col-sm-2 mt-3">
-                      <Button variant="secondary w-100" 
-                              onClick={ () => { setActiveComponentId(2) }}>
-                         Edit</Button>
-                    </div>
-                </div>
-                <div className="row pb-3 bottom">
-                    <div className="col">
-                        <Button variant="secondary w-100" 
-                            onClick={ () => { setActiveComponentId(3) }}>
-                            View Candidates</Button>
-                    </div>
-                    <div className="col">
-                        <Button variant="secondary w-100"
-                            onClick={ () => { setActiveComponentId(4) }}>
-                            Vote</Button>
-                    </div>
-                </div>
-            </div>
-        );
+      const newMap = new mapboxgl.Map({
+        container: this.mapContainer,
+        style: 'mapbox://styles/mapbox/streets-v11',
+        center: [voterLongitude, voterLatitude],
+        zoom: 12
+      });
+      this.setState({ map: newMap });
     }
+  }
 
-    // active component 1
-    const renderLoading = () => {
-        return <LoadingSpinner />;
-    };
+  
 
-    // active component 2
-    const renderEditDistrict = () => {
-        return <EditDistrict />;
-    };
+  componentDidUpdate() {
+    if(this.state.activeComponentId === 0) {
+      let voter = this.context.user;
+      const voterLatitude = voter._doc.location.coordinates.latitude;
+      const voterLongitude = voter._doc.location.coordinates.longitude;
 
-    // active component 3
-    const renderViewCandidates = () => {
-        return <ViewCandidates />;
+      this.state.map.setCenter([voterLongitude, voterLatitude]);
     }
-
-    // active component 4
-    const renderVote = () => {
-        return <Vote />;
-    }
-
-    const renderActiveComponent = () => {
-        switch(activeComponentId) {
-            case(4): {
-                return renderVote();
-            }
-
-            case(3): {
-                return renderViewCandidates();
-            }
-
-            case(2): {
-                return renderEditDistrict();
-            }
-
-            case(1): {
-                return renderLoading();
-            }
-
-            case(0):
-            default: {
-                return renderDefault();
-            }
-        }
-    };
-
+  }
+  
+  renderDefault = () => {
+    let voter = this.context.user;
     return (
-      <UserContext.Consumer>
-      {
-          ({user}) => {
-            // Can't set this on function load because we need to know 
-            // the user's data.
-            setVoter(user);
-            return renderActiveComponent();
-          }
-      }
-      </UserContext.Consumer>  
-
+      <div className="container-fluid full-screen">
+        <div className="row">
+            <div className="col-8 col-sm-9 mt-3 ml-3 bg-white text-center pt-2 mapFormWidget">
+                Your district is {voter._doc.location.district}
+            </div>
+            <div className="col-3 col-sm-2 mt-3">
+              <Button variant="secondary w-100" 
+                      onClick={ () => { this.setState({ activeComponentId: 2 })}} >
+                  Edit</Button>
+            </div>
+        </div>
+        <div className="row">
+           <div ref={el => this.mapContainer = el} className="col mapContainer" />
+        </div>
+        <div className="row pb-3">
+            <div className="col">
+                <Button variant="secondary w-100" 
+                    onClick={ () => { this.setState({ activeComponentId: 3 })}} >
+                    View Candidates</Button>
+            </div>
+            <div className="col">
+                <Button variant="secondary w-100"
+                    onClick={ () => { this.setState({ activeComponentId: 4 })}} >
+                    Vote</Button>
+            </div>
+        </div>
+      </div>
     );
-}
+  }  
+
+  // // active component 1
+  // renderLoading = () => {
+  //   return <LoadingSpinner />;
+  // };
+
+  // active component 2
+  renderEditDistrict = () => {
+      return <EditDistrict />;
+  };
+
+  
+  // active component 3
+  renderViewCandidates = () => {
+    return <ViewCandidates />;
+  }
+
+
+  // active component 4
+  renderVote = () => {
+    return <Vote />;
+  }
+
+  renderActiveComponent = () => {
+    switch(this.state.activeComponentId) {
+      case(4): {
+        return this.renderVote();
+      }
+
+      case(3): {
+          return this.renderViewCandidates();
+      }
+
+      case(2): {
+        return this.renderEditDistrict();
+      }
+
+      // case(1): {
+      //     return this.renderLoading();
+      // }
+
+      case(0):
+      default: {
+          return this.renderDefault();
+      }
+    }
+  };
+
+  render() {
+    return this.renderActiveComponent();
+  }
+};
+Landing.contextType = UserContext;
 
 export default Landing;

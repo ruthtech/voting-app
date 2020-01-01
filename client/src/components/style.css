@@ -72,6 +72,17 @@ body {
   margin: 1rem;
 }
 
+/* Map */
+
+.mapContainer {
+  height: 85vh;
+  padding-left: 0!important;
+}
+
+  
+/* end map */
+
+
 /* Start political party colours */
 .pc {
   background-color: #244982;

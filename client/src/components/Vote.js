@@ -74,7 +74,7 @@ function Vote() {
                 />
             </div>
         </div>
-        <div className="row bottom">
+        <div className="row">
             <div className="col right-align-div">
               <Button variant="secondary w-50" type="submit" onClick={
                 () => { setActiveComponentId(1) }} disabled={selectedCandidate===null}>

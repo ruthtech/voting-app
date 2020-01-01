@@ -78,7 +78,7 @@ router.post("/api/run/simulator", async function(req, res) {
 //   return res;
 // });
 
-// Given a user and address, update the user's address. District will be calculated.
+// Given a user and address, update the user's address. District, latitude, and longitude will be calculated.
 router.put("/api/updateAddress/:username/:streetno/:streetname/:city/:province/:postalCode",
   async function(req, res) {
     try {

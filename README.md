@@ -61,6 +61,7 @@ Front end:
   * [React-Bootstrap](https://react-bootstrap.github.io/)
   * [React](https://reactjs.org/)
   * [Create-React-App](https://github.com/facebook/create-react-app)
+  * [mapbox] (https://www.mapbox.com/)
 
 Back end:
   * [MongoDB](https://www.mongodb.com/)
@@ -79,8 +80,8 @@ This project does not use versions at this time.
 
 ## Authors
 * Kevin O Davis [https://github.com/kevin-on-davis]
-   * Investigation into opennorth to find the information about political candidates
-   * Investigation into random.me to generate information for population of database
+   * Investigation into opennorth to find the information about political candidates (https://represent.opennorth.ca)
+   * Investigation into randomuser.me to generate information for population of database (https://randomuser.me/)
    * Database: 
       * creation of MongoDB database and collections
       * initialization of MongoDB from random.me data
@@ -91,13 +92,14 @@ This project does not use versions at this time.
 
 
 * Ruth Lee [https://github.com/ruthtech]
-   * Front end (React, Bootstrap, React-Bootstrap, create-react-app)
-   * Deployment to Heroku
+   * mapbox (https://www.mapbox.com/)
+   * React Front end (React, Bootstrap, React-Bootstrap, create-react-app)
    * Server: 
-       * created express server skeleton for Kevin to change the api routes to be populated from the database rather than mock data. 
-       * endpoint implementations: update address, added district information to verify voter 
+       * created express server skeleton for Kevin to change the api routes to be populated from the database rather than the mock data. 
+       * endpoint implementations: update address, added district information to verify voter, added latitude and longitude to verify user
    * Database: 
        * debugged the Mongoose connection and models
+   * Deployment to Heroku
 
 ## License
 MIT

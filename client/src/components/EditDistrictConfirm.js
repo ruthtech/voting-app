@@ -7,7 +7,6 @@ import EditDistrict from './EditDistrict';
 import UserContext from '../utils/UserContext';
 
 function EditDistrictConfirm(props) {
-  // console.log("EditDistrictConfirm, props is ", props);
   const [user, setUser] = useState(props.user);
   const [activeComponentId, setActiveComponentId] = useState(0); // 0 is render default (this confirmation page) and 1 is go back and edit (edit district), 2 is for landing
   console.log("EditDistrictConfirm ", user);
@@ -36,7 +35,6 @@ function EditDistrictConfirm(props) {
 
     // active component id 0
     const renderDefault = (handleLogin) => {
-      // console.log("EditDistrictConfirm renderDefault user is ", user);
       return (
         <div className="container-fluid bg-grey full-screen">
         <div className="row pt-3">
@@ -49,7 +47,7 @@ function EditDistrictConfirm(props) {
             <p>{user.streetNo} {unescape(user.address)}, {unescape(user.city)}, {unescape(user.province)}, {unescape(user.postalCode)}</p>
           </div>
         </div>
-        <div className="row bottom">
+        <div className="row">
           <div className="col">
             <Button variant="secondary w-100" type="button" 
               onClick={ () => { setActiveComponentId(1)}}>
@@ -72,7 +70,6 @@ function EditDistrictConfirm(props) {
     };
 
     const renderActiveComponent = (handleLogin) => {
-      // console.log("EditDistrictConfirm id is ", activeComponentId);
       switch(activeComponentId) {
         case(1): {
           return renderEditDistrict();
