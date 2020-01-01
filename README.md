@@ -53,6 +53,7 @@ Development Tools:
     * Open the extensions pane and search for open in browser.
     * Select the version written by TechER and click Install.
   * [Google Chrome](https://www.google.com/chrome/browser/desktop/index.html)
+  * [Studio 3T](https://studio3t.com/)
   * [Figma](https://www.figma.com)
   * [Trello](https://trello.com/)
 
@@ -66,8 +67,7 @@ Front end:
 Back end:
   * [MongoDB](https://www.mongodb.com/)
   * [Mongoose](https://www.npmjs.com/package/mongoose)
-  * [Studio 3T](https://studio3t.com/)
-  * [dotenv](https://www.npmjs.com/package/dotenv)
+  <!-- * [dotenv](https://www.npmjs.com/package/dotenv) -->
   * [axios](https://www.npmjs.com/package/axios)
   * [express](https://www.npmjs.com/package/express)
 
