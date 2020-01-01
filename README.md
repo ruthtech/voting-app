@@ -61,7 +61,7 @@ Front end:
   * [React-Bootstrap](https://react-bootstrap.github.io/)
   * [React](https://reactjs.org/)
   * [Create-React-App](https://github.com/facebook/create-react-app)
-  * [mapbox] (https://www.mapbox.com/)
+  * [mapbox](https://www.mapbox.com/)
 
 Back end:
   * [MongoDB](https://www.mongodb.com/)
