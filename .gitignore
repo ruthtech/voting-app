@@ -2,6 +2,5 @@ node_modules/*
 package-lock.json
 client/node_modules/*
 client/package-lock.json
-client/build/*
 todo.txt
 package-orig.json
