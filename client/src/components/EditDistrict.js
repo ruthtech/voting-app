@@ -6,32 +6,42 @@ import Button from 'react-bootstrap/Button';
 import axios from 'axios';
 import UserContext from '../utils/UserContext';
 import EditDistrictConfirm from './EditDistrictConfirm';
+import Landing from './Landing';
 import "./style.css";
 
-function EditDistrict() {
+function EditDistrict(props) {
+  console.log("EditDistrict, props are ", props);
+
   const [voter, setVoter] = useState();
-  const [streetNo, setStreetNo] = useState();
-  const [address, setAddress] = useState();
-  const [city, setCity] = useState();
-  const [province, setProvince] = useState();
-  const [postalCode, setPostalCode] = useState();
+  const [streetNo, setStreetNo] = useState(props.location.streetNo);
+  const [address, setAddress] = useState(props.location.address);
+  const [city, setCity] = useState(props.location.city);
+  const [province, setProvince] = useState(props.location.province);
+  const [postalCode, setPostalCode] = useState(props.location.postalCode);
   const [activeComponentId, setActiveComponentId] = useState(0); // 0 means render default form, 1 means EditDistrictConfirm
 
   const handleFormSubmit = async (event) => {
     try {
+      let eStreetNo = escape(streetNo);
       let eAddress = escape(address);
       let eCity = escape(city);
+      let eProvince = escape(province);
       // province is already escaped because it's the id of the dropdown field
-      voter.streetNo = streetNo;
+      voter.streetNo = eStreetNo;
       voter.address = eAddress;
       voter.city = eCity;
-      voter.province = province;
+      voter.province = eProvince;
       voter.postalCode = postalCode.replace(/\s/g, "");
       setVoter(voter);
     } catch( err ) {
       console.log(err);
     }
   }
+
+  // active component id 2
+  const renderBack = () => {
+    return <Landing />;
+  };
 
   // active component id 1
   const renderConfirm = () => {
@@ -41,7 +51,7 @@ function EditDistrict() {
   // active component id 0
   const renderDefault = () => {
     return (
-      <div className="container-fluid bg-grey full-screen">
+      <div className="container-fluid bg-almostWhite full-screen">
           <div className="row">
               <div className="col">
                   <h1>Enter your new address</h1>
@@ -52,23 +62,23 @@ function EditDistrict() {
               <Form>
                   <Form.Group controlId="formBasicAddress">
                     <Form.Label id="streetNoLabel" className="entry-field-label">Street Number</Form.Label>
-                    <Form.Control id="streetNo" type="number" onChange={event => setStreetNo(event.target.value)}/>
+                    <Form.Control id="streetNo" type="number" value={streetNo} onChange={event => setStreetNo(event.target.value)}/>
 
                     <Form.Label className="entry-field-label">Address</Form.Label>
-                    <Form.Control type="text" onChange={event => setAddress(event.target.value)}/>
+                    <Form.Control type="text" value={address} onChange={event => setAddress(event.target.value)}/>
                   </Form.Group>
 
                   <Form.Group controlId="formBasicCity">
                     <Form.Label className="entry-field-label">City</Form.Label>
-                    <Form.Control type="text" onChange={event => setCity(event.target.value)}/>
+                    <Form.Control type="text" value={city} onChange={event => setCity(event.target.value)}/>
                   </Form.Group>
 
                   <Form.Group controlId="formBasicPostalcode">
                     <Form.Label className="entry-field-label">Postal Code</Form.Label>
-                    <Form.Control type="text" onChange={event => setPostalCode(event.target.value)}/>
+                    <Form.Control type="text" value={postalCode} onChange={event => setPostalCode(event.target.value)}/>
                   </Form.Group>
 
-                  <Form.Group controlId="provinces" className="right-align-div">
+                  <Form.Group controlId="provinces" value={province} className="right-align-div">
                     <DropdownButton id="provinceDropdown" title="Province/Territory" variant="secondary">
                       <Dropdown.Item id="Alberta" onClick={(event) => setProvince(event.target.id)}>Alberta</Dropdown.Item>
                       <Dropdown.Item id="British%20Columbia" onClick={(event) => setProvince(event.target.id)}>British Columbia</Dropdown.Item>
@@ -86,8 +96,12 @@ function EditDistrict() {
                     </DropdownButton>
                   </Form.Group>
 
-                  <Form.Group controlId="formSubmit" className="right-align-div">
-                    <Button variant="secondary w-50" type="submit" 
+                  <Form.Group controlId="formSubmit" className="centre-align-div">
+                    <Button variant="secondary w-50 mr-3" type="button" 
+                      onClick={ () => { setActiveComponentId(2)}}>
+                      Back
+                    </Button>
+                    <Button variant="secondary w-50 ml-3" type="submit" 
                       onClick={(event) => {
                         handleFormSubmit(event); // save the new address to the database
                         setActiveComponentId(1); // switch to the Edit District Confirm page
@@ -104,6 +118,10 @@ function EditDistrict() {
 
   const renderActiveComponent = () => {
     switch(activeComponentId) {
+      case(2): {
+        return renderBack();
+      }
+
       case(1): {
         return renderConfirm();
       }

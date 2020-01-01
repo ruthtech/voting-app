@@ -42,7 +42,7 @@ function ViewCandidates() {
 
     const renderDefault = () => {
       return (
-        <div className="container-fluid bg-grey">
+        <div className="container-fluid bg-almostWhite">
           <div className="row ">
             {
              candidates.map( (candidate) => {

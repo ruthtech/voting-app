@@ -23,7 +23,16 @@ function EditDistrictConfirm(props) {
 
     // active component id 1
     const renderEditDistrict = () => {
-      return <EditDistrict />;
+      const location = {
+        streetNo: unescape(user.streetNo),
+        address: unescape(user.address),
+        city: unescape(user.city),
+        province: unescape(user.province),
+        postalCode: unescape(user.postalCode)
+      };
+
+      console.log("location is ", location);
+      return <EditDistrict location={location}/>;
     };
 
     // active component id 2
@@ -34,7 +43,7 @@ function EditDistrictConfirm(props) {
     // active component id 0
     const renderDefault = (handleLogin) => {
       return (
-        <div className="container-fluid bg-grey full-screen">
+        <div className="container-fluid bg-almostWhite full-screen">
         <div className="row pt-3">
           <div className="col">
             <h4>Is this correct?</h4>

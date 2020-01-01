@@ -42,7 +42,7 @@ function Candidate(props) {
     // Active component Id 0
     const renderCandidateDetails = () => {
         return (
-            <div className="container-fluid full-screen bg-grey">
+            <div className="container-fluid full-screen bg-almostWhite">
                 <div className="row">
                     {/* <div className="col text-center">
                         <Image src={candidate.pictureURL} />

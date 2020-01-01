@@ -14,7 +14,7 @@ function VoteConfirm(props) {
     // Active Component Id 0
     const renderDefault = () => {
       return (
-        <div className={"container-fluid bg-grey full-screen"}>
+        <div className={"container-fluid bg-almostWhite full-screen"}>
             <div className="row pb-3">
                 <div className="col">
                     <h1>You are voting for</h1>

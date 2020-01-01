@@ -32,7 +32,7 @@ function VoteSubmitted(props) {
     // active id 0
     const renderDefault = () => {
         return (
-            <div className={"container-fluid bg-grey full-screen"} >
+            <div className={"container-fluid bg-almostWhite full-screen"} >
                 <div className="row">
                     <div className="col">
                         <h1>You voted for</h1>

@@ -60,7 +60,7 @@ function Vote() {
   const renderDefault = () => {
     // console.log("Vote renderDefault ", candidates);
     return  (
-      <div className="container-fluid bg-grey full-screen">
+      <div className="container-fluid bg-almostWhite full-screen">
         <div className="row pt-3">
           <div className="col">
             <h1>Vote in District {voter._doc.location.district}</h1>
