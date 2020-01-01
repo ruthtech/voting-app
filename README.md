@@ -39,7 +39,7 @@ Our Trello board shows our Kanban
 
 
 ## Deployment
-View this application on Heroku.  https://arcane-mountain-21933.herokuapp.com/
+View this application on Heroku.  https://arcane-mountain-21933.herokuapp.com/ Log in with userid "happyfrog374" and password "technics".
 
 ## Built With
 Development Tools:
@@ -78,11 +78,10 @@ This project does not use versions at this time.
 * Kevin O Davis [https://github.com/kevin-on-davis]
    * Investigation into opennorth to find the information about political candidates (https://represent.opennorth.ca)
    * Investigation into randomuser.me to generate information for population of database (https://randomuser.me/)
-   * Database: 
+   * Database/Mongoose: 
       * creation of MongoDB database and collections
       * initialization of MongoDB from random.me data
       * creation of the Mongoose models
-      * debugged database and models
    * Server: 
       * endpoint implementations: verify voter, enter vote, find candidates, run simulation
 
@@ -92,9 +91,9 @@ This project does not use versions at this time.
    * React Front end (React, Bootstrap, React-Bootstrap, create-react-app)
    * Server: 
        * created express server skeleton for Kevin to change the api routes to be populated from the database rather than the mock data. 
-       * endpoint implementations: update address, added district information to verify voter, added latitude and longitude to verify user
-   * Database: 
-       * debugged the Mongoose connection and models
+       * endpoint implementations: update address in MongoDB, added district information to verify voter, calculated latitude and longitude and added to user
+   * Database/Mongoose:
+       * Assisted Kevin debugging the connection to MongoDB, fixed a cast error in the Mongoose model (changed type fron number to string)
    * Deployment to Heroku
 
 ## License

@@ -9,12 +9,10 @@ import UserContext from '../utils/UserContext';
 function EditDistrictConfirm(props) {
   const [user, setUser] = useState(props.user);
   const [activeComponentId, setActiveComponentId] = useState(0); // 0 is render default (this confirmation page) and 1 is go back and edit (edit district), 2 is for landing
-  console.log("EditDistrictConfirm ", user);
 
     const handleFormSubmit = async (handleLogin, event) => {
       try {
         let newUser = await axios.put(`/api/updateAddress/${user._doc.login.username}/${user.streetNo}/${user.address}/${user.city}/${user.province}/${user.postalCode}`);
-        console.log("EditDistrictConfirm, new user is ", newUser);
         setUser(newUser.data);
         props.user = newUser.data;
         handleLogin(newUser.data);

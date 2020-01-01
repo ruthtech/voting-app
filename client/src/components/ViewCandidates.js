@@ -19,7 +19,7 @@ function ViewCandidates() {
         try {
           if(voter === null) {
             // Not ready to load candidates until we know what district the user is in
-            console.log("Vote loadCandidates no voter yet");
+            // console.log("Vote loadCandidates no voter yet");
             return;
           }
   
@@ -63,7 +63,7 @@ function ViewCandidates() {
     }
 
     const renderHome = () => {
-      console.log("CandidateCard going home");
+      // console.log("CandidateCard going home");
       return (
         <Landing />
       );
