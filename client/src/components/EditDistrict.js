@@ -22,15 +22,11 @@ function EditDistrict(props) {
 
   const handleFormSubmit = async (event) => {
     try {
-      let eStreetNo = escape(streetNo);
-      let eAddress = escape(address);
-      let eCity = escape(city);
-      let eProvince = escape(province);
       // province is already escaped because it's the id of the dropdown field
-      voter.streetNo = eStreetNo;
-      voter.address = eAddress;
-      voter.city = eCity;
-      voter.province = eProvince;
+      voter.streetNo = streetNo;
+      voter.address = address;
+      voter.city = city;
+      voter.province = province;
       voter.postalCode = postalCode.replace(/\s/g, "");
       setVoter(voter);
     } catch( err ) {

@@ -12,7 +12,7 @@ function EditDistrictConfirm(props) {
 
     const handleFormSubmit = async (handleLogin, event) => {
       try {
-        let newUser = await axios.put(`/api/updateAddress/${user._doc.login.username}/${user.streetNo}/${user.address}/${user.city}/${user.province}/${user.postalCode}`);
+        let newUser = await axios.put(`/api/updateAddress/${escape(user._doc.login.username)}/${escape(user.streetNo)}/${escape(user.address)}/${escape(user.city)}/${escape(user.province)}/${escape(user.postalCode)}`);
         setUser(newUser.data);
         props.user = newUser.data;
         handleLogin(newUser.data);
