@@ -25,7 +25,9 @@ class EditDistrict extends Component {
     try {
       event.preventDefault();
       // Check if the address is valid or not. If it's not, replace it with the nearest valid address.
+      console.log(`EditDistrict about to call /api/address/${escape(this.state.location.streetNo)}/${escape(this.state.location.streetName)}/${escape(this.state.location.city)}/${escape(this.state.location.province)}/${escape(this.state.location.postcode.replace(/\s/g, ""))}`);
       let newLocation = await axios.get(`/api/address/${escape(this.state.location.streetNo)}/${escape(this.state.location.streetName)}/${escape(this.state.location.city)}/${escape(this.state.location.province)}/${escape(this.state.location.postcode.replace(/\s/g, ""))}`);
+      console.log("EditDistrict, newLocation is ", newLocation);
       this.setState({ location: newLocation.data });
     } catch( err ) {
       console.log(err);
@@ -40,6 +42,7 @@ class EditDistrict extends Component {
   // active component id 1
   renderConfirm = () => {
     let voter = this.context.user;
+    console.log("EditDistrict about to confirm, location is ", this.state.location);
     return <EditDistrictConfirm location={this.state.location} username={voter._doc.login.username}/>
   };
 
