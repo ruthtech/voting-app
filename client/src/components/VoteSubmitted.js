@@ -9,14 +9,11 @@ import './style.css';
 function VoteSubmitted(props) {
     const [candidate] = useState(props.candidate);
     const [activeComponentId, setActiveComponentId] = useState(0); // 0 means the confirmation message, 1 means landing page
-    console.log("VoteSubmitted props is ", props);
-    console.log("VoteSubmitted candidate is ", candidate);
 
     // Could have done this on the last page (VoteConfirm) ... decisions, decisions ...
     // Tell the server to mark this user as having voted and increment the candidate's # of votes by 1.
     const submitVote = async (user, candidate) => {
       try {
-        console.log(`/api/voter/${user.uuid}/${candidate.id}`);
         await axios.put(`/api/voter/${user.uuid}/${candidate.id}`);
       }
       catch( err ) {

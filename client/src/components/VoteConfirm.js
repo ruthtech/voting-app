@@ -9,7 +9,6 @@ import "./style.css";
 function VoteConfirm(props) {
     const [activeComponentId, setActiveComponentId] = useState(0); // 0 is for default, 1 is for edit/go back, 2 is for save/confirm
     const [candidate] = useState(props.candidate);
-    console.log("VoteConfirm candidate is ", candidate);
 
     // Active Component Id 0
     const renderDefault = () => {
