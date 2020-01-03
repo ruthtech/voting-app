@@ -44,7 +44,7 @@ const verifyUser = async function(username, password) {
     location = await loadDistrictAndLocation(data);
     console.log("DEBUG for Heroku. Losing location data in transfer somewhere. But where? 3", data.location);
     let dataClone = cloneData(data, location);
-    console.log("DEBUG for Heroku. Losing location data in transfer somewhere. But where? 4", dataClone);
+    console.log("DEBUG for Heroku. Losing location data in transfer somewhere. But where? 4", dataClone.location);
 
     return dataClone;
   } catch ( err ) {
@@ -152,6 +152,7 @@ async function getValidAddress(streetNo, streetName, city, province, postcode) {
     province: province,
     postcode: postcode
   };
+  console.log("Debug getValidAddress, input is ", location);
 
   try {
     let response = null;
@@ -161,17 +162,24 @@ async function getValidAddress(streetNo, streetName, city, province, postcode) {
       let latLongURL = `${URLstart}${postcodeSearch}${otherParms}`;
       response = await axios.get(latLongURL);
     }
+    console.log("Debug getValidAddress at line 165, location is ", location);
 
     if(response.data.features.length !== 0) {
       // Great, that's all that we need to generate an election district. 
       // Is the rest of the location valid?
       // Format: A0A 0A0, Toronto, Ontario, Canada
       let responseLocation = getLocation(response.data.features[0].place_name);
+      console.log("Debug getValidAddress at line 172, responseLocation is ", responseLocation);
+      console.log("responseLocation city equal location city? ", (responseLocation.city === location.city));
+      console.log("responseLocation province equal location province? ", (responseLocation.province === location.province));
+      console.log("responseLocation postcode equal location postcode? ", (responseLocation.postcode.replace(/\s/g, "") === location.postcode.replace(/\s/g, "")));
 
+      // Postal code can be either form, both of which are equivalent: A0A 0A0 or A0A0A0
       if( (responseLocation.city === location.city) && 
           (responseLocation.province === location.province) && 
-          (responseLocation.postcode === location.postcode)) {
+          (responseLocation.postcode.replace(/\s/g, "") === location.postcode.replace(/\s/g, ""))) {
         // The rest of the location is valid
+        console.log("Debug getValidAddress at line 178, location is ", location);
         return location;
       }
     } 
@@ -187,6 +195,7 @@ async function getValidAddress(streetNo, streetName, city, province, postcode) {
       location.city = defaultLocation.city;
       location.province = defaultLocation.province;
       location.postcode = defaultLocation.postcode;
+      console.log("Debug getValidAddress at line 194, location is ", location);
     } else {
       // We found an address in Canada. To find the postal code we need to parse it out of the feature's place_name.
       // Format looks something like this: "place_name": "695 Dalhousie Avenue, Saint Catharines, Ontario L2N 4X9, Canada"
@@ -208,6 +217,9 @@ async function getValidAddress(streetNo, streetName, city, province, postcode) {
         // Extract the correct province (everything after the second comma and before the postal code)
         const canadaIndex = place_name.indexOf(", Canada");
         location.province = place_name.substring(provinceStartCommaIndex+1, canadaIndex-7).trim();
+        console.log("Debug getValidAddress at line 216, place_name is " + place_name);
+        console.log("provinceStartCommaIndex+1 is " + (provinceStartCommaIndex+1) + " and canadaIndex-7 is " + (canadaIndex-7));
+        console.log("Debug getValidAddress at line 217, location is ", location);
      } else {
         // There's no postal code or street address. 
         // e.g. Wayerton, New Brunswick, Canada
@@ -223,8 +235,11 @@ async function getValidAddress(streetNo, streetName, city, province, postcode) {
         }
         location.province = place_name.substring(provinceStartCommaIndex+1, lastCommaIndex).trim();
         location.postcode = defaultLocation.postcode;
+        console.log("Debug getValidAddress at line 233, location is ", location);
       }
     }
+
+    console.log("Debug getValidAddress, output is ", location);
     return location;
   } catch ( error ) {
     console.log("Error when checking if address is valid ", error.description);
@@ -262,11 +277,14 @@ async function convertToValidLocation(data) {
 
     // Update the database to have the correct postal code, city and province, or the House of Commons.
     // Should the user click "Edit District", they should see the postal code that we are working off of.
-    console.log(`Debugging again. ${data.login.username}, ${location}`);
+    console.log(`Debugging again. convertToValidLocation. Before internalUpdate ${data.login.username}, `, location);
     data = await internalUpdateAddress(
       data.login.username,
       location
     );
+    console.log(`Debugging again. convertToValidLocation. After internalUpdate ${data.login.username}, `);
+    console.log(data.location);
+    console.log(location);
 
     // There seems to be a waiting period between the update call above and when the data is actually updated.
     // Manually update the data now so that everything works as it should.
