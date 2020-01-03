@@ -28,7 +28,7 @@ class EditDistrict extends Component {
       // escape is deprecated and doesn't work on the Quebec city names with accents. Use encodeURI instead.
       console.log(`EditDistrict about to call /api/address/${encodeURI(this.state.location.streetNo)}/${encodeURI(this.state.location.streetName)}/${encodeURI(this.state.location.city)}/${encodeURI(this.state.location.province)}/${encodeURI(this.state.location.postcode.replace(/\s/g, ""))}`);
       let newLocation = await axios.get(`/api/address/${encodeURI(this.state.location.streetNo)}/${encodeURI(this.state.location.streetName)}/${encodeURI(this.state.location.city)}/${encodeURI(this.state.location.province)}/${encodeURI(this.state.location.postcode.replace(/\s/g, ""))}`);
-      console.log("EditDistrict, newLocation is ", newLocation);
+      console.log("EditDistrict, newLocation is ", newLocation.data);
       this.setState({ location: newLocation.data });
     } catch( err ) {
       console.log(err);

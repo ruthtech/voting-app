@@ -38,9 +38,13 @@ const verifyUser = async function(username, password) {
     }
 
     // Send back the user that was just found with its calculated district, latitude, and longitude
+    console.log("DEBUG for Heroku. Losing location data in transfer somewhere. But where? 1", data.location);
     data = await convertToValidLocation(data);
+    console.log("DEBUG for Heroku. Losing location data in transfer somewhere. But where? 2", data.location);
     location = await loadDistrictAndLocation(data);
+    console.log("DEBUG for Heroku. Losing location data in transfer somewhere. But where? 3", data.location);
     let dataClone = cloneData(data, location);
+    console.log("DEBUG for Heroku. Losing location data in transfer somewhere. But where? 4", dataClone);
 
     return dataClone;
   } catch ( err ) {
