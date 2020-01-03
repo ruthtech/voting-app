@@ -55,11 +55,11 @@ const verifyUser = async function(username, password) {
 const internalUpdateAddress = async function(username, location) {
   const filter = { "login.username": username };
   const update = {
-    "location.street.number": unescape(location.streetNo),
-    "location.street.name": unescape(location.streetName),
-    "location.city": unescape(location.city),
-    "location.state": unescape(location.province),
-    "location.postcode": unescape(location.postcode)
+    "location.street.number": location.streetNo,
+    "location.street.name": location.streetName,
+    "location.city": location.city,
+    "location.state": location.province,
+    "location.postcode": location.postcode
   };
 
   let data = await VoterModel.findOneAndUpdate(filter, update).exec();
@@ -72,11 +72,11 @@ const updateAddress = async function(username, streetNo, streetName, city, provi
   try {
     const filter = { "login.username": username };
     const update = {
-      "location.street.number": unescape(streetNo),
-      "location.street.name": unescape(streetName),
-      "location.city": unescape(city),
-      "location.state": unescape(province),
-      "location.postcode": unescape(postcode)
+      "location.street.number": streetNo,
+      "location.street.name": streetName,
+      "location.city": city,
+      "location.state": province,
+      "location.postcode": postcode
     };
 
     data = await VoterModel.findOneAndUpdate(filter, update).exec();
@@ -169,7 +169,7 @@ async function getValidAddress(streetNo, streetName, city, province, postcode) {
     } 
 
    // mapbox couldn't find the postal code. Search via the address and "Canada" instead.
-    const eAddress = escape(streetNo + " " + streetName);
+    const eAddress = encodeURI(streetNo + " " + streetName);
     let latLongURL = `${URLstart}${eAddress}.json?country=CA${otherParms}`;
     response = await axios.get(latLongURL);
 
@@ -306,10 +306,10 @@ async function loadDistrictAndLocation(data) {
   }
   try {
    // First find the postal code.
-   const eCity = escape(data.location.city);
-   const eProvince = escape(data.location.state);
+   const eCity = encodeURI(data.location.city);
+   const eProvince = encodeURI(data.location.state);
    const postcode = data.location.postcode.replace(/\s/g, ""); 
-   const eAddress = escape(data.location.street.number + " " + data.location.street.name);
+   const eAddress = encodeURI(data.location.street.number + " " + data.location.street.name);
 
    // Now that we have a valid postal code, ask opennorth what district it belongs in.
    location.districtURL = `https://represent.opennorth.ca/postcodes/${postcode}/?sets=federal-electoral-districts&format=json`;

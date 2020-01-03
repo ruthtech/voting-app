@@ -15,7 +15,7 @@ function Login() {
   const handleFormSubmit = async (username, password, handleLogin, event) => {
     try {
       event.preventDefault();
-      username = escape(username);
+      username = encodeURI(username);
 
       let query = `/api/login/${username}/${password}`;
       const user = await axios.get(query);

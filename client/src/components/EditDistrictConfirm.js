@@ -13,7 +13,7 @@ function EditDistrictConfirm(props) {
 
     const handleFormSubmit = async (handleLogin) => {
       try {
-        let newUser = await axios.put(`/api/updateAddress/${escape(username)}/${escape(location.streetNo)}/${escape(location.streetName)}/${escape(location.city)}/${escape(location.province)}/${escape(location.postcode)}`);
+        let newUser = await axios.put(`/api/updateAddress/${encodeURI(username)}/${encodeURI(location.streetNo)}/${encodeURI(location.streetName)}/${encodeURI(location.city)}/${encodeURI(location.province)}/${encodeURI(location.postcode)}`);
         
         setLocation(newUser.data); // Update this UI page with the new address. (If the address was invalid then the closest match was returned.)
 

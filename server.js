@@ -4,9 +4,10 @@ const path = require("path");
 const port = process.env.PORT || 5000;
 
 const app = express();
+const bodyParser = require("body-parser");
 
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
+//app.use(express.urlencoded({ extended: true }));
+//app.use(express.json());
 
 const apiRoutes = require("./routes/apiroutes");
 
@@ -14,8 +15,8 @@ const apiRoutes = require("./routes/apiroutes");
 app.use(apiRoutes);
 
 // Parse response?
-//app.use(bodyParser.urlencoded({ extended: true }));
-//app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
 // Serve the React components and assets
 app.use(express.static(path.join(__dirname, "client/build")));

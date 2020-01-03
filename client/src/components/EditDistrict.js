@@ -25,8 +25,9 @@ class EditDistrict extends Component {
     try {
       event.preventDefault();
       // Check if the address is valid or not. If it's not, replace it with the nearest valid address.
-      console.log(`EditDistrict about to call /api/address/${escape(this.state.location.streetNo)}/${escape(this.state.location.streetName)}/${escape(this.state.location.city)}/${escape(this.state.location.province)}/${escape(this.state.location.postcode.replace(/\s/g, ""))}`);
-      let newLocation = await axios.get(`/api/address/${escape(this.state.location.streetNo)}/${escape(this.state.location.streetName)}/${escape(this.state.location.city)}/${escape(this.state.location.province)}/${escape(this.state.location.postcode.replace(/\s/g, ""))}`);
+      // escape is deprecated and doesn't work on the Quebec city names with accents. Use encodeURI instead.
+      console.log(`EditDistrict about to call /api/address/${encodeURI(this.state.location.streetNo)}/${encodeURI(this.state.location.streetName)}/${encodeURI(this.state.location.city)}/${encodeURI(this.state.location.province)}/${encodeURI(this.state.location.postcode.replace(/\s/g, ""))}`);
+      let newLocation = await axios.get(`/api/address/${encodeURI(this.state.location.streetNo)}/${encodeURI(this.state.location.streetName)}/${encodeURI(this.state.location.city)}/${encodeURI(this.state.location.province)}/${encodeURI(this.state.location.postcode.replace(/\s/g, ""))}`);
       console.log("EditDistrict, newLocation is ", newLocation);
       this.setState({ location: newLocation.data });
     } catch( err ) {
@@ -78,7 +79,7 @@ class EditDistrict extends Component {
 
                   <Form.Group value={this.state.location.province} className="right-align-div">
                     <DropdownButton id="provinceDropdown" title="Province/Territory" variant="secondary">
-                      <Dropdown.Item id="Alberta" onClick={() => this.setState({ location: {...this.state.location, province:'Alberta'}})}>Alberta</Dropdown.Item>
+                      <Dropdown.Item id="Alberta" onClick={() => {this.setState({ location: {...this.state.location, province:'Alberta'}}); console.log("Setting to Alberta, hopefully. What is the retrieved value? ", this.state.location);}}>Alberta</Dropdown.Item>
                       <Dropdown.Item id="BritishColumbia" onClick={() => this.setState({ location: {...this.state.location, province:'British Columbia'}})}>British Columbia</Dropdown.Item>
                       <Dropdown.Item id="Manitoba" onClick={() => this.setState({ location: {...this.state.location, province:'Manitoba'}})}>Manitoba</Dropdown.Item>
                       <Dropdown.Item id="NewBrunswick" onClick={() => this.setState({ location: {...this.state.location, province:'New Brunswick'}})}>New Brunswick</Dropdown.Item>

@@ -82,12 +82,12 @@ router.post("/api/run/simulator", async function(req, res) {
 router.put("/api/updateAddress/:username/:streetno/:streetname/:city/:province/:postcode",
   async function(req, res) {
     try {
-      const username = req.params.username;
-      const streetNo = req.params.streetno;
-      const streetName = req.params.streetname;
-      const city = req.params.city;
-      const province = req.params.province;
-      const postcode = req.params.postcode; 
+      const username = decodeURI(req.params.username);
+      const streetNo = decodeURI(req.params.streetno);
+      const streetName = decodeURI(req.params.streetname);
+      const city = decodeURI(req.params.city);
+      const province = decodeURI(req.params.province);
+      const postcode = decodeURI(req.params.postcode); 
 
       let user = await voter.updateAddress(username, streetNo, streetName, city, province, postcode);
 
@@ -110,11 +110,11 @@ router.put("/api/updateAddress/:username/:streetno/:streetname/:city/:province/:
 */
 router.get("/api/address/:streetno/:streetname/:city/:province/:postcode", async function (req, res) {
   try {
-    const streetNo = req.params.streetno;
-    const streetName = req.params.streetname;
-    const city = req.params.city;
-    const province = req.params.province;
-    const postcode = req.params.postcode; 
+    const streetNo = decodeURI(req.params.streetno);
+    const streetName = decodeURI(req.params.streetname);
+    const city = decodeURI(req.params.city);
+    const province = decodeURI(req.params.province);
+    const postcode = decodeURI(req.params.postcode); 
 
     let address = await voter.getValidAddress(streetNo, streetName, city, province, postcode);
 
