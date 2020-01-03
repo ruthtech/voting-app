@@ -48,10 +48,9 @@ const verifyUser = async function(username, password) {
 
     return dataClone;
   } catch ( err ) {
-    console.log("error when find/verify user ");
-    console.log("data retrieved was ", data);
+    console.log("error when find/verify user ", err.description);
+//    console.log("data retrieved was ", data);
     console.log("location data was ", location);
-    console.log(err);
     return false;
   }
 };
@@ -66,7 +65,9 @@ const internalUpdateAddress = async function(username, location) {
     "location.postcode": location.postcode
   };
 
+  console.log("Debugging where information is lost. Before internal update ", update);
   let data = await VoterModel.findOneAndUpdate(filter, update).exec();
+  console.log("Debugging after internal update ", data.location);
   return data;
 }
 
@@ -91,14 +92,17 @@ const updateAddress = async function(username, streetNo, streetName, city, provi
     // Unfortunately the randomuser.me data doesn't know the district name, nor does its
     // random latitude and longitude exist. However, given a valid address, we can
     // calculate these. 
+    console.log("DEBUG for Heroku. Losing location data in transfer somewhere. But where? 10", data.location);
     location = await loadDistrictAndLocation(data);
+    console.log("DEBUG for Heroku. Losing location data in transfer somewhere. But where? 11", data.location);
 
     // Send back the user that was just updated with its new district, latitude, and longitude
     let dataClone = cloneData(data, location);
+    console.log("DEBUG for Heroku. Losing location data in transfer somewhere. But where? 12", dataClone);
     return dataClone;
   } catch ( error ) {
-    console.log("error when update address");
-    console.log("data retrieved was ", data);
+    console.log("error when update address", error.description);
+//    console.log("data retrieved was ", data);
     console.log("location data was ", location);
 
     console.log(error);
@@ -223,8 +227,7 @@ async function getValidAddress(streetNo, streetName, city, province, postcode) {
     }
     return location;
   } catch ( error ) {
-    console.log("getValidAddress9");
-    console.log(error);
+    console.log("Error when checking if address is valid ", error.description);
   }
 }
 
@@ -259,7 +262,7 @@ async function convertToValidLocation(data) {
 
     // Update the database to have the correct postal code, city and province, or the House of Commons.
     // Should the user click "Edit District", they should see the postal code that we are working off of.
-    // console.log(`Debugging again. ${data.login.username}, ${location}`);
+    console.log(`Debugging again. ${data.login.username}, ${location}`);
     data = await internalUpdateAddress(
       data.login.username,
       location
@@ -273,7 +276,7 @@ async function convertToValidLocation(data) {
 
   } catch ( err ) {
     // If all else fails, update data to the default location
-    console.log(err);
+    console.log("Error when converting to valid location ", err.description);
 
     data = await internalUpdateAddress(
       data.login.username, 
@@ -335,8 +338,8 @@ async function loadDistrictAndLocation(data) {
    return location;
 
   } catch (err) {
-    console.log("loadDistrictAndLocation ", location);
-    console.log(err);
+    console.log("Error when loadDistrictAndLocation ", err.description);
+    console.log(location);
      // Most of the randomuser.me data is invalid. (e.g. a city that is in the wrong province, or a postal code that
      // doesn't exist, or latitude and longitude that don't exist.) When we retrieve one of the invalid records, we need to fail gracefully.
      // In case the address does not exist, take the street number and street name and "Canada" and see
