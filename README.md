@@ -78,25 +78,18 @@ This project does not use versions at this time.
 * Kevin O Davis [https://github.com/kevin-on-davis]
    * Investigation into opennorth to find the information about political candidates (https://represent.opennorth.ca)
    * Investigation into randomuser.me to generate information for population of database (https://randomuser.me/)
+   * Server: endpoint creation and implementation, connected to backend
    * Database/Mongoose: 
       * creation of MongoDB database and collections
       * initialization of MongoDB from random.me data
       * creation of the Mongoose models
-   * Server: 
-      * endpoint implementations: verify voter, enter vote, find candidates, run simulation
-
 
 * Ruth Lee [https://github.com/ruthtech]
    * mapbox (https://www.mapbox.com/)
    * React Front end (React, Bootstrap, React-Bootstrap, create-react-app)
-   * Server: 
-       * created express server skeleton for Kevin to change the api routes to be populated from the database rather than the mock data. 
-       * endpoint implementations: update address in MongoDB, added district information to verify voter, calculated latitude and longitude and added to user
-       * repair randomuser.me data as a user logs in. Most of the data is valid only in isolation (e.g. address exists but not in the city or province listed). The postal codes are often invalid and the latitude/longitude locations don't exist. Code was added 
-       to look at the address. If the postal code was invalid then ask mapbox for the valid city, province, and postal code
-       in Canada associated with that address. If there was no such address then default to the House of Commons in Ottawa, ON.
+   * Server: endpoint creation and implementation, created express server skeleton and endpoints for Kevin to change the api routes to be populated from the database rather than the mock data
    * Database/Mongoose:
-       * Assisted Kevin debugging and modifying the connection to MongoDB/Mongoose model for Heroku
+       * Debugged and modified the connection to MongoDB/Mongoose for Heroku
    * Deployment to Heroku
 
 ## License
