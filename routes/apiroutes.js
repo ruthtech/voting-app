@@ -25,11 +25,11 @@ router.get("/api/login/:username/:password", async function(req, res) {
 });
 
 // Return all of the candidates for a given district
-router.get("/api/candidates/:postalcode", async function(req, res) {
+router.get("/api/candidates/:postcode", async function(req, res) {
   try {
     const candidates = {
       candidateList: await voter.findCandidates(
-        req.params.postalcode.replace(/\s/g, "")
+        req.params.postcode.replace(/\s/g, "")
       )
     };
     res.status(200);
@@ -79,7 +79,7 @@ router.post("/api/run/simulator", async function(req, res) {
 // });
 
 // Given a user and address, update the user's address. District, latitude, and longitude will be calculated.
-router.put("/api/updateAddress/:username/:streetno/:streetname/:city/:province/:postalCode",
+router.put("/api/updateAddress/:username/:streetno/:streetname/:city/:province/:postcode",
   async function(req, res) {
     try {
       const username = req.params.username;
@@ -87,9 +87,9 @@ router.put("/api/updateAddress/:username/:streetno/:streetname/:city/:province/:
       const streetName = req.params.streetname;
       const city = req.params.city;
       const province = req.params.province;
-      const postalCode = req.params.postalCode; 
+      const postcode = req.params.postcode; 
 
-      let user = await voter.updateAddress(username, streetNo, streetName, city, province, postalCode);
+      let user = await voter.updateAddress(username, streetNo, streetName, city, province, postcode);
 
       res.status(200);
       res.send(user);
@@ -102,6 +102,32 @@ router.put("/api/updateAddress/:username/:streetno/:streetname/:city/:province/:
     return res;
   }
 );
+
+/* 
+  If the address is valid, return it.
+
+  Otherwise return the closest valid address.
+*/
+router.get("/api/address/:streetno/:streetname/:city/:province/:postcode", async function (req, res) {
+  try {
+    const streetNo = req.params.streetno;
+    const streetName = req.params.streetname;
+    const city = req.params.city;
+    const province = req.params.province;
+    const postcode = req.params.postcode; 
+
+    let address = await voter.getValidAddress(streetNo, streetName, city, province, postcode);
+
+    res.status(200);
+    res.send(address);
+  } catch (err) {
+    // Internal error on the server side.
+    console.log(err);
+    res.status(500);
+    res.send(err);
+  }
+  return res;
+});
 
 
 module.exports = router;

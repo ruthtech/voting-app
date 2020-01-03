@@ -93,10 +93,10 @@ class Landing extends Component {
     const voter = this.context.user;
     const location = {
       streetNo: voter._doc.location.street.number,
-      address: voter._doc.location.street.name,
+      streetName: voter._doc.location.street.name,
       city: voter._doc.location.city,
       province: voter._doc.location.state,
-      postalCode: voter._doc.location.postcode
+      postcode: voter._doc.location.postcode
     };
   
     return <EditDistrict location={location}/>;

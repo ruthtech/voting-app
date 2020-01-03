@@ -33,7 +33,7 @@ const verifyUser = async function(username, password) {
     }).exec();
 
     if (!data) {
-      console.log(`DEBUG no user found for username ${username} with that password.`);
+      console.log(`No user found for username ${username} with that password.`);
       return false;
     }
 
@@ -52,21 +52,21 @@ const verifyUser = async function(username, password) {
   }
 };
 
-const internalUpdateAddress = async function(username, streetNo, streetName, city, province, postalCode) {
+const internalUpdateAddress = async function(username, location) {
   const filter = { "login.username": username };
   const update = {
-    "location.street.number": unescape(streetNo),
-    "location.street.name": unescape(streetName),
-    "location.city": unescape(city),
-    "location.state": unescape(province),
-    "location.postcode": unescape(postalCode)
+    "location.street.number": unescape(location.streetNo),
+    "location.street.name": unescape(location.streetName),
+    "location.city": unescape(location.city),
+    "location.state": unescape(location.province),
+    "location.postcode": unescape(location.postcode)
   };
 
   let data = await VoterModel.findOneAndUpdate(filter, update).exec();
   return data;
 }
 
-const updateAddress = async function(username, streetNo, streetName, city, province, postalCode) {
+const updateAddress = async function(username, streetNo, streetName, city, province, postcode) {
   let data = null;
   let location = null;
   try {
@@ -76,7 +76,7 @@ const updateAddress = async function(username, streetNo, streetName, city, provi
       "location.street.name": unescape(streetName),
       "location.city": unescape(city),
       "location.state": unescape(province),
-      "location.postcode": unescape(postalCode)
+      "location.postcode": unescape(postcode)
     };
 
     data = await VoterModel.findOneAndUpdate(filter, update).exec();
@@ -114,6 +114,116 @@ function getPostalCode(address) {
   }
 }
 
+// Format: A0A 0A0, Toronto, Ontario, Canada
+function getLocation(address) {
+  let location = {
+    city: "",
+    province: "",
+    postcode: ""
+  };
+
+  const cityStartIndex = address.indexOf(",");
+  const provinceStartIndex = address.indexOf(",", cityStartIndex+1);
+  const provinceEndIndex = address.indexOf(",", provinceStartIndex+1);
+  location.postcode = address.substring(0,7).trim();
+  location.city = address.substring(cityStartIndex+1,provinceStartIndex).trim();
+  location.province = address.substring(provinceStartIndex+1,provinceEndIndex).trim();
+  return location;
+}
+
+// 
+// Did the user enter a valid address in the Edit District page?
+// Does this record from the database contain valid information?
+//
+async function getValidAddress(streetNo, streetName, city, province, postcode) {
+  // This method needs to protect against every type of invalid input possible. If it can go wrong, it will. 
+  let location = {
+    streetNo: streetNo,
+    streetName: streetName,
+    city: city,
+    province: province,
+    postcode: postcode
+  };
+
+  try {
+    let response = null;
+    if(location.postcode !== null && location.postcode !== "") {
+      location.postcode = location.postcode.replace(/\s/g, ""); 
+      const postcodeSearch = location.postcode + ".json?types=postcode";
+      let latLongURL = `${URLstart}${postcodeSearch}${otherParms}`;
+      response = await axios.get(latLongURL);
+    }
+
+    if(response.data.features.length !== 0) {
+      // Great, that's all that we need to generate an election district. 
+      // Is the rest of the location valid?
+      // Format: A0A 0A0, Toronto, Ontario, Canada
+      let responseLocation = getLocation(response.data.features[0].place_name);
+
+      if( (responseLocation.city === location.city) && 
+          (responseLocation.province === location.province) && 
+          (responseLocation.postcode === location.postcode)) {
+        // The rest of the location is valid
+        return location;
+      }
+    } 
+
+   // mapbox couldn't find the postal code. Search via the address and "Canada" instead.
+    const eAddress = escape(streetNo + " " + streetName);
+    let latLongURL = `${URLstart}${eAddress}.json?country=CA${otherParms}`;
+    response = await axios.get(latLongURL);
+
+    if(response.data.features.length === 0) {
+      // Still can't find it? No such address in Canada? 
+      // Shouldn't happen but just in case, resort to default location (House of Commons in Ottawa).
+      location.city = defaultLocation.city;
+      location.province = defaultLocation.province;
+      location.postcode = defaultLocation.postcode;
+    } else {
+      // We found an address in Canada. To find the postal code we need to parse it out of the feature's place_name.
+      // Format looks something like this: "place_name": "695 Dalhousie Avenue, Saint Catharines, Ontario L2N 4X9, Canada"
+      // Sometimes the format looks like this: "place_name": 'Wayerton, New Brunswick, Canada',
+      const place_name = response.data.features[0].place_name;
+      const lastCommaIndex = place_name.lastIndexOf(",");
+      const provinceStartCommaIndex = place_name.lastIndexOf(",", lastCommaIndex-1);
+      const cityStartCommaIndex = place_name.lastIndexOf(",", provinceStartCommaIndex-1);
+      location.postcode = getPostalCode(place_name);
+      if(location.postcode !== null) {
+        // 695 Dalhousie Avenue, Saint Catharines, Ontario L2N 4X9, Canada
+        // We know that the postal code is right before the country, so subtract 7 characters and extract
+        // just those 7.
+        // We know that postcode exists in Canada because mapbox returns only valid addresses.
+    
+        // Extract the correct city name (everything after the first comma and before the second comma)
+        location.city = place_name.substring(cityStartCommaIndex+1, provinceStartCommaIndex).trim();
+    
+        // Extract the correct province (everything after the second comma and before the postal code)
+        const canadaIndex = place_name.indexOf(", Canada");
+        location.province = place_name.substring(provinceStartCommaIndex+1, canadaIndex-7).trim();
+     } else {
+        // There's no postal code or street address. 
+        // e.g. Wayerton, New Brunswick, Canada
+        //      9316 Main Street North, Murray River, Prince Edward Island, Canada
+        // While we could get an API key with Canada Post, for now we will use the default 
+        // postal code (Canada's House of Commons) with the mapbox city and province in the address.
+        // 
+        let firstCommaIndex = place_name.lastIndexOf(cityStartCommaIndex-1);
+        if(firstCommaIndex < 0) {
+          location.city = place_name.substring(cityStartCommaIndex+1, provinceStartCommaIndex).trim();
+        } else {
+          location.city = place_name.substring(firstCommaIndex+1, cityStartCommaIndex).trim();
+        }
+        location.province = place_name.substring(provinceStartCommaIndex+1, lastCommaIndex).trim();
+        location.postcode = defaultLocation.postcode;
+      }
+    }
+    return location;
+  } catch ( error ) {
+    console.log("getValidAddress9");
+    console.log(error);
+  }
+}
+
 // randomuser.me generates nonsense for many fields. Each field makes sense in isolation but together they don't exist,
 // e.g. a city from one province listed in another province, with a postal code that doesn't exist, 
 // latitude and longitude that don't exist, and a timezone in Jakarta. (That's a real example.)
@@ -134,86 +244,28 @@ async function convertToValidLocation(data) {
     // exist is sent to opennorth, a 404 is returned and the user can't log in. This method will 
     // sanitize the input for the application so that we can continue. 
     // 
-    let postalcode = data.location.postcode;
-    let foundPostalCode = false; // Default to false because there's many ways that we can't find a valid postal code.
-    if(postalcode !== null && postalcode !== "") {
-      postalcode = postalcode.replace(/\s/g, ""); 
-      const postalCodeSearch = postalcode + ".json?types=postcode";
-      let latLongURL = `${URLstart}${postalCodeSearch}${otherParms}`;
-      let response = await axios.get(latLongURL);
-      foundPostalCode = (response.data.features.length !== 0);
-    }
 
-    if(foundPostalCode) {
-      // Great, that's all that we need to generate an election district. 
-      // Since randomuser.me generates invalid postal codes, this must be one of the records that we've fixed programmatically.
-      return data;
-    } 
-
-    // mapbox couldn't find the postal code. Search via the address and "Canada" instead.
-    let streetNo = data.location.street.number;
-    let streetName = data.location.street.name;
-    const eAddress = escape(streetNo + " " + streetName);
-    let latLongURL = `${URLstart}${eAddress}.json?country=CA${otherParms}`;
-    response = await axios.get(latLongURL);
-
-    let city = "";
-    let province = "";
-    if(response.data.features.length === 0) {
-      // Still can't find it? No such address in Canada? 
-      // Shouldn't happen but just in case, resort to default location (House of Commons in Ottawa).
-      city = defaultLocation.city;
-      province = defaultLocation.province;
-      postalcode = defaultLocation.postcode;
-    } else {
-      // We found an address in Canada. To find the postal code we need to parse it out of the feature's place_name.
-      // Format looks something like this: "place_name": "695 Dalhousie Avenue, Saint Catharines, Ontario L2N 4X9, Canada"
-      // Sometimes the format looks like this: "place_name": 'Wayerton, New Brunswick, Canada',
-
-      const place_name = response.data.features[0].place_name;
-      const canadaIndex = place_name.indexOf(", Canada");
-      const commaIndex = place_name.indexOf(",");
-      const secondCommaIndex = place_name.indexOf(",", commaIndex+1);
-      postalcode = getPostalCode(place_name);
-      if(postalcode !== null) {
-        // We know that the postal code is right before the country, so subtract 7 characters and extract
-        // just those 7.
-        // We know that postalcode exists in Canada because mapbox returns only valid addresses.
-    
-        // Extract the correct city name (everything after the first comma and before the second comma)
-        city = place_name.substring(commaIndex+1, secondCommaIndex).trim();
-    
-        // Extract the correct province (everything after the second comma and before the postal code)
-        province = place_name.substring(secondCommaIndex+1, canadaIndex-7).trim();
-      } else {
-        // There's no postal code or street address. 
-        // e.g. Wayerton, New Brunswick, Canada
-        // While we could get an API key with Canada Post, for now we will use the default 
-        // postal code (Canada's House of Commons) with the mapbox city and province in the address.
-        // 
-        city = place_name.substring(0, commaIndex).trim();
-        province = place_name.substring(commaIndex+1, secondCommaIndex).trim();
-        postalcode = defaultLocation.postcode;
-      }
-    }
+    let location = await getValidAddress(
+      data.location.street.number,
+      data.location.street.name,
+      data.location.city,
+      data.location.state,
+      data.location.postcode
+    );
 
     // Update the database to have the correct postal code, city and province, or the House of Commons.
     // Should the user click "Edit District", they should see the postal code that we are working off of.
-    // console.log(`Debugging again. ${data.login.username}, streetNo: ${data.location.street.number}, street name: ${data.location.street.name}, city: ${city}, province: ${province}, postal code: ${postalcode}`);
+    // console.log(`Debugging again. ${data.login.username}, ${location}`);
     data = await internalUpdateAddress(
-      data.login.username, 
-      data.location.street.number, 
-      data.location.street.name, 
-      city, 
-      province, 
-      postalcode
+      data.login.username,
+      location
     );
 
     // There seems to be a waiting period between the update call above and when the data is actually updated.
     // Manually update the data now so that everything works as it should.
-    data.location.city = city;
-    data.location.province = province;
-    data.location.postcode = postalcode;
+    data.location.city = location.city;
+    data.location.state = location.province;
+    data.location.postcode = location.postcode;
 
   } catch ( err ) {
     // If all else fails, update data to the default location
@@ -221,11 +273,7 @@ async function convertToValidLocation(data) {
 
     data = await internalUpdateAddress(
       data.login.username, 
-      defaultLocation.streetNo, 
-      defaultLocation.streetName, 
-      defaultLocation.city, 
-      defaultLocation.province,
-      defaultLocation.postcode
+      defaultLocation
     );
 
     // There seems to be a waiting period between the update call above and when the data is actually updated.
@@ -233,7 +281,7 @@ async function convertToValidLocation(data) {
     data.location.streetNo = defaultLocation.streetNo;
     data.location.streetName = defaultLocation.streetName;
     data.location.city = defaultLocation.city;
-    data.location.province = defaultLocation.province;
+    data.location.state = defaultLocation.province;
     data.location.postcode = defaultLocation.postcode;
   }
   return data;
@@ -260,11 +308,11 @@ async function loadDistrictAndLocation(data) {
    // First find the postal code.
    const eCity = escape(data.location.city);
    const eProvince = escape(data.location.state);
-   const postalcode = data.location.postcode.replace(/\s/g, ""); 
+   const postcode = data.location.postcode.replace(/\s/g, ""); 
    const eAddress = escape(data.location.street.number + " " + data.location.street.name);
 
    // Now that we have a valid postal code, ask opennorth what district it belongs in.
-   location.districtURL = `https://represent.opennorth.ca/postcodes/${postalcode}/?sets=federal-electoral-districts&format=json`;
+   location.districtURL = `https://represent.opennorth.ca/postcodes/${postcode}/?sets=federal-electoral-districts&format=json`;
    location.districtData = await axios.get(location.districtURL);
 
    // And from that we get the district name.
@@ -318,7 +366,7 @@ function findDistrictBoundariesURL(districtData) {
   // Given the postal code, find the district.
   // From the district data you can find the URL to look up the boundaries for that district
   const boundaryURL = districtData.foundaries_centroid[0].url;
-  return `https://represent.opennorth.ca${boundaryURL}`;
+  let boundaryURLQuery = `https://represent.opennorth.ca${boundaryURL}`;
   // It will look something like the following:
   // {
   //   "metadata": {
@@ -356,7 +404,31 @@ function findDistrictBoundariesURL(districtData) {
   //   },
   //   "start_date": null
   // }
+
+  // Then you get the shape_url
+  let shapeURL = boundaryURLQuery.related.shape_url;
+  let shapeURLQuery = `https://represent.opennorth.ca${shapeURL}`;
+
+  // That will produce something like the following
+  /*
+  {
+    "coordinates": [
+      [
+        [
+          [
+          -75.68056163858387,
+          45.41809970468586
+          ], 
+          // ... 552 of these points
+        ]
+      ]
+    ],
+    "type": "MultiPolygon"
+  }
+  */
 }
+
+
 
 // We won't create a new voter
 // exports.createNewVoter = async function(voterInfo) {
@@ -401,9 +473,9 @@ const enterVote = async function(voter, candidateid) {
   res.send(newVoteTally);
 };
 
-const findCandidates = async function(postalcode) {
+const findCandidates = async function(postcode) {
   let data = await axios.get(
-    `https://represent.opennorth.ca/postcodes/${postalcode}/?sets=federal-electoral-districts&format=json`
+    `https://represent.opennorth.ca/postcodes/${postcode}/?sets=federal-electoral-districts&format=json`
   );
   let candidateList = await CandidateModel.find({
     district_name: data.data.representatives_centroid[0].district_name
@@ -467,6 +539,7 @@ module.exports = {
   updateAddress : updateAddress,
   enterVote : enterVote,
   findCandidates : findCandidates,
-  runSimulation : runSimulation
+  runSimulation : runSimulation,
+  getValidAddress : getValidAddress
 };
 

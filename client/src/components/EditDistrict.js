@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { Component } from 'react';
 import Form from 'react-bootstrap/Form';
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
@@ -9,43 +9,42 @@ import EditDistrictConfirm from './EditDistrictConfirm';
 import Landing from './Landing';
 import "./style.css";
 
-function EditDistrict(props) {
-  console.log("EditDistrict, props are ", props);
+class EditDistrict extends Component {
+  constructor(props) {
+    super(props);
+  }
 
-  const [voter, setVoter] = useState();
-  const [streetNo, setStreetNo] = useState(props.location.streetNo);
-  const [address, setAddress] = useState(props.location.address);
-  const [city, setCity] = useState(props.location.city);
-  const [province, setProvince] = useState(props.location.province);
-  const [postalCode, setPostalCode] = useState(props.location.postalCode);
-  const [activeComponentId, setActiveComponentId] = useState(0); // 0 means render default form, 1 means EditDistrictConfirm
+  // Location data is not escaped until right before it is sent to axios. 
+  // Sending in location instead of user/voter because the query to the server to find out if the address exists isn't associated with a user. 
+  state = {
+    location: this.props.location,
+    activeComponentId: 0 // 0 means render default form, 1 means EditDistrictConfirm
+  }
 
-  const handleFormSubmit = async (event) => {
+  handleFormSubmit = async (event) => {
     try {
-      // province is already escaped because it's the id of the dropdown field
-      voter.streetNo = streetNo;
-      voter.address = address;
-      voter.city = city;
-      voter.province = province;
-      voter.postalCode = postalCode.replace(/\s/g, "");
-      setVoter(voter);
+      event.preventDefault();
+      // Check if the address is valid or not. If it's not, replace it with the nearest valid address.
+      let newLocation = await axios.get(`/api/address/${escape(this.state.location.streetNo)}/${escape(this.state.location.streetName)}/${escape(this.state.location.city)}/${escape(this.state.location.province)}/${escape(this.state.location.postcode.replace(/\s/g, ""))}`);
+      this.setState({ location: newLocation.data });
     } catch( err ) {
       console.log(err);
     }
   }
 
   // active component id 2
-  const renderBack = () => {
+  renderBack = () => {
     return <Landing />;
   };
 
   // active component id 1
-  const renderConfirm = () => {
-    return <EditDistrictConfirm user={voter}/>
+  renderConfirm = () => {
+    let voter = this.context.user;
+    return <EditDistrictConfirm location={this.state.location} username={voter._doc.login.username}/>
   };
 
   // active component id 0
-  const renderDefault = () => {
+  renderDefault = () => {
     return (
       <div className="container-fluid bg-almostWhite full-screen">
           <div className="row">
@@ -56,51 +55,51 @@ function EditDistrict(props) {
           <div className="row pb-3">
             <div className="col ">
               <Form>
-                  <Form.Group controlId="formBasicAddress">
+                  <Form.Group id="formBasicAddress">
                     <Form.Label id="streetNoLabel" className="entry-field-label">Street Number</Form.Label>
-                    <Form.Control id="streetNo" type="number" value={streetNo} onChange={event => setStreetNo(event.target.value)}/>
+                    <Form.Control id="streetNo" type="number" value={this.state.location.streetNo} onChange={event => this.setState({ location: {...this.state.location, streetNo:event.target.value}})} />
 
                     <Form.Label className="entry-field-label">Address</Form.Label>
-                    <Form.Control type="text" value={address} onChange={event => setAddress(event.target.value)}/>
+                    <Form.Control type="text" value={this.state.location.streetName} onChange={event => this.setState({ location: {...this.state.location, streetName:event.target.value}})}/>
                   </Form.Group>
 
-                  <Form.Group controlId="formBasicCity">
+                  <Form.Group id="formBasicCity">
                     <Form.Label className="entry-field-label">City</Form.Label>
-                    <Form.Control type="text" value={city} onChange={event => setCity(event.target.value)}/>
+                    <Form.Control type="text" value={this.state.location.city} onChange={event => this.setState({ location: {...this.state.location, city:event.target.value}})}/>
                   </Form.Group>
 
-                  <Form.Group controlId="formBasicPostalcode">
+                  <Form.Group id="formBasicPostalcode">
                     <Form.Label className="entry-field-label">Postal Code</Form.Label>
-                    <Form.Control type="text" value={postalCode} onChange={event => setPostalCode(event.target.value)}/>
+                    <Form.Control type="text" value={this.state.location.postcode} onChange={event => this.setState({ location: {...this.state.location, postcode:event.target.value}})}/>
                   </Form.Group>
 
-                  <Form.Group controlId="provinces" value={province} className="right-align-div">
+                  <Form.Group value={this.state.location.province} className="right-align-div">
                     <DropdownButton id="provinceDropdown" title="Province/Territory" variant="secondary">
-                      <Dropdown.Item id="Alberta" onClick={(event) => setProvince(event.target.id)}>Alberta</Dropdown.Item>
-                      <Dropdown.Item id="British%20Columbia" onClick={(event) => setProvince(event.target.id)}>British Columbia</Dropdown.Item>
-                      <Dropdown.Item id="Manitoba" onClick={(event) => setProvince(event.target.id)}>Manitoba</Dropdown.Item>
-                      <Dropdown.Item id="New%20Brunswick" onClick={(event) => setProvince(event.target.id)}>New Brunswick</Dropdown.Item>
-                      <Dropdown.Item id="Newfoundland%20and%20Labrador" onClick={(event) => setProvince(event.target.id)}>Newfoundland and Labrador</Dropdown.Item>
-                      <Dropdown.Item id="Northwest%20Territories" onClick={(event) => setProvince(event.target.id)}>Northwest Territories</Dropdown.Item>
-                      <Dropdown.Item id="Nova%20 Scotia" onClick={(event) => setProvince(event.target.id)}>Nova Scotia</Dropdown.Item>
-                      <Dropdown.Item id="Nunavut" onClick={(event) => setProvince(event.target.id)}>Nunavut</Dropdown.Item>
-                      <Dropdown.Item id="Ontario" onClick={(event) => setProvince(event.target.id)}>Ontario</Dropdown.Item>
-                      <Dropdown.Item id="Prince%20Edward%20Island" onClick={(event) => setProvince(event.target.value)}>Prince Edward Island</Dropdown.Item>
-                      <Dropdown.Item id="Quebec" onClick={(event) => setProvince(event.target.id)}>Quebec</Dropdown.Item>
-                      <Dropdown.Item id="Saskatchewan" onClick={(event) => setProvince(event.target.id)}>Saskatchewan</Dropdown.Item>
-                      <Dropdown.Item id="Yukon" onClick={(event) => setProvince(event.target.id)}>Yukon</Dropdown.Item>
+                      <Dropdown.Item id="Alberta" onClick={() => this.setState({ location: {...this.state.location, province:'Alberta'}})}>Alberta</Dropdown.Item>
+                      <Dropdown.Item id="BritishColumbia" onClick={() => this.setState({ location: {...this.state.location, province:'British Columbia'}})}>British Columbia</Dropdown.Item>
+                      <Dropdown.Item id="Manitoba" onClick={() => this.setState({ location: {...this.state.location, province:'Manitoba'}})}>Manitoba</Dropdown.Item>
+                      <Dropdown.Item id="NewBrunswick" onClick={() => this.setState({ location: {...this.state.location, province:'New Brunswick'}})}>New Brunswick</Dropdown.Item>
+                      <Dropdown.Item id="NewfoundlandandLabrador" onClick={() => this.setState({ location: {...this.state.location, province:'Newfoundland and Labrador'}})}>Newfoundland and Labrador</Dropdown.Item>
+                      <Dropdown.Item id="NorthwestTerritories" onClick={() => this.setState({ location: {...this.state.location, province:'Northwest Territories'}})}>Northwest Territories</Dropdown.Item>
+                      <Dropdown.Item id="NovaScotia" onClick={() => this.setState({ location: {...this.state.location, province:'Nova Scotia'}})}>Nova Scotia</Dropdown.Item>
+                      <Dropdown.Item id="Nunavut" onClick={() => this.setState({ location: {...this.state.location, province:'Nunavut'}})}>Nunavut</Dropdown.Item>
+                      <Dropdown.Item id="Ontario" onClick={() => this.setState({ location: {...this.state.location, province:'Ontario'}})}>Ontario</Dropdown.Item>
+                      <Dropdown.Item id="PrinceEdwardIsland" onClick={() => this.setState({ location: {...this.state.location, province:'Prince Edward Island'}})}>Prince Edward Island</Dropdown.Item>
+                      <Dropdown.Item id="Quebec" onClick={() => this.setState({ location: {...this.state.location, province:'Quebec'}})}>Quebec</Dropdown.Item>
+                      <Dropdown.Item id="Saskatchewan" onClick={() => this.setState({ location: {...this.state.location, province:'Saskatchewan'}})}>Saskatchewan</Dropdown.Item>
+                      <Dropdown.Item id="Yukon" onClick={() => this.setState({ location: {...this.state.location, province:'Yukon'}})}>Yukon</Dropdown.Item>
                     </DropdownButton>
                   </Form.Group>
 
                   <Form.Group controlId="formSubmit" className="centre-align-div">
                     <Button variant="secondary w-50 mr-3" type="button" 
-                      onClick={ () => { setActiveComponentId(2)}}>
+                      onClick={ () => { this.state.activeComponentId = 2 } }>
                       Back
                     </Button>
                     <Button variant="secondary w-50 ml-3" type="submit" 
                       onClick={(event) => {
-                        handleFormSubmit(event); // save the new address to the database
-                        setActiveComponentId(1); // switch to the Edit District Confirm page
+                        this.handleFormSubmit(event); // Check that the address exists and send it, or the closest matching existing address, to the confirmation page.
+                        this.state.activeComponentId = 1; // switch to the Edit District Confirm page
                       }}>
                       Save
                     </Button>
@@ -112,34 +111,27 @@ function EditDistrict(props) {
     )
   };
 
-  const renderActiveComponent = () => {
-    switch(activeComponentId) {
+  renderActiveComponent = () => {
+    switch(this.state.activeComponentId) {
       case(2): {
-        return renderBack();
+        return this.renderBack();
       }
 
       case(1): {
-        return renderConfirm();
+        return this.renderConfirm();
       }
 
       case(0):
       default: {
-        return renderDefault();
+        return this.renderDefault();
       }
     }
   };
 
-    return (
-      <UserContext.Consumer>
-        {
-          ({user}) => {
-            setVoter(user);
-
-            return renderActiveComponent();
-          }
-        }
-      </UserContext.Consumer>
-    );
+  render() {
+    return this.renderActiveComponent();
+  }
 }
+EditDistrict.contextType = UserContext;
 
 export default EditDistrict;

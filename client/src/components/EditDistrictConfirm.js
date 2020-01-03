@@ -7,15 +7,18 @@ import EditDistrict from './EditDistrict';
 import UserContext from '../utils/UserContext';
 
 function EditDistrictConfirm(props) {
-  const [user, setUser] = useState(props.user);
+  const [location, setLocation] = useState(props.location);
+  const [username] = useState(props.username);
   const [activeComponentId, setActiveComponentId] = useState(0); // 0 is render default (this confirmation page) and 1 is go back and edit (edit district), 2 is for landing
 
-    const handleFormSubmit = async (handleLogin, event) => {
+    const handleFormSubmit = async (handleLogin) => {
       try {
-        let newUser = await axios.put(`/api/updateAddress/${escape(user._doc.login.username)}/${escape(user.streetNo)}/${escape(user.address)}/${escape(user.city)}/${escape(user.province)}/${escape(user.postalCode)}`);
-        setUser(newUser.data);
-        props.user = newUser.data;
-        handleLogin(newUser.data);
+        let newUser = await axios.put(`/api/updateAddress/${escape(username)}/${escape(location.streetNo)}/${escape(location.streetName)}/${escape(location.city)}/${escape(location.province)}/${escape(location.postcode)}`);
+        
+        setLocation(newUser.data); // Update this UI page with the new address. (If the address was invalid then the closest match was returned.)
+
+        handleLogin(newUser.data); // Update the user in the context.
+
       } catch ( err ) {
         console.log(err);
       }
@@ -23,14 +26,6 @@ function EditDistrictConfirm(props) {
 
     // active component id 1
     const renderEditDistrict = () => {
-      const location = {
-        streetNo: unescape(user.streetNo),
-        address: unescape(user.address),
-        city: unescape(user.city),
-        province: unescape(user.province),
-        postalCode: unescape(user.postalCode)
-      };
-
       console.log("location is ", location);
       return <EditDistrict location={location}/>;
     };
@@ -50,8 +45,13 @@ function EditDistrictConfirm(props) {
           </div>
         </div>
         <div className="row">
+          <div className="col">
+            <h6>If there were any problems locating the address that you entered, the closest address is displayed below.</h6>
+          </div>
+        </div>
+        <div className="row">
           <div className="col bg-white centre-align-div">
-            <p>{user.streetNo} {unescape(user.address)}, {unescape(user.city)}, {unescape(user.province)}, {unescape(user.postalCode)}</p>
+            <p>{location.streetNo} {location.streetName}, {location.city}, {location.province}, {location.postcode}</p>
           </div>
         </div>
         <div className="row">
