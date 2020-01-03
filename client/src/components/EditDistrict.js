@@ -49,6 +49,7 @@ class EditDistrict extends Component {
 
   // active component id 0
   renderDefault = () => {
+    console.log("EditDistrict rendering page, location is ", this.state.location);
     return (
       <div className="container-fluid bg-almostWhite full-screen">
           <div className="row">
