@@ -3,6 +3,7 @@ import Login from "./components/Login";
 import Landing from "./components/Landing";
 import UserContext from './utils/UserContext';
 // import LoadingSpinner from './components/LoadingSpinner';
+import Test from './components/Test';
 
 // When debugging the React code, set the user data as though they logged in via Login.
 // When not debugging, comment out the below import.
@@ -23,7 +24,13 @@ function App() {
   // in or not. The URL cannot reach any components except Login or Landing. 
   let component = null;
   if(user != null) {
-    component = <Landing />
+    // DEBUG 
+    if(user._doc.login.username === "test") {
+      component = <Test />
+      // END DEBUG
+    } else {
+      component = <Landing />
+    }
   } else {
     component = <Login />
   }

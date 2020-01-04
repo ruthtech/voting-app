@@ -15,6 +15,22 @@ function Login() {
   const handleFormSubmit = async (username, password, handleLogin, event) => {
     try {
       event.preventDefault();
+
+      // DEBUG
+      // This will be in place only while Ruth tries to get the mapbox API key working off of the production API key.
+      if((username === "test") && (password === "testingintoronto")) {
+        const user = {
+          _doc: {
+            login: {
+              username: "test"
+            }
+          }
+        };
+        handleLogin(user);
+        return;
+      }
+      // END DEBUG
+
       username = encodeURI(username);
 
       let query = `/api/login/${username}/${password}`;
