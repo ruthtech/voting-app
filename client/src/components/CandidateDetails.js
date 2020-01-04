@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Button from 'react-bootstrap/Button';
-import Image from 'react-bootstrap/Image';
-import Card from 'react-bootstrap/Card';
+// import Image from 'react-bootstrap/Image';
+// import Card from 'react-bootstrap/Card';
 import Landing from './Landing';
 import ViewCandidates from './ViewCandidates';
 import "./style.css";

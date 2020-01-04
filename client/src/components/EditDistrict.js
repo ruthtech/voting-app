@@ -10,10 +10,6 @@ import Landing from './Landing';
 import "./style.css";
 
 class EditDistrict extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   // Location data is not escaped until right before it is sent to axios. 
   // Sending in location instead of user/voter because the query to the server to find out if the address exists isn't associated with a user. 
   state = {

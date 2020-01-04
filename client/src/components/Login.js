@@ -52,14 +52,14 @@ function Login() {
             <div className="row bottom-page">
                 <div className="col">
                   <Form>
-                    <Form.Group controlId="formBasicUUID">
+                    <Form.Group id="formBasicUUID">
                       <Form.Label className="entry-field-label">Username</Form.Label>
-                      <Form.Control type="text" value={username} onChange={event => setUsername(event.target.value)}/>
+                      <Form.Control type="text" defaultValue={username} onChange={event => setUsername(event.target.value)}/>
                     </Form.Group>
 
-                    <Form.Group controlId="formBasicPassword">
+                    <Form.Group id="formBasicPassword">
                       <Form.Label className="entry-field-label">Password</Form.Label>
-                      <Form.Control type="password" value={password} onChange={event => setPassword(event.target.value)}/>
+                      <Form.Control type="password" defaultValue={password} onChange={event => setPassword(event.target.value)}/>
                     </Form.Group>
 
                     <div className="right-align-div">
