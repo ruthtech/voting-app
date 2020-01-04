@@ -60,10 +60,10 @@ Front end:
   * [Create-React-App](https://github.com/facebook/create-react-app)
   * [mapbox](https://www.mapbox.com/)
 
-Back end:
+Back end and middleware:
   * [MongoDB](https://www.mongodb.com/)
   * [Mongoose](https://www.npmjs.com/package/mongoose)
-  <!-- * [dotenv](https://www.npmjs.com/package/dotenv) -->
+  * [dotenv](https://www.npmjs.com/package/dotenv)
   * [axios](https://www.npmjs.com/package/axios)
   * [express](https://www.npmjs.com/package/express)
 

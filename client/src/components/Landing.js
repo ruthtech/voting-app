@@ -8,8 +8,10 @@ import EditDistrict from "./EditDistrict";
 import ViewCandidates from './ViewCandidates';
 import Vote from './Vote';
 
-mapboxgl.accessToken = "pk.eyJ1IjoiZXNjaGVyZmFuIiwiYSI6ImNrMXdid2lyNTAwNmkzbW93bTNpMHE4N3YifQ.7Jg5xKMsj7Y29BJG74q7Aw";
-
+// Because any key embedded in the .env file will be included in the build, 
+// which reveals an API key that we eon't want revealed, 
+//import "../mapboxAPIKey.js"; // when testing locally
+import "../mapboxAPIKey-heroku.js"; // when deploying to Heroku
 
 // const ottawaLat = 45.416667;
 // const ottawaLong = -75.7;
