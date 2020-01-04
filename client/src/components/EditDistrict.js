@@ -98,13 +98,13 @@ class EditDistrict extends Component {
 
                   <Form.Group controlId="formSubmit" className="centre-align-div">
                     <Button variant="secondary w-50 mr-3" type="button" 
-                      onClick={ () => { this.state.activeComponentId = 2 } }>
+                      onClick={ () => { this.setState({ activeComponentId: 2 }); } }>
                       Back
                     </Button>
                     <Button variant="secondary w-50 ml-3" type="submit" 
                       onClick={(event) => {
                         this.handleFormSubmit(event); // Check that the address exists and send it, or the closest matching existing address, to the confirmation page.
-                        this.state.activeComponentId = 1; // switch to the Edit District Confirm page
+                        this.setState({ activeComponentId: 1 });; // switch to the Edit District Confirm page
                       }}>
                       Save
                     </Button>
