@@ -6,14 +6,14 @@ require('dotenv').config();
 
 const axios = require("axios");
 let TOKEN = "";
-//if(process.env.DEVELOPMENT_MAPBOX_APIKEY) {
+if(process.env.DEVELOPMENT_MAPBOX_APIKEY) {
   // running locally
   console.log("votercontroller is using the local api key");
   TOKEN = process.env.DEVELOPMENT_APP_MAPBOX_APIKEY;
-//} else {
+} else {
   // default to the API key that can only be used by the Heroku URL
-//  TOKEN = "pk.eyJ1IjoiZXNjaGVyZmFuIiwiYSI6ImNrNHl4bGszeDA1Z2MzZXM3enl3dXAwdGQifQ.GQLGYq0XDlXApqGgkKqF2A";
-//}
+  TOKEN = "pk.eyJ1IjoiZXNjaGVyZmFuIiwiYSI6ImNrNHl4bGszeDA1Z2MzZXM3enl3dXAwdGQifQ.GQLGYq0XDlXApqGgkKqF2A";
+}
 const URLstart = `https://api.mapbox.com/geocoding/v5/mapbox.places/`;
 const otherParms = `&access_token=${TOKEN}&cachebuster=1571367145365&autocomplete=true`;
 

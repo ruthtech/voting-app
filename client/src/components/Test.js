@@ -7,7 +7,10 @@ import mapboxgl from 'mapbox-gl';
 // Because any key embedded in the .env file will be included in the build, 
 // which reveals an API key that we eon't want revealed, 
 //import "../mapboxAPIKey.js"; // when testing locally
-import "../mapboxAPIKey-heroku.js"; // when deploying to Heroku
+
+// when deploying to Heroku or GitHub
+mapboxgl.accessToken = "pk.eyJ1IjoiZXNjaGVyZmFuIiwiYSI6ImNrNHl4bGszeDA1Z2MzZXM3enl3dXAwdGQifQ.GQLGYq0XDlXApqGgkKqF2A";
+
 
 const ottawa = {
   latitude: 45.416667,
@@ -29,6 +32,7 @@ class Test extends Component {
   componentDidMount() {
     // Is this the component with the map?
     const location = toronto;
+    console.log("access token is ", mapboxgl.accessToken);
 
     const newMap = new mapboxgl.Map({
       container: this.mapContainer,
