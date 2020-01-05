@@ -8,14 +8,15 @@ const axios = require("axios");
 let TOKEN = "";
 if(process.env.DEVELOPMENT_MAPBOX_APIKEY) {
   // running locally
-  console.log("votercontroller is using the local api key");
-  TOKEN = process.env.DEVELOPMENT_APP_MAPBOX_APIKEY;
+  console.log("votercontroller is using the local api key ", process.env.DEVELOPMENT_MAPBOX_APIKEY );
+  TOKEN = process.env.DEVELOPMENT_MAPBOX_APIKEY;
 } else {
   // default to the API key that can only be used by the Heroku URL
   TOKEN = "pk.eyJ1IjoiZXNjaGVyZmFuIiwiYSI6ImNrNHl4bGszeDA1Z2MzZXM3enl3dXAwdGQifQ.GQLGYq0XDlXApqGgkKqF2A";
 }
 const URLstart = `https://api.mapbox.com/geocoding/v5/mapbox.places/`;
 const otherParms = `&access_token=${TOKEN}&cachebuster=1571367145365&autocomplete=true`;
+console.log("otherParms is ", otherParms);
 
 const houseOfCommonsLocation = {
   streetNo: 1,
@@ -110,7 +111,7 @@ const updateAddress = async function(username, streetNo, streetName, city, provi
     console.log("DEBUG for Heroku. Losing location data in transfer somewhere. But where? 12", dataClone);
     return dataClone;
   } catch ( error ) {
-    console.log("error when update address", error.description);
+    console.log("error when update address", error);
 //    console.log("data retrieved was ", data);
     console.log("location data was ", location);
 
@@ -251,7 +252,7 @@ async function getValidAddress(streetNo, streetName, city, province, postcode) {
     console.log("Debug getValidAddress, output is ", location);
     return location;
   } catch ( error ) {
-    console.log("Error when checking if address is valid ", error.description);
+    console.log("Error when checking if address is valid ", error);
   }
 }
 
