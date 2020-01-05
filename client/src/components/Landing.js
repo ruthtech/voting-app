@@ -10,8 +10,8 @@ import Vote from './Vote';
 
 // Because any key embedded in the .env file will be included in the build, 
 // which reveals an API key that we eon't want revealed, 
-//import "../mapboxAPIKey.js"; // when testing locally
-//import "../mapboxAPIKey-heroku.js"; // when deploying to Heroku
+//import "../mapboxAPIKey-development.js"; // when testing locally
+import "../mapboxAPIKey-production.js"; // when deploying to Heroku
 
 // const ottawaLat = 45.416667;
 // const ottawaLong = -75.7;
@@ -25,8 +25,9 @@ class Landing extends Component {
 
   componentDidMount() {
     if(this.state.activeComponentId === 0) {
-      // Is this the component with the map?
-      mapboxgl.accessToken = "pk.eyJ1IjoiZXNjaGVyZmFuIiwiYSI6ImNrMXdid2lyNTAwNmkzbW93bTNpMHE4N3YifQ.7Jg5xKMsj7Y29BJG74q7Aw";
+
+      console.log("mapbox API key is ", mapboxgl.accessToken);
+
       let voter = this.context.user;
       const voterLatitude = voter._doc.location.coordinates.latitude;
       const voterLongitude = voter._doc.location.coordinates.longitude;
@@ -38,7 +39,6 @@ class Landing extends Component {
         zoom: 12
       });
       this.setState({ map: newMap });
-      console.log("mapbox API key is ", mapboxgl.accessToken);
     }
   }
 
