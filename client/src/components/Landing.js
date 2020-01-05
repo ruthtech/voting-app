@@ -10,8 +10,10 @@ import Vote from './Vote';
 
 // Because any key embedded in the .env file will be included in the build, 
 // which reveals an API key that we eon't want revealed, 
-//import "../mapboxAPIKey-development.js"; // when testing locally
-import "../mapboxAPIKey-production.js"; // when deploying to Heroku
+import productionMapToken from "../mapboxAPIKey-production.js"; // when deploying to Heroku
+//import developmentMapToken from "../mapboxAPIKey-development.js"; // when testing locally
+
+mapboxgl.accessToken = productionMapToken;
 
 // const ottawaLat = 45.416667;
 // const ottawaLong = -75.7;

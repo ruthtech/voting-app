@@ -10,7 +10,7 @@
 
 # production
 # /build
-# mapboxAPIKey.js
+mapboxAPIKey-development.js
 
 # misc
 .DS_Store
