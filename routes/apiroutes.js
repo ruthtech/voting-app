@@ -116,7 +116,8 @@ router.get("/api/address/:streetno/:streetname/:city/:province/:postcode", async
     const province = decodeURI(req.params.province);
     const postcode = decodeURI(req.params.postcode); 
 
-    let address = await voter.getValidAddress(streetNo, streetName, city, province, postcode);
+    // false means do not update the address in the database if it's invalid. Edit District Confirm may not click "Save"; they may click "Edit".
+    let address = await voter.getValidAddress(streetNo, streetName, city, province, postcode, false); 
 
     res.status(200);
     res.send(address);

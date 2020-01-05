@@ -66,6 +66,7 @@ Back end and middleware:
   * [dotenv](https://www.npmjs.com/package/dotenv)
   * [axios](https://www.npmjs.com/package/axios)
   * [express](https://www.npmjs.com/package/express)
+  * [mapbox](https://www.mapbox.com/)
 
 
 ## Contributing
@@ -100,6 +101,7 @@ Thanks to the following:
 * [U of T Coding Bootcamp] https://bootcamp.learn.utoronto.ca/coding/
 * Icon of Canada flag (circle) made by [Roundicons](https://www.flaticon.com/authors/roundicons) from [Flaticon](https://www.flaticon.com/)
 * Canada flag on the login page made by [Freepik](https://www.flaticon.com/authors/freepik) from [Flaticon](https://www.flaticon.com)
+* Latitude and longitude manual lookup [latlong.net](https://www.latlong.net/)
 
 
   

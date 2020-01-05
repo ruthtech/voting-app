@@ -27,12 +27,11 @@ class Landing extends Component {
 
   componentDidMount() {
     if(this.state.activeComponentId === 0) {
-
-      console.log("mapbox API key is ", mapboxgl.accessToken);
-
       let voter = this.context.user;
       const voterLatitude = voter._doc.location.coordinates.latitude;
       const voterLongitude = voter._doc.location.coordinates.longitude;
+      const districtBoundaries = voter._doc.location.districtBoundaries;
+      console.log("voter location is ", voter._doc.location);
 
       const newMap = new mapboxgl.Map({
         container: this.mapContainer,
@@ -40,6 +39,29 @@ class Landing extends Component {
         center: [voterLongitude, voterLatitude],
         zoom: 12
       });
+
+      console.log("district boundaries are ", districtBoundaries);
+
+      newMap.on('load', () => {
+        console.log('tests');
+        newMap.addLayer({
+          'id': voter._doc.location.district,
+          'type': 'fill',
+          'source': {
+            'type': 'geojson',
+            'data': {
+              'type': 'Feature',
+              'geometry': districtBoundaries
+            }
+          },
+          'layout': {},
+          'paint': {
+            'fill-color': '#D3D3D3',
+            'fill-opacity': 0.8
+          }
+        });
+      });
+
       this.setState({ map: newMap });
     }
   }
