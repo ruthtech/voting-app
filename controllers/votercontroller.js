@@ -6,16 +6,15 @@ const ottawaCentreDistrictBoundaries = require('./ottawaCentreDistrictBoundaries
 require('dotenv').config();
 
 const axios = require("axios");
-let TOKEN = "";
+let TOKEN = "pk.eyJ1IjoiZXNjaGVyZmFuIiwiYSI6ImNrNHl4bGszeDA1Z2MzZXM3enl3dXAwdGQifQ.GQLGYq0XDlXApqGgkKqF2A";
 if(process.env.DEVELOPMENT_MAPBOX_APIKEY) {
-  // running locally
+  // running locally. Switch to the local mapbox API key
+  console.log("votercontroller using development API key");
   TOKEN = process.env.DEVELOPMENT_MAPBOX_APIKEY;
-} else {
-  // default to the API key that can only be used by the Heroku URL
-  TOKEN = "pk.eyJ1IjoiZXNjaGVyZmFuIiwiYSI6ImNrNHl4bGszeDA1Z2MzZXM3enl3dXAwdGQifQ.GQLGYq0XDlXApqGgkKqF2A";
-}
+} 
 const URLstart = `https://api.mapbox.com/geocoding/v5/mapbox.places/`;
 const otherParms = `&access_token=${TOKEN}&cachebuster=1571367145365&autocomplete=true`;
+console.log("votercontroller otherParms is ", otherParms);
 
 const houseOfCommonsLocation = {
   streetNo: 1,

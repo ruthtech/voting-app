@@ -27,6 +27,7 @@ Manual tests were run as documented below.
 2. Can user edit their address and see the map update?
 3. Can user vote? 
 4. Can user view candidates for their district?
+5. Can the user see their voting district shaded on the map?
 
 
 Navigate to https://arcane-mountain-21933.herokuapp.com/ and log in with userid "happyfrog374" and password "technics".
