@@ -27,7 +27,7 @@ function App() {
     // DEBUG 
     if(user._doc.login.username === "test") {
       component = <Test />
-      // END DEBUG
+    // END DEBUG
     } else {
       component = <Landing />
     }

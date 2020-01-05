@@ -23,24 +23,12 @@ const toronto = {
 class Test extends Component {
   // Setting the component's initial state
   state = {
-    location: toronto,
     map: null
   };
 
-  // If the map is currently looking at Toronto, switch to Ottawa, and vice versa.
-  getNewCoordinates() {
-    if(this.state.location === toronto) {
-      this.setState({location: ottawa});
-      return ottawa;
-    } 
-
-    this.setState({location: toronto});
-    return toronto;
-  }
-
   componentDidMount() {
     // Is this the component with the map?
-    const location = this.getNewCoordinates();
+    const location = toronto;
 
     const newMap = new mapboxgl.Map({
       container: this.mapContainer,
@@ -52,7 +40,7 @@ class Test extends Component {
   }
 
   componentDidUpdate() {
-    const location = this.getNewCoordinates();
+    const location = ottawa;
     this.state.map.setCenter([location.longitude, location.latitude]);
   }
   
