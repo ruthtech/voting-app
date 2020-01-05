@@ -6,7 +6,7 @@ const ottawaCentreDistrictBoundaries = require('./ottawaCentreDistrictBoundaries
 require('dotenv').config();
 
 const axios = require("axios");
-let TOKEN = "pk.eyJ1IjoiZXNjaGVyZmFuIiwiYSI6ImNrNHl4bGszeDA1Z2MzZXM3enl3dXAwdGQifQ.GQLGYq0XDlXApqGgkKqF2A";
+let TOKEN = process.env.MAPBOX_API_TOKEN;
 if(process.env.DEVELOPMENT_MAPBOX_APIKEY) {
   // running locally. Switch to the local mapbox API key
   console.log("votercontroller using development API key");
