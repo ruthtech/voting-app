@@ -4,8 +4,8 @@ var voter = require("../controllers/votercontroller");
 const log = require('loglevel');
 require('dotenv').config();
 
-if(process.env.DEVELOPMENT_LOGGING_LEVEL) {
-  log.setLevel(process.env.DEVELOPMENT_LOGGING_LEVEL);
+if(process.env.LOGGING_LEVEL) {
+  log.setLevel(process.env.LOGGING_LEVEL);
 }
 
 router.get("/api/login/:username/:password", async function(req, res) {

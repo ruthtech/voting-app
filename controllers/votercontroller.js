@@ -8,10 +8,13 @@ require('dotenv').config();
 
 const axios = require("axios");
 let TOKEN = process.env.MAPBOX_API_TOKEN; // Defined in Heroku via the CLI heroku config:set MAPBOX_API_TOKEN=foo
+if(process.env.LOGGING_LEVEL) {
+  log.setLevel(process.env.LOGGING_LEVEL);
+}
+
 if(process.env.DEVELOPMENT_MAPBOX_APIKEY) {
   // running locally. Switch to the local mapbox API key and read what level of logging we want.
   // Available levels are the following: 'trace', 'debug', 'info', 'warn', 'error'
-  log.setLevel(process.env.DEVELOPMENT_LOGGING_LEVEL);
   log.trace("votercontroller using development API key");
   TOKEN = process.env.DEVELOPMENT_MAPBOX_APIKEY;
 } 

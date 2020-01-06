@@ -8,8 +8,8 @@ const bodyParser = require("body-parser");
 const log = require('loglevel');
 require('dotenv').config();
 
-if(process.env.DEVELOPMENT_LOGGING_LEVEL) {
-  log.setLevel(process.env.DEVELOPMENT_LOGGING_LEVEL);
+if(process.env.LOGGING_LEVEL) {
+  log.setLevel(process.env.LOGGING_LEVEL);
 }
 
 //app.use(express.urlencoded({ extended: true }));
