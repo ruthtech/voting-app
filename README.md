@@ -68,6 +68,7 @@ Back end and middleware:
   * [axios](https://www.npmjs.com/package/axios)
   * [express](https://www.npmjs.com/package/express)
   * [mapbox](https://www.mapbox.com/)
+  * [loglevel](https://www.npmjs.com/package/loglevel)
 
 
 ## Contributing
@@ -89,6 +90,7 @@ This project does not use versions at this time.
 * Ruth Lee [https://github.com/ruthtech]
    * mapbox (https://www.mapbox.com/)
    * React Front end (React, Bootstrap, React-Bootstrap, create-react-app)
+   * loglevel (https://www.npmjs.com/package/loglevel)
    * Server: created express server skeleton and some endpoints for Kevin to change the api routes to be populated from the database rather than the mock data, additional endpoint creation and implementation, code to check addresses against mapbox to see if it exists. (And if the invalid address is in the database, the user's record is updated to the most likely real address.)
    * Database/Mongoose:
        * Debugged and modified the connection to MongoDB/Mongoose for Heroku
