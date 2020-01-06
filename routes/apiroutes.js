@@ -1,9 +1,12 @@
 const express = require("express");
 const router = express.Router();
-const db = require("../models");
 var voter = require("../controllers/votercontroller");
+const log = require('loglevel');
+require('dotenv').config();
 
-// const voter = new Voter();
+if(process.env.DEVELOPMENT_LOGGING_LEVEL) {
+  log.setLevel(process.env.DEVELOPMENT_LOGGING_LEVEL);
+}
 
 router.get("/api/login/:username/:password", async function(req, res) {
   try {
@@ -17,7 +20,8 @@ router.get("/api/login/:username/:password", async function(req, res) {
     res.send(user);
   } catch (err) {
     // Internal error on the server side.
-    console.log(err);
+    log.error("/api/login/:username/:password");
+    log.error(err);
     res.status(500);
     res.send(err);
   }
@@ -36,7 +40,8 @@ router.get("/api/candidates/:postcode", async function(req, res) {
     res.send(candidates);
   } catch (err) {
     // Internal error on the server side.
-    console.log(err);
+    log.error("/api/candidates/:postcode");
+    log.error(err);
     res.status(500);
     res.send(err);
   }
@@ -50,7 +55,8 @@ router.post("/api/voter/:voterid/:candidateId", async function(req, res) {
       votecast: await voter.enterVote(req.body.voterid, req.body.candidateId)
     };
   } catch (err) {
-    console.log(err);
+    log.error("/api/login/:username/:password");
+    log.error(err);
     res.send(err);
   }
 });
@@ -95,7 +101,8 @@ router.put("/api/updateAddress/:username/:streetno/:streetname/:city/:province/:
       res.send(user);
     } catch (err) {
       // Internal error on the server side.
-      console.log(err);
+      log.error("/api/updateAddress/:username/:streetno/:streetname/:city/:province/:postcode");
+      log.error(err);
       res.status(500);
       res.send(err);
     }
@@ -123,7 +130,8 @@ router.get("/api/address/:streetno/:streetname/:city/:province/:postcode", async
     res.send(address);
   } catch (err) {
     // Internal error on the server side.
-    console.log(err);
+    log.error("/api/address/:streetno/:streetname/:city/:province/:postcode");
+    log.error(err);
     res.status(500);
     res.send(err);
   }

@@ -3,18 +3,21 @@ const PartyModel = require('../models/Party');
 const DistrictModel = require('../models/District');
 const CandidateModel = require('../models/Candidates');
 const ottawaCentreDistrictBoundaries = require('./ottawaCentreDistrictBoundaries');
+const log = require('loglevel');
 require('dotenv').config();
 
 const axios = require("axios");
-let TOKEN = process.env.MAPBOX_API_TOKEN;
+let TOKEN = process.env.MAPBOX_API_TOKEN; // Defined in Heroku via the CLI heroku config:set MAPBOX_API_TOKEN=foo
 if(process.env.DEVELOPMENT_MAPBOX_APIKEY) {
-  // running locally. Switch to the local mapbox API key
-  console.log("votercontroller using development API key");
+  // running locally. Switch to the local mapbox API key and read what level of logging we want.
+  // Available levels are the following: 'trace', 'debug', 'info', 'warn', 'error'
+  log.setLevel(process.env.DEVELOPMENT_LOGGING_LEVEL);
+  log.trace("votercontroller using development API key");
   TOKEN = process.env.DEVELOPMENT_MAPBOX_APIKEY;
 } 
 const URLstart = `https://api.mapbox.com/geocoding/v5/mapbox.places/`;
 const otherParms = `&access_token=${TOKEN}&cachebuster=1571367145365&autocomplete=true`;
-console.log("votercontroller otherParms is ", otherParms);
+log.trace("votercontroller otherParms is ", otherParms);
 
 const houseOfCommonsLocation = {
   streetNo: 1,
@@ -41,24 +44,23 @@ const verifyUser = async function(username, password) {
     }).exec();
 
     if (!data) {
-      console.log(`No user found for username ${username} with that password.`);
+      log.warn(`No user found for username ${username} with that password.`);
       return false;
     }
 
     // Send back the user that was just found with its calculated district, latitude, and longitude
-    console.log("DEBUG for Heroku. Losing location data in transfer somewhere. But where? 1", data.location);
+    log.trace("Tracing data transfer 1", data.location);
     data = await convertToValidAddress(data);
-    console.log("DEBUG for Heroku. Losing location data in transfer somewhere. But where? 2", data.location);
+    log.trace("Tracing data transfer 2", data.location);
     let districtLocation = await findDistrictNameAndBoundaries(data.location.postcode);
-    console.log("DEBUG for Heroku. Losing location data in transfer somewhere. But where? 3", districtLocation);
+    log.trace("Tracing data transfer 3", data.location);
     let dataClone = cloneData(data, districtLocation);
-    console.log("DEBUG for Heroku. Losing location data in transfer somewhere. But where? 4", dataClone.location);
+    log.trace("Tracing data transfer 4", data.location);
 
     return dataClone;
   } catch ( err ) {
-    console.log("error when find/verify user ", err.description);
-//    console.log("data retrieved was ", data);
-    console.log("location data was ", location);
+    log.error("error when find/verify user ", err);
+    log.error("find/verify data retrieved was ", data);
     return false;
   }
 };
@@ -73,9 +75,7 @@ const internalUpdateAddress = async function(username, location) {
     "location.postcode": location.postcode
   };
 
-  console.log("Debugging where information is lost. Before internal update ", update);
   let data = await VoterModel.findOneAndUpdate(filter, update).exec();
-  console.log("Debugging after internal update ", data.location);
   return data;
 }
 
@@ -101,11 +101,8 @@ const updateAddress = async function(username, streetNo, streetName, city, provi
     // When the address is verified on login it is corrected if necessary.
     return data; 
   } catch ( error ) {
-    console.log("error when update address", error);
-//    console.log("data retrieved was ", data);
-    console.log("location data was ", location);
-
-    console.log(error);
+    log.error("error when update address", error);
+    log.error("update address data retrieved was ", data);
     return false;
   }
 };
@@ -137,7 +134,7 @@ async function getValidAddress(streetNo, streetName, city, province, postcode, u
     latitude: defaultLocation.latitude,
     longitude: defaultLocation.longitude
   };
-  console.log("Debug getValidAddress, address is 1 ", address);
+  log.trace("getValidAddress, address is 1 ", address);
 
   try {
     let response = null;
@@ -147,7 +144,7 @@ async function getValidAddress(streetNo, streetName, city, province, postcode, u
       let latLongURL = `${URLstart}${postcodeSearch}${otherParms}`;
       response = await axios.get(latLongURL);
     }
-    console.log("Debug getValidAddres, address is 2 ", address);
+    log.trace("getValidAddress, address is 2 ", address);
 
     if(response.data.features.length !== 0) {
       // Great, that's all that we need to generate an election district. 
@@ -162,11 +159,11 @@ async function getValidAddress(streetNo, streetName, city, province, postcode, u
       const city = placeName.substring(cityStartIndex+1,provinceStartIndex).trim();
       const province = placeName.substring(provinceStartIndex+1,provinceEndIndex).trim();
     
-      console.log("Look for latitude and longitude in response.data ", response.data);
-      console.log("center is ", response.data.features[0].center);
-      console.log("responseLocation city equal address city? ", (city === address.city));
-      console.log("responseLocation province equal address province? ", (province === address.province));
-      console.log("responseLocation postcode equal address postcode? ", (postcode.replace(/\s/g, "") === address.postcode.replace(/\s/g, "")));
+      log.debug("Look for latitude and longitude in response.data ", response.data);
+      log.debug("center is ", response.data.features[0].center);
+      log.debug("responseLocation city equal address city? ", (city === address.city));
+      log.debug("responseLocation province equal address province? ", (province === address.province));
+      log.debug("responseLocation postcode equal address postcode? ", (postcode.replace(/\s/g, "") === address.postcode.replace(/\s/g, "")));
 
       // Postal code can be either form, both of which are equivalent: A0A 0A0 or A0A0A0
       if( (city === address.city) && 
@@ -175,7 +172,7 @@ async function getValidAddress(streetNo, streetName, city, province, postcode, u
         // The rest of the address is valid
         address.latitude = response.data.features[0].center[1];
         address.longitude = response.data.features[0].center[0];
-        console.log("Debug getValidAddress, address is 3 ", address);
+        log.trace("getValidAddress, address is 3 ", address);
         return address;
       }
     } 
@@ -193,7 +190,7 @@ async function getValidAddress(streetNo, streetName, city, province, postcode, u
       address.postcode = defaultLocation.postcode;
       address.latitude = defaultLocation.latitude;
       address.longitude = defaultLocation.longitude;
-      console.log("Debug getValidAddress, address is 4 ", address);
+      log.trace("getValidAddress, address is 4 ", address);
     } else {
       // We found an address in Canada. To find the postal code we need to parse it out of the feature's place_name.
       // Format looks something like this: "place_name": "695 Dalhousie Avenue, Saint Catharines, Ontario L2N 4X9, Canada"
@@ -217,9 +214,9 @@ async function getValidAddress(streetNo, streetName, city, province, postcode, u
         address.province = place_name.substring(provinceStartCommaIndex+1, canadaIndex-7).trim();
         address.latitude = response.data.features[0].center[1];
         address.longitude = response.data.features[0].center[0];
-        console.log("Debug getValidAddress, place_name is " + place_name);
-        console.log("provinceStartCommaIndex+1 is " + (provinceStartCommaIndex+1) + " and canadaIndex-7 is " + (canadaIndex-7));
-        console.log("Debug getValidAddress, address is 5 ", address);
+        log.debug("Debug getValidAddress, place_name is " + place_name);
+        log.trace("provinceStartCommaIndex+1 is " + (provinceStartCommaIndex+1) + " and canadaIndex-7 is " + (canadaIndex-7));
+        log.debug("Debug getValidAddress, address is 5 ", address);
      } else {
         // There's no postal code or street address. 
         // e.g. Wayerton, New Brunswick, Canada
@@ -235,30 +232,30 @@ async function getValidAddress(streetNo, streetName, city, province, postcode, u
         }
         address.province = place_name.substring(provinceStartCommaIndex+1, lastCommaIndex).trim();
         address.postcode = defaultLocation.postcode;
-        console.log("response data for no postal code is ", response.data);
+        log.debug("response data for no postal code is ", response.data);
         address.latitude = defaultLocation.latitude;
         address.longitude = defaultLocation.longitude;
-        console.log("Debug getValidAddress, address is 6 ", address);
+        log.trace("getValidAddress, address is 6 ", address);
       }
     }
 
-    console.log("Debug getValidAddress, output before calling update on database (if applicable) is ", address);
+    log.trace("Debug getValidAddress, output before calling update on database (if applicable) is ", address);
 
     if(updateDatabaseIfInvalid) {
       // Update the database to have the correct postal code, city and province, or the House of Commons.
       // Should the user click "Edit District", they should see the postal code that we are working off of.
-      console.log(`Debugging again. getValidAddress. Before internalUpdate ${username}, `, address);
+      log.trace(`Debugging again. getValidAddress. Before internalUpdate ${username}, `, address);
       let data = await internalUpdateAddress(
         username,
         address
       );
-      console.log(`Debugging again. getValidAddress. After internalUpdate ${username}, `);
-      console.log(data.location);
-      console.log(address);
+      log.trace(`Debugging again. getValidAddress. After internalUpdate ${username}, `);
+      log.trace(data.location);
+      log.trace(address);
     }
     return address;
   } catch ( error ) {
-    console.log("Error when checking if address is valid ", error);
+    log.error("Error when checking if address is valid ", error);
   }
 }
 
@@ -307,7 +304,7 @@ async function convertToValidAddress(data) {
     return data;
   } catch ( err ) {
     // If all else fails, update data to the default location
-    console.log("Error when converting to valid address ", err);
+    log.error("Error when converting to valid address ", err);
 
     data = await internalUpdateAddress(
       data.login.username, 
@@ -351,12 +348,12 @@ async function findDistrictNameAndBoundaries(postcode) {
     // And from that we get the district name.
     location.district = districtData.data.representatives_centroid[0].district_name;
     location.districtBoundaries = await getDistrictBoundaries(districtData.data);
-    console.log("location.districtBoundaries is ", location.districtBoundaries);
-    console.log("findDistrictNameAndBoundaries, data is 2 ", location);
+    log.debug("location.districtBoundaries is ", location.districtBoundaries);
+    log.trace("findDistrictNameAndBoundaries, district location is ", location);
 
     return location;
   } catch (err) {
-    console.log("Error when findDistrictNameAndBoundaries ", err);
+    log.error("Error when findDistrictNameAndBoundaries ", err);
 
     // Most of the randomuser.me data is invalid. (e.g. a city that is in the wrong province, or a postal code that
      // doesn't exist, or latitude and longitude that don't exist.) When we retrieve one of the invalid records, we need to fail gracefully.
@@ -378,12 +375,12 @@ async function findDistrictNameAndBoundaries(postcode) {
 
 // Copy the district name and boundaries (new fields) to the data
 function cloneData(data, districtLocation) {
-  console.log("cloneData, districtLocation is ", districtLocation);
+  log.trace("cloneData, districtLocation is ", districtLocation);
   let dataClone = { ...data };
   dataClone._doc.location.district = districtLocation.district;
   dataClone._doc.location.districtBoundaries = districtLocation.districtBoundaries;
-  console.log("cloneData, latitude is ", dataClone._doc.location.coordinates.latitude);
-  console.log("cloneData, longitude is ", dataClone._doc.location.coordinates.longitude);
+  log.debug("cloneData, latitude is ", dataClone._doc.location.coordinates.latitude);
+  log.debug("cloneData, longitude is ", dataClone._doc.location.coordinates.longitude);
   // dataClone._doc.location.coordinates.latitude = location.latitude;
   // dataClone._doc.location.coordinates.longitude = location.longitude;
   return dataClone;
@@ -393,12 +390,12 @@ function cloneData(data, districtLocation) {
 async function getDistrictBoundaries(districtData) {
   // Given the postal code, find the district.
   // From the district data you can find the URL to look up the boundaries for that district
-  console.log("districtData is ", districtData);
+  log.debug("districtData is ", districtData);
   const boundaryURL = districtData.boundaries_centroid[0].url;
   let boundaryURLQuery = `https://represent.opennorth.ca${boundaryURL}`;
   let boundaryData = await axios.get(boundaryURLQuery);
-  console.log("boundaryURLQuery is ", boundaryURLQuery);
-  console.log("boundaryData is ", boundaryData.data);
+  log.debug("boundaryURLQuery is ", boundaryURLQuery);
+  log.debug("boundaryData is ", boundaryData.data);
 
   // It will look something like the following:
   // {
@@ -442,9 +439,9 @@ async function getDistrictBoundaries(districtData) {
   let shapeURL = boundaryData.data.related.shape_url;
   let shapeURLQuery = `https://represent.opennorth.ca${shapeURL}`;
   let districtBoundary = await axios.get(shapeURLQuery);
-  console.log("shapeURL is ", shapeURL);
-  console.log("shapeURLQuery is ", shapeURLQuery);
-  console.log("districtBoundary is ", districtBoundary.data);
+  log.debug("shapeURL is ", shapeURL);
+  log.debug("shapeURLQuery is ", shapeURLQuery);
+  log.debug("districtBoundary is ", districtBoundary.data);
 
 
   // districtBoundary will look something like the following. (See k1a0a6_districtBoundaries.json for the full list.)

@@ -5,13 +5,19 @@ const port = process.env.PORT || 5000;
 
 const app = express();
 const bodyParser = require("body-parser");
+const log = require('loglevel');
+require('dotenv').config();
+
+if(process.env.DEVELOPMENT_LOGGING_LEVEL) {
+  log.setLevel(process.env.DEVELOPMENT_LOGGING_LEVEL);
+}
 
 //app.use(express.urlencoded({ extended: true }));
 //app.use(express.json());
 
 const apiRoutes = require("./routes/apiroutes");
 
-// Routes for data from MySQL
+// Routes for data from the database
 app.use(apiRoutes);
 
 // Parse response?
@@ -30,7 +36,7 @@ app.get("*", (req, res) => {
 
 // Close your database connection when Node exits
 process.on("exit", async function(code) {
-  return console.log(`About to exit with code ${code}`);
+  return log.warn(`About to exit with code ${code}`);
 });
 
-app.listen(port, () => console.log(`Listening on port ${port}`));
+app.listen(port, () => log.warn(`Listening on port ${port}`));
