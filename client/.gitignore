@@ -10,7 +10,6 @@
 
 # production
 # /build
-mapboxAPIKey-development.js
 
 # misc
 .DS_Store
@@ -18,6 +17,7 @@ mapboxAPIKey-development.js
 .env.development.local
 .env.test.local
 .env.production.local
+
 
 npm-debug.log*
 yarn-debug.log*

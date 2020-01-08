@@ -3,6 +3,7 @@ package-lock.json
 todo.txt
 package-orig.json
 .env
-client/src/mapboxAPIKey-development.js
+.env.development.local
+
 
 

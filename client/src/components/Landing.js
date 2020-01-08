@@ -8,13 +8,8 @@ import EditDistrict from "./EditDistrict";
 import ViewCandidates from './ViewCandidates';
 import Vote from './Vote';
 
-// Because any key embedded in the .env file will be included in the build, 
-// which reveals an API key that we don't want revealed, write the development key in a
-// file that is never checked into GitHub and is never read at runtime.
-import productionMapToken from "../mapboxAPIKey-production.js"; // when deploying to Heroku
-//import developmentMapToken from "../mapboxAPIKey-development.js"; // when testing locally
-
-mapboxgl.accessToken = productionMapToken;
+mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_API_TOKEN;
+console.log("Landing mapbox access token is ", mapboxgl.accessToken);
 
 // const ottawaLat = 45.416667;
 // const ottawaLong = -75.7;

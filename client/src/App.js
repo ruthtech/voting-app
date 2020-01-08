@@ -4,17 +4,15 @@ import Landing from "./components/Landing";
 import UserContext from './utils/UserContext';
 import log from 'loglevel';
 import remote from 'loglevel-plugin-remote';
-
-require('dotenv').config();
-
 // import LoadingSpinner from './components/LoadingSpinner';
 
 // When debugging the React code, set the user data as though they logged in via Login.
 // When not debugging, comment out the below import.
 //import hannahWhite from './debugReact'; 
 
-const level = (process.env.LOGGING_LEVEL) ? process.env.LOGGING_LEVEL : 'info';
-console.log("in App.js process.env.LOGGING_LEVEL is ", process.env.LOGGING_LEVEL);
+const level = (process.env.REACT_APP_LOGGING_LEVEL) ? process.env.REACT_APP_LOGGING_LEVEL : 'info';
+console.log("App.js process.env.REACT_APP_LOGGING_LEVEL is ", process.env.REACT_APP_LOGGING_LEVEL);
+console.log("App.js mapbox access token is ", process.env.REACT_APP_MAPBOX_API_TOKEN);
 log.setLevel(level);
 const customJSON = log => ({
   msg: log.message,
