@@ -139,11 +139,9 @@ router.get("/api/address/:streetno/:streetname/:city/:province/:postcode", async
 });
 
 router.post("/logger", async function(req, res) {
-  console.log("Ironically, debugging the logging in the server's log method");
   const logs = req.body.logs;
   for (const logEntry of logs) {
     const level = logEntry.level;
-    console.log("level is, ", level);
     switch(level) {
       case('trace'): {
         log.trace(logEntry.msg);
