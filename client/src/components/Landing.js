@@ -9,7 +9,6 @@ import ViewCandidates from './ViewCandidates';
 import Vote from './Vote';
 
 mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_API_TOKEN;
-console.log("Landing mapbox access token is ", mapboxgl.accessToken);
 
 // const ottawaLat = 45.416667;
 // const ottawaLong = -75.7;

@@ -11,8 +11,6 @@ import remote from 'loglevel-plugin-remote';
 //import hannahWhite from './debugReact'; 
 
 const level = (process.env.REACT_APP_LOGGING_LEVEL) ? process.env.REACT_APP_LOGGING_LEVEL : 'info';
-console.log("App.js process.env.REACT_APP_LOGGING_LEVEL is ", process.env.REACT_APP_LOGGING_LEVEL);
-console.log("App.js mapbox access token is ", process.env.REACT_APP_MAPBOX_API_TOKEN);
 log.setLevel(level);
 const customJSON = log => ({
   msg: log.message,
@@ -54,7 +52,6 @@ function App() {
           postcode: newUser._doc.location.postcode,
           username: newUser._doc.login.username
         }
-        console.log("App Context ", JSON.stringify(userSubset)); // Ironically, debugging the logging
         log.info("App Context ", JSON.stringify(userSubset)); 
         setUser(newUser)
       },
