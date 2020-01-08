@@ -14,6 +14,7 @@ require('dotenv').config();
 //import hannahWhite from './debugReact'; 
 
 const level = (process.env.LOGGING_LEVEL) ? process.env.LOGGING_LEVEL : 'info';
+console.log("in App.js process.env.LOGGING_LEVEL is ", process.env.LOGGING_LEVEL);
 log.setLevel(level);
 const customJSON = log => ({
   msg: log.message,
@@ -56,7 +57,7 @@ function App() {
           username: newUser._doc.login.username
         }
         console.log("App Context ", JSON.stringify(userSubset)); // Ironically, debugging the logging
-        log.debug("App Context ", JSON.stringify(userSubset)); 
+        log.info("App Context ", JSON.stringify(userSubset)); 
         setUser(newUser)
       },
       log: log
