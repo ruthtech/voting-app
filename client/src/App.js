@@ -2,11 +2,26 @@ import React, { useState } from 'react';
 import Login from "./components/Login";
 import Landing from "./components/Landing";
 import UserContext from './utils/UserContext';
+import log from 'loglevel';
+import remote from 'loglevel-plugin-remote';
+
+require('dotenv').config();
+
 // import LoadingSpinner from './components/LoadingSpinner';
 
 // When debugging the React code, set the user data as though they logged in via Login.
 // When not debugging, comment out the below import.
 //import hannahWhite from './debugReact'; 
+
+const level = (process.env.LOGGING_LEVEL) ? process.env.LOGGING_LEVEL : 'info';
+log.setLevel(level);
+const customJSON = log => ({
+  msg: log.message,
+  level: level,
+  stacktrace: log.stacktrace
+});
+
+remote.apply(log, { format: customJSON, url: '/logger' });
 
 function App() {
   const [user, setUser] = useState( null );
@@ -25,13 +40,25 @@ function App() {
   if(user != null) {
     component = <Landing />
   } else {
-    component = <Login />
+    component = <Login log={log}/>
   }
 
   return (
     <UserContext.Provider value={ {
       user: user,
-      handleLogin: (newUser) => {console.log("App Context ", newUser); setUser(newUser)}
+      handleLogin: (newUser) => {
+        const userSubset = {
+          name: newUser._doc.name,
+          district: newUser._doc.location.district,
+          street: newUser._doc.location.street,
+          city: newUser._doc.location.city,
+          postcode: newUser._doc.location.postcode,
+          username: newUser._doc.login.username
+        }
+        log.debug("App Context ", JSON.stringify(userSubset)); 
+        setUser(newUser)
+      },
+      log: log
     } }>
       { component }
     </UserContext.Provider>

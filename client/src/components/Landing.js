@@ -9,11 +9,12 @@ import ViewCandidates from './ViewCandidates';
 import Vote from './Vote';
 
 // Because any key embedded in the .env file will be included in the build, 
-// which reveals an API key that we eon't want revealed, 
+// which reveals an API key that we don't want revealed, write the development key in a
+// file that is never checked into GitHub and is never read at runtime.
 import productionMapToken from "../mapboxAPIKey-production.js"; // when deploying to Heroku
-//import developmentMapToken from "../mapboxAPIKey-development.js"; // when testing locally
+import developmentMapToken from "../mapboxAPIKey-development.js"; // when testing locally
 
-mapboxgl.accessToken = productionMapToken;
+mapboxgl.accessToken = developmentMapToken;
 
 // const ottawaLat = 45.416667;
 // const ottawaLong = -75.7;
@@ -27,11 +28,12 @@ class Landing extends Component {
 
   componentDidMount() {
     if(this.state.activeComponentId === 0) {
-      let voter = this.context.user;
+      const voter = this.context.user;
+      const log = this.context.log;
       const voterLatitude = voter._doc.location.coordinates.latitude;
       const voterLongitude = voter._doc.location.coordinates.longitude;
       const districtBoundaries = voter._doc.location.districtBoundaries;
-      console.log("voter location is ", voter._doc.location);
+      log.debug("voter location is ", voter._doc.location);
 
       const newMap = new mapboxgl.Map({
         container: this.mapContainer,
@@ -40,10 +42,9 @@ class Landing extends Component {
         zoom: 12
       });
 
-      console.log("district boundaries are ", districtBoundaries);
+      log.debug("district boundaries are ", districtBoundaries);
 
       newMap.on('load', () => {
-        console.log('tests');
         newMap.addLayer({
           'id': voter._doc.location.district,
           'type': 'fill',
@@ -65,8 +66,6 @@ class Landing extends Component {
       this.setState({ map: newMap });
     }
   }
-
-  
 
   componentDidUpdate() {
     if(this.state.activeComponentId === 0) {
@@ -133,13 +132,13 @@ class Landing extends Component {
   
   // active component 3
   renderViewCandidates = () => {
-    return <ViewCandidates />;
+    return <ViewCandidates log={this.context.log}/>;
   }
 
 
   // active component 4
   renderVote = () => {
-    return <Vote />;
+    return <Vote log={this.context.log}/>;
   }
 
   renderActiveComponent = () => {

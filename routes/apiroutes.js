@@ -138,5 +138,58 @@ router.get("/api/address/:streetno/:streetname/:city/:province/:postcode", async
   return res;
 });
 
+router.post("/logger", async function(req, res) {
+
+  const logs = req.body.logs;
+  for (const logEntry of logs) {
+    const level = logEntry.level;
+    console.log("level is, ", level);
+    switch(level) {
+      case('trace'): {
+        log.trace(logEntry.msg);
+        if(logEntry.stacktrace.trim() !== '') {
+          log.trace(logEntry.stacktrace);
+        }
+        break;
+      }
+
+      case('debug'):
+      case('log'): {
+        log.debug(logEntry.msg);
+        if(logEntry.stacktrace.trim() !== '') {
+          log.debug(logEntry.stacktrace);
+        }
+        break;
+      }
+
+      case('info'): {
+        log.info(logEntry.msg);
+        if(logEntry.stacktrace.trim() !== '') {
+          log.info(logEntry.stacktrace);
+        }
+        break;
+      }
+
+      case('error'): {
+        log.error(logEntry.msg);
+        if(logEntry.stacktrace.trim() !== '') {
+          log.error(logEntry.stacktrace);
+        }
+        break;
+      }
+
+      case('warn'): 
+      default: {
+        log.warn(logEntry.msg);
+        if(logEntry.stacktrace.trim() !== '') {
+          log.warn(logEntry.stacktrace);
+        }
+      }
+    }
+  }
+
+  res.status(200);
+  res.send({});
+});
 
 module.exports = router;

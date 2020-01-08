@@ -7,7 +7,6 @@ import ViewCandidates from './ViewCandidates';
 import "./style.css";
 
 function Candidate(props) {
-    // console.log("Candidate ", props);
     const [candidate] = useState(props.candidate);
     const [activeComponentId, setActiveComponentId] = useState(0); // 0 is for candidate details, 1 is for list of candidates, 2 is for Landing
 

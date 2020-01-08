@@ -20,13 +20,13 @@ function EditDistrictConfirm(props) {
         handleLogin(newUser.data); // Update the user in the context.
 
       } catch ( err ) {
-        console.log(err);
+        props.log.error(err);
       }
     };
 
     // active component id 1
     const renderEditDistrict = () => {
-      console.log("location is ", location);
+      props.debug("location is ", location);
       return <EditDistrict location={location}/>;
     };
 

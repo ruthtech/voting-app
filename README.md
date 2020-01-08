@@ -11,7 +11,10 @@ A browser. Chrome was used for testing.
 1. Go to https://github.com/ruthtech/voting-app and click on the "Clone or Download" button. 
 2. Choose "Download ZIP". 
 3. Unzip into a directory. If you're on Windows, open File Explorer and navigate to the download directory. Select the ZIP file, right click, and choose "Extract All". Accept the default location.
-4. Once the file is unzipped, navigate to voting-app-master and use your browser to open index.html.
+4. Once the file is unzipped, navigate to voting-app-master. 
+   * Type "npm install" to install the prerequisites. 
+   * Type "npm start" to start the Express server.
+   * Use your browser to open "localhost:5000".
 
 
 ## Running the tests
@@ -60,6 +63,9 @@ Front end:
   * [React](https://reactjs.org/)
   * [Create-React-App](https://github.com/facebook/create-react-app)
   * [mapbox](https://www.mapbox.com/)
+  * [dotenv](https://www.npmjs.com/package/dotenv)
+  * [loglevel](https://www.npmjs.com/package/loglevel)
+  * [loglevel-plugin-remote](https://github.com/kutuluk/loglevel-plugin-remote)
 
 Back end and middleware:
   * [MongoDB](https://www.mongodb.com/)
@@ -79,21 +85,22 @@ This project does not use versions at this time.
 
 ## Authors
 * Kevin O Davis [https://github.com/kevin-on-davis]
-   * Investigation into opennorth to find the information about political candidates (https://represent.opennorth.ca)
-   * Investigation into randomuser.me to generate information for population of database (https://randomuser.me/)
+   * Investigation into opennorth to find the information about political candidates [opennorth](https://represent.opennorth.ca)
+   * Investigation into randomuser.me to generate information for population of database [randomuser.me](https://randomuser.me/)
    * Server: endpoint creation and implementation, connected endpoints to backend database
    * Database/Mongoose: 
-      * creation of MongoDB database and collections
-      * initialization of MongoDB from random.me data
-      * creation of the Mongoose models
+      * creation of MongoDB database and collections [MongoDB](https://www.mongodb.com/)
+      * initialization of MongoDB from randomuser.me data
+      * creation of the models (Mongoose) [Mongoose](https://www.npmjs.com/package/mongoose)
 
 * Ruth Lee [https://github.com/ruthtech]
-   * mapbox (https://www.mapbox.com/)
+   * [mapbox](https://www.mapbox.com/)
    * React Front end (React, Bootstrap, React-Bootstrap, create-react-app)
-   * loglevel (https://www.npmjs.com/package/loglevel)
-   * Server: created express server skeleton and some endpoints for Kevin to change the api routes to be populated from the database rather than the mock data, additional endpoint creation and implementation, code to check addresses against mapbox to see if it exists. (And if the invalid address is in the database, the user's record is updated to the most likely real address.)
+   * [dotenv](https://www.npmjs.com/package/dotenv)
+   * [logging](https://www.npmjs.com/package/loglevel) and [React logging](https://github.com/kutuluk/loglevel-plugin-remote)
+   * Server: created express server skeleton, endpoint creation and implementation, code that checks if the voters' addresses exist. (And if the invalid address is in the database, the voter's record is updated to the most likely real address.)
    * Database/Mongoose:
-       * Debugged and modified the connection to MongoDB/Mongoose for Heroku
+       * Debugged and modified the connection to MongoDB and Mongoose models for Heroku
    * Deployment to Heroku
 
 ## License
@@ -105,6 +112,5 @@ Thanks to the following:
 * Icon of Canada flag (circle) made by [Roundicons](https://www.flaticon.com/authors/roundicons) from [Flaticon](https://www.flaticon.com/)
 * Canada flag on the login page made by [Freepik](https://www.flaticon.com/authors/freepik) from [Flaticon](https://www.flaticon.com)
 * Latitude and longitude manual lookup [latlong.net](https://www.latlong.net/)
-
-
+* Article [Best Practices for Client-Side Logging and Error Handling in React](https://www.loggly.com/blog/best-practices-for-client-side-logging-and-error-handling-in-react/) for guidance on how to send React logging messages to the server. (This means that even if a voter doesn't know how to get and submit any log error messages, the logs still have them.)
   

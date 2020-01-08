@@ -12,17 +12,15 @@ if(process.env.LOGGING_LEVEL) {
   log.setLevel(process.env.LOGGING_LEVEL);
 }
 
-//app.use(express.urlencoded({ extended: true }));
-//app.use(express.json());
+// Make sure to define the configurations BEFORE defining the routes or req.body
+// will be undefined. 
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
 const apiRoutes = require("./routes/apiroutes");
 
 // Routes for data from the database
 app.use(apiRoutes);
-
-// Parse response?
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
 
 // Serve the React components and assets
 app.use(express.static(path.join(__dirname, "client/build")));

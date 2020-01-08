@@ -17,7 +17,7 @@ function VoteSubmitted(props) {
         await axios.put(`/api/voter/${user.uuid}/${candidate.id}`);
       }
       catch( err ) {
-        console.log(err);    
+        props.log.error(err);    
       }
     }
 

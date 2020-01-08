@@ -8,7 +8,7 @@ import CandidateDetails from './CandidateDetails';
 import Card from 'react-bootstrap/Card';
 import "./style.css";
 
-function ViewCandidates() {
+function ViewCandidates(props) {
     const [candidates, setCandidates] = useState([]);
     const [voter, setVoter] = useState(null);
     const [selectedCandidate, setSelectedCandidate] = useState(null); 
@@ -19,21 +19,20 @@ function ViewCandidates() {
         try {
           if(voter === null) {
             // Not ready to load candidates until we know what district the user is in
-            // console.log("Vote loadCandidates no voter yet");
             return;
           }
   
           if(activeComponentId === 0) {
             let postcode = voter._doc.location.postcode.replace(/\s/g, "");
-            // console.log(`/api/candidates/${postcode}`);
+            props.log.debug(`/api/candidates/${postcode}`);
             const candidates = await axios.get(`/api/candidates/${postcode}`);
-            // console.log("View Candidates found ", candidates);
+            props.log.debug("View Candidates found ", candidates);
             setCandidates(candidates.data.candidateList);
             setActiveComponentId(2);
           }
         }
         catch( err ) {
-            console.log(err);
+            props.log.error(err);
             setCandidates([]);
         }
       }
@@ -46,7 +45,7 @@ function ViewCandidates() {
           <div className="row ">
             {
              candidates.map( (candidate) => {
-              //  console.log(candidate)
+              props.log.debug(candidate)
                return renderCandidateThumbnail(candidate);
              })
             }
@@ -63,14 +62,13 @@ function ViewCandidates() {
     }
 
     const renderHome = () => {
-      // console.log("CandidateCard going home");
       return (
         <Landing />
       );
     }
   
     const renderCandidateDetails = (candidate) => {
-      return <CandidateDetails candidate={candidate} handleSelectCandidate={setSelectedCandidate}/>
+      return <CandidateDetails candidate={candidate} handleSelectCandidate={setSelectedCandidate} log={props.log}/>
     };
   
     const renderCandidateThumbnail = (candidate) => {

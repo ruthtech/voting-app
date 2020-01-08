@@ -8,28 +8,13 @@ import UserContext from '../utils/UserContext';
 import CanadaFlag from './assets/media/canada-flag.svg';
 import "./style.css";
 
-function Login() {
+function Login(props) {
   const [username, setUsername] = useState();
   const [password, setPassword] = useState();
 
   const handleFormSubmit = async (username, password, handleLogin, event) => {
     try {
       event.preventDefault();
-
-      // DEBUG
-      // This will be in place only while Ruth tries to get the mapbox API key working off of the production API key.
-      if((username === "test") && (password === "testingintoronto")) {
-        const user = {
-          _doc: {
-            login: {
-              username: "test"
-            }
-          }
-        };
-        handleLogin(user);
-        return;
-      }
-      // END DEBUG
 
       username = encodeURI(username);
 
@@ -45,7 +30,7 @@ function Login() {
       // Success
       handleLogin(user.data.isVerified);
     } catch ( err ) {
-      console.log(err);
+      props.log.error(err);
 
       // null means that no user is logged in.
       handleLogin(null);

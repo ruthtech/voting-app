@@ -10,35 +10,32 @@ import "./style.css";
 
 
 
-function Vote() {
+function Vote(props) {
   const [candidates, setCandidates] = useState([]);
   const [selectedCandidate, setSelectedCandidate] = useState(null);
   const [activeComponentId, setActiveComponentId] = useState(0); // 0 for the loading spinner, 1 for the page listing all of the voting rows, and 2 for vote confirm
   const [voter, setVoter] = useState(null);
 
   useEffect( () => {
-    // console.log("Vote useEffect");
     async function loadCandidates() {
       try {
         if(voter === null) {
           // Not ready to load candidates until we know what district the user is in
-          // console.log("Vote loadCandidates no voter yet");
           return;
         }
   
         if(activeComponentId === 0) {
-          // console.log("Vote loadCandidates voter is ", voter);
-          console.log(voter._doc);
+          props.log.debug(voter._doc);
           let postcode = voter._doc.location.postcode.replace(/\s/g, "");
-          console.log(`Vote loadCandidates with /api/candidates/${postcode}`);
+          props.log.debug(`Vote loadCandidates with /api/candidates/${postcode}`);
           const candidates = await axios.get(`/api/candidates/${postcode}`);
-          console.log("Vote loadCandidates after ", candidates.data);
+          props.log.debug("Vote loadCandidates after ", candidates.data);
           setCandidates(candidates.data.candidateList);
           setActiveComponentId(2);
         }
       }
       catch( err ) {
-          console.log(err);
+          props.log.error(err);
           setCandidates([]);
       }
     };
@@ -47,7 +44,7 @@ function Vote() {
 
 
   const handleFormSelect = async (candidate) => {
-    console.log("Vote, candidate selected, candidate is ", candidate);
+    props.log.debug("Vote, candidate selected, candidate is ", candidate);
     setSelectedCandidate(candidate);
   };
 
@@ -58,7 +55,6 @@ function Vote() {
 
   // Active Component Id 1
   const renderDefault = () => {
-    // console.log("Vote renderDefault ", candidates);
     return  (
       <div className="container-fluid bg-almostWhite full-screen">
         <div className="row pt-3">
@@ -88,7 +84,7 @@ function Vote() {
 
   // Active Component Id 2
   const renderVoteConfirm = () => {
-    return <VoteConfirm candidate={selectedCandidate} />
+    return <VoteConfirm candidate={selectedCandidate} log={props.log}/>
   };
 
   const renderActiveComponent = () => {
@@ -112,11 +108,7 @@ function Vote() {
     <UserContext.Consumer>
     {
       ({user}) => {
-        // console.log("Vote in render. user is ", user);
         setVoter(user);
-        // console.log("Vote in render. voter is ", voter);
-        // console.log("Vote in render. candidates are ", candidates);
-        // console.log("Vote in render, loading is ", loading);
         return renderActiveComponent();
       }
     }

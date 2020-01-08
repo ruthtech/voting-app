@@ -8,6 +8,7 @@ import UserContext from '../utils/UserContext';
 import EditDistrictConfirm from './EditDistrictConfirm';
 import Landing from './Landing';
 import "./style.css";
+import log from 'loglevel';
 
 class EditDistrict extends Component {
   // Location data is not escaped until right before it is sent to axios. 
@@ -20,14 +21,15 @@ class EditDistrict extends Component {
   handleFormSubmit = async (event) => {
     try {
       event.preventDefault();
+      const log = this.context.log;
       // Check if the address is valid or not. If it's not, replace it with the nearest valid address.
       // escape is deprecated and doesn't work on the Quebec city names with accents. Use encodeURI instead.
-      console.log(`EditDistrict about to call /api/address/${encodeURI(this.state.location.streetNo)}/${encodeURI(this.state.location.streetName)}/${encodeURI(this.state.location.city)}/${encodeURI(this.state.location.province)}/${encodeURI(this.state.location.postcode.replace(/\s/g, ""))}`);
+      log.debug(`EditDistrict about to call /api/address/${encodeURI(this.state.location.streetNo)}/${encodeURI(this.state.location.streetName)}/${encodeURI(this.state.location.city)}/${encodeURI(this.state.location.province)}/${encodeURI(this.state.location.postcode.replace(/\s/g, ""))}`);
       let newLocation = await axios.get(`/api/address/${encodeURI(this.state.location.streetNo)}/${encodeURI(this.state.location.streetName)}/${encodeURI(this.state.location.city)}/${encodeURI(this.state.location.province)}/${encodeURI(this.state.location.postcode.replace(/\s/g, ""))}`);
-      console.log("EditDistrict, newLocation is ", newLocation.data);
+      log.debug("EditDistrict, newLocation is ", newLocation.data);
       this.setState({ location: newLocation.data });
     } catch( err ) {
-      console.log(err);
+      log.error(err);
     }
   }
 
@@ -38,14 +40,16 @@ class EditDistrict extends Component {
 
   // active component id 1
   renderConfirm = () => {
-    let voter = this.context.user;
-    console.log("EditDistrict about to confirm, location is ", this.state.location);
-    return <EditDistrictConfirm location={this.state.location} username={voter._doc.login.username}/>
+    const voter = this.context.user;
+    const log = this.context.log;
+    log.debug("EditDistrict about to confirm, location is ", this.state.location);
+    return <EditDistrictConfirm location={this.state.location} username={voter._doc.login.username} log={log}/>
   };
 
   // active component id 0
   renderDefault = () => {
-    console.log("EditDistrict rendering page, location is ", this.state.location);
+    const log = this.context.log;
+    log.debug("EditDistrict rendering page, location is ", this.state.location);
     return (
       <div className="container-fluid bg-almostWhite full-screen">
           <div className="row">
@@ -76,7 +80,7 @@ class EditDistrict extends Component {
 
                   <Form.Group value={this.state.location.province} className="right-align-div">
                     <DropdownButton id="provinceDropdown" title="Province/Territory" variant="secondary">
-                      <Dropdown.Item id="Alberta" onClick={() => {this.setState({ location: {...this.state.location, province:'Alberta'}}); console.log("Setting to Alberta, hopefully. What is the retrieved value? ", this.state.location);}}>Alberta</Dropdown.Item>
+                      <Dropdown.Item id="Alberta" onClick={() => {this.setState({ location: {...this.state.location, province:'Alberta'}})}}>Alberta</Dropdown.Item>
                       <Dropdown.Item id="BritishColumbia" onClick={() => this.setState({ location: {...this.state.location, province:'British Columbia'}})}>British Columbia</Dropdown.Item>
                       <Dropdown.Item id="Manitoba" onClick={() => this.setState({ location: {...this.state.location, province:'Manitoba'}})}>Manitoba</Dropdown.Item>
                       <Dropdown.Item id="NewBrunswick" onClick={() => this.setState({ location: {...this.state.location, province:'New Brunswick'}})}>New Brunswick</Dropdown.Item>
