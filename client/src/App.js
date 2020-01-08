@@ -55,6 +55,7 @@ function App() {
           postcode: newUser._doc.location.postcode,
           username: newUser._doc.login.username
         }
+        console.log("App Context ", JSON.stringify(userSubset)); // Ironically, debugging the logging
         log.debug("App Context ", JSON.stringify(userSubset)); 
         setUser(newUser)
       },

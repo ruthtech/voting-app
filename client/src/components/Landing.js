@@ -12,9 +12,9 @@ import Vote from './Vote';
 // which reveals an API key that we don't want revealed, write the development key in a
 // file that is never checked into GitHub and is never read at runtime.
 import productionMapToken from "../mapboxAPIKey-production.js"; // when deploying to Heroku
-import developmentMapToken from "../mapboxAPIKey-development.js"; // when testing locally
+//import developmentMapToken from "../mapboxAPIKey-development.js"; // when testing locally
 
-mapboxgl.accessToken = developmentMapToken;
+mapboxgl.accessToken = productionMapToken;
 
 // const ottawaLat = 45.416667;
 // const ottawaLong = -75.7;
