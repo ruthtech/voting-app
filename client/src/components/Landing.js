@@ -73,6 +73,8 @@ class Landing extends Component {
   
   renderDefault = () => {
     let voter = this.context.user;
+    console.log("has voter voted already? ", (voter._doc.hasvoted==='true'));
+    console.log("what is the voter structure like? ", voter._doc);
     return (
       <div className="container-fluid full-screen">
         <div className="row">
@@ -96,7 +98,8 @@ class Landing extends Component {
             </div>
             <div className="col">
                 <Button variant="secondary w-100"
-                    onClick={ () => { this.setState({ activeComponentId: 4 })}} >
+                    onClick={ () => { 
+                      this.setState({ activeComponentId: 4 })}} disabled={voter._doc.hasvoted==='true'}>
                     Vote</Button>
             </div>
         </div>

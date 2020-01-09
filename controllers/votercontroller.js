@@ -500,7 +500,8 @@ async function getDistrictBoundaries(districtData) {
 //   res.send(result);
 // };
 
-const enterVote = async function(voter, candidateid) {
+const enterVote = async function(voterid, candidateid) {
+  console.log("entering a vote ")
   let newVoteTally = await CandidateModel.findOneAndUpdate(
     { _id: candidateid },
     { $inc: { votes_for: 1 } }

@@ -52,10 +52,10 @@ router.get("/api/candidates/:postcode", async function(req, res) {
 router.post("/api/voter/:voterid/:candidateId", async function(req, res) {
   try {
     const tallyVote = {
-      votecast: await voter.enterVote(req.body.voterid, req.body.candidateId)
+      votecast: await voter.enterVote(req.params.voterid, req.params.candidateId)
     };
   } catch (err) {
-    log.error("/api/login/:username/:password");
+    log.error(`/api/voter/${req.params.voterid}/${req.params.candidateId}`);
     log.error(err);
     res.send(err);
   }
