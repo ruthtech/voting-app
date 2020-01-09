@@ -99,7 +99,7 @@ class EditDistrict extends Component {
                   <Form.Group controlId="formSubmit" className="centre-align-div">
                     <Button variant="secondary w-50 mr-3" type="button" 
                       onClick={ () => { this.setState({ activeComponentId: 2 }); } }>
-                      Back
+                      Home
                     </Button>
                     <Button variant="secondary w-50 ml-3" type="submit" 
                       onClick={(event) => {

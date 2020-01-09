@@ -5,6 +5,7 @@ import axios from 'axios';
 import UserContext from '../utils/UserContext';
 import VoteConfirm from './VoteConfirm';
 import LoadingSpinner from './LoadingSpinner';
+import Landing from './Landing';
 
 import "./style.css";
 
@@ -13,7 +14,7 @@ import "./style.css";
 function Vote(props) {
   const [candidates, setCandidates] = useState([]);
   const [selectedCandidate, setSelectedCandidate] = useState(null);
-  const [activeComponentId, setActiveComponentId] = useState(0); // 0 for the loading spinner, 1 for the page listing all of the voting rows, and 2 for vote confirm
+  const [activeComponentId, setActiveComponentId] = useState(0); // 0 for the loading spinner, 1 for the page listing all of the voting rows, 2 for vote confirm, and 3 for landing
   const [voter, setVoter] = useState(null);
 
   useEffect( () => {
@@ -71,12 +72,18 @@ function Vote(props) {
             </div>
         </div>
         <div className="row">
-            <div className="col right-align-div">
-              <Button variant="secondary w-50" type="submit" onClick={
-                () => { setActiveComponentId(1) }} disabled={selectedCandidate===null}>
-                Vote
-              </Button>
-            </div>
+          <div className="col">
+            <Button variant="secondary w-100" type="submit" onClick={
+              () => { setActiveComponentId(3) }} >
+              Home
+            </Button>
+          </div>
+          <div className="col">
+            <Button variant="secondary w-100" type="submit" onClick={
+              () => { setActiveComponentId(1) }} disabled={selectedCandidate===null}>
+              Vote
+            </Button>
+          </div>
         </div>
     </div>
     );
@@ -87,6 +94,11 @@ function Vote(props) {
     return <VoteConfirm candidate={selectedCandidate} log={props.log}/>
   };
 
+  // Active Component Id 3
+  const renderHome = () => {
+    return <Landing />;
+  };
+
   const renderActiveComponent = () => {
     switch(activeComponentId) {
       case(0): {
@@ -95,6 +107,10 @@ function Vote(props) {
 
       case(1): {
         return renderVoteConfirm();
+      }
+
+      case(3): {
+        return renderHome();
       }
 
       case(2):
