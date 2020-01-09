@@ -17,6 +17,11 @@ function Login(props) {
       event.preventDefault();
 
       username = encodeURI(username);
+      if(username==='admin') {
+        // Temporary. How do we want to support the adminstrator running the simulation for the user to see?
+        handleLogin({ name: "admin", isAdmin: true });
+        return;
+      }
 
       let query = `/api/login/${username}/${password}`;
       const user = await axios.get(query);

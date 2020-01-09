@@ -1,3 +1,5 @@
+import ottawaCentreDistrictBoundaries from './components/assets/geoJSON/ottawaCentreDistrictBoundaries';
+
 const hannahWhite = { 
     _doc: {
       "_id" : "5df12740d7c15a6378d6b8b5", 
@@ -24,7 +26,8 @@ const hannahWhite = {
           "timezone" : {
               "offset" : "-7:00", 
               "description" : "Edmonton"
-          }
+          },
+          "districtBoundaries": ottawaCentreDistrictBoundaries
       }, 
       "email" : "hannah.white@example.com", 
       "login" : {

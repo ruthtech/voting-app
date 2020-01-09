@@ -11,6 +11,7 @@ let TOKEN = process.env.MAPBOX_API_TOKEN; // Defined in Heroku via the CLI herok
 if(process.env.LOGGING_LEVEL) {
   log.setLevel(process.env.LOGGING_LEVEL);
 }
+console.log("apiroutes mapbox is ", process.env.LOGGING_LEVEL);
 
 if(process.env.DEVELOPMENT_MAPBOX_APIKEY) {
   // running locally. Switch to the local mapbox API key and read what level of logging we want.

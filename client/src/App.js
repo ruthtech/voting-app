@@ -4,7 +4,7 @@ import Landing from "./components/Landing";
 import UserContext from './utils/UserContext';
 import log from 'loglevel';
 import remote from 'loglevel-plugin-remote';
-// import LoadingSpinner from './components/LoadingSpinner';
+import Simulation from './components/Simulation';
 
 // When debugging the React code, set the user data as though they logged in via Login.
 // When not debugging, comment out the below import.
@@ -26,33 +26,44 @@ function App() {
   //const [user, setUser] = useState(hannahWhite); 
   // END DEBUGGING REACT
 
-  // This React application was designed to have only two roots:
+  // This React application was designed to have only three roots:
   //   1. Login 
   //   2. Landing (after user has logged in)
+  //   3. Simulation (after admin has logged in)
   //
   // You cannot reach any of the components via a Router. This was done
   // so that we do not need to check, in every component, if the user has logged
-  // in or not. The URL cannot reach any components except Login or Landing. 
+  // in or not. The URL cannot reach any components except Login, Landing, or Simulation. 
   let component = null;
-  if(user != null) {
-    component = <Landing />
-  } else {
+  if(user === null) {
     component = <Login log={log}/>
+  } else if(user.isAdmin === true) {
+    component = <Simulation />
+  } else {
+    component = <Landing />
   }
 
   return (
     <UserContext.Provider value={ {
       user: user,
       handleLogin: (newUser) => {
-        const userSubset = {
-          name: newUser._doc.name,
-          district: newUser._doc.location.district,
-          street: newUser._doc.location.street,
-          city: newUser._doc.location.city,
-          postcode: newUser._doc.location.postcode,
-          username: newUser._doc.login.username
+        if((newUser === null)) {
+          // If null, either the username or the password didn't match. No one is logged in yet.
+          return;
         }
-        log.info("App Context ", JSON.stringify(userSubset)); 
+
+        if(!newUser.isAdmin) {
+          // If the user is an administrator, they don't have an address etc. They just need to run the simulation.
+          const userSubset = {
+            name: newUser._doc.name,
+            district: newUser._doc.location.district,
+            street: newUser._doc.location.street,
+            city: newUser._doc.location.city,
+            postcode: newUser._doc.location.postcode,
+            username: newUser._doc.login.username
+          }
+          log.info("App Context ", JSON.stringify(userSubset)); 
+        }
         setUser(newUser)
       },
       log: log
