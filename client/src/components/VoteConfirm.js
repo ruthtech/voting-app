@@ -4,11 +4,13 @@ import Button from 'react-bootstrap/Button';
 import UserContext from '../utils/UserContext';
 import Vote from "./Vote";
 import VoteSubmitted from "./VoteSubmitted";
+import axios from "axios";
 import "./style.css";
 
 function VoteConfirm(props) {
     const [activeComponentId, setActiveComponentId] = useState(0); // 0 is for default, 1 is for edit/go back, 2 is for save/confirm
     const [candidate] = useState(props.candidate);
+    const [voterId] = useState(props.voterId);
 
     // Active Component Id 0
     const renderDefault = () => {
@@ -48,12 +50,23 @@ function VoteConfirm(props) {
 
     // active component id 1
     const renderEditVote = () => {
-        return <Vote />;
+        return <Vote log={props.log} />;
     }
 
     // active component id 2
     const renderConfirm = () => {
-        return <VoteSubmitted candidate={candidate}/>;
+        // Submit the vote
+        // /api/voter/:voterid/:candidateId
+        console.log(`/api/voter/${voterId}/${candidate._id}`);
+        axios.get(`/api/voter/${voterId}/${candidate._id}`)
+        .then(function(response){
+            props.log.debug("vote submitted and response is ", response);
+        })
+        .catch(function(error) {
+            props.log.error(error);
+        });
+
+        return <VoteSubmitted candidate={candidate} log={props.log} />;
     }
 
     const renderActiveComponent = () => {

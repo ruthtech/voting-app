@@ -7,8 +7,11 @@ import VoteConfirm from './VoteConfirm';
 import LoadingSpinner from './LoadingSpinner';
 import Landing from './Landing';
 
-import "./style.css";
+// When debugging the React code, set the user data as though they logged in via Login.
+// When not debugging, comment out the below import.
+// import { ottawaCentreCandidatesList } from '../debugReact'; 
 
+import "./style.css";
 
 
 function Vote(props) {
@@ -32,6 +35,10 @@ function Vote(props) {
           const candidates = await axios.get(`/api/candidates/${postcode}`);
           props.log.debug("Vote loadCandidates after ", candidates.data);
           setCandidates(candidates.data.candidateList);
+
+          // FOR DEBUGGING REACT. Comment out and replace with the line above when in production.
+          // setCandidates(ottawaCentreCandidatesList);
+          // END DEBUGGING REACT
           setActiveComponentId(2);
         }
       }
@@ -91,7 +98,7 @@ function Vote(props) {
 
   // Active Component Id 2
   const renderVoteConfirm = () => {
-    return <VoteConfirm candidate={selectedCandidate} log={props.log}/>
+    return <VoteConfirm candidate={selectedCandidate} log={props.log} voterId={voter._doc.login.uuid}/>
   };
 
   // Active Component Id 3

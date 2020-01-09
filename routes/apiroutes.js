@@ -63,7 +63,6 @@ router.post("/api/voter/:voterid/:candidateId", async function(req, res) {
 
 //
 router.post("/api/run/simulator", async function(req, res) {
-  console.log("Running Simulator");
   voter.runSimulation();
 });
 // Return the candidate with the given id

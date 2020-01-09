@@ -3,7 +3,7 @@ package-lock.json
 todo.txt
 package-orig.json
 .env
-.env.development.local
+.env.development
 
 
 

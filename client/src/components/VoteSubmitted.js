@@ -10,17 +10,6 @@ function VoteSubmitted(props) {
     const [candidate] = useState(props.candidate);
     const [activeComponentId, setActiveComponentId] = useState(0); // 0 means the confirmation message, 1 means landing page
 
-    // Could have done this on the last page (VoteConfirm) ... decisions, decisions ...
-    // Tell the server to mark this user as having voted and increment the candidate's # of votes by 1.
-    const submitVote = async (user, candidate) => {
-      try {
-        await axios.put(`/api/voter/${user.uuid}/${candidate.id}`);
-      }
-      catch( err ) {
-        props.log.error(err);    
-      }
-    }
-
     // active id 1
     const renderHome = () => {
         return <Landing />;
@@ -35,7 +24,7 @@ function VoteSubmitted(props) {
                         <h1>You voted for</h1>
                     </div>
                 </div>
-                <div className="row pb-3">
+                <div className="row pb-3 text-center">
                     <div className="col">
                     <Card>
                         <Card.Body>
@@ -76,7 +65,6 @@ function VoteSubmitted(props) {
         <UserContext.Consumer>
         {  
           ({user}) => {
-            submitVote(user, candidate);
             return renderActiveComponent();
           }
         }
