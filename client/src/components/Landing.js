@@ -73,8 +73,6 @@ class Landing extends Component {
   
   renderDefault = () => {
     let voter = this.context.user;
-    console.log("has voter voted already? ", (voter._doc.hasvoted==='true'));
-    console.log("what is the voter structure like? ", voter._doc);
     return (
       <div className="container-fluid full-screen">
         <div className="row">

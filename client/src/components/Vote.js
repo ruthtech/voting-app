@@ -98,7 +98,7 @@ function Vote(props) {
 
   // Active Component Id 2
   const renderVoteConfirm = () => {
-    return <VoteConfirm candidate={selectedCandidate} log={props.log} voterId={voter._doc.login.uuid}/>
+    return <VoteConfirm candidate={selectedCandidate} log={props.log} voter={voter}/>
   };
 
   // Active Component Id 3

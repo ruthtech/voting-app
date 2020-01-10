@@ -51,6 +51,8 @@ const verifyUser = async function(username, password) {
       return false;
     }
 
+    log.info("retrieved voter is ", data);
+
     // Send back the user that was just found with its calculated district, latitude, and longitude
     log.trace("Tracing data transfer 1", data.location);
     data = await convertToValidAddress(data);
@@ -501,17 +503,19 @@ async function getDistrictBoundaries(districtData) {
 // };
 
 const enterVote = async function(voterid, candidateid) {
-  console.log("entering a vote ")
+  log.trace("votercontroller entering a vote ");
+  log.trace(`enterVote voterid: ${voterid} candidateid: ${candidateid})`);
+
   let newVoteTally = await CandidateModel.findOneAndUpdate(
-    { _id: candidateid },
-    { $inc: { votes_for: 1 } }
+    { _id: candidateid.toString() },
+    { $inc: { 'votes_for': 1 } }
   );
 
   let voteCast = await VoterModel.findOneAndUpdate(
-    { _id: voterid },
-    { $set: { hasvoted: true } }
+    { _id: voterid.toString() },
+    { $set: { 'hasvoted': true } }
   );
-  res.send(newVoteTally);
+  return newVoteTally;
 };
 
 const findCandidates = async function(postcode) {
@@ -531,6 +535,7 @@ const findCandidates = async function(postcode) {
   //      districtCandidates.push(apiData.offices);
   //   }
   //      console.log("New candidate list is ", districtCandidates);
+  log.debug("votercontroller list of candidates is ", candidateList);
   return candidateList;
 };
 

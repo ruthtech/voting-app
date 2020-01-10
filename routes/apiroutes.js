@@ -51,9 +51,12 @@ router.get("/api/candidates/:postcode", async function(req, res) {
 // Vote for a candidate and log event that user has voted
 router.post("/api/voter/:voterid/:candidateId", async function(req, res) {
   try {
-    const tallyVote = {
+    console.log("apiroutes entering a vote ");
+    console.log(`/api/voter/${req.params.voterid}/${req.params.candidateId}`);
+    const newVoteTally = {
       votecast: await voter.enterVote(req.params.voterid, req.params.candidateId)
     };
+    res.send(newVoteTally);
   } catch (err) {
     log.error(`/api/voter/${req.params.voterid}/${req.params.candidateId}`);
     log.error(err);

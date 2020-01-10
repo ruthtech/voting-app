@@ -10,7 +10,7 @@ import "./style.css";
 function VoteConfirm(props) {
     const [activeComponentId, setActiveComponentId] = useState(0); // 0 is for default, 1 is for edit/go back, 2 is for save/confirm
     const [candidate] = useState(props.candidate);
-    const [voterId] = useState(props.voterId);
+    const [voter] = useState(props.voter);
 
     // Active Component Id 0
     const renderDefault = () => {
@@ -57,14 +57,20 @@ function VoteConfirm(props) {
     const renderConfirm = () => {
         // Submit the vote
         // /api/voter/:voterid/:candidateId
-        console.log(`/api/voter/${voterId}/${candidate._id}`);
-        axios.get(`/api/voter/${voterId}/${candidate._id}`)
+        props.log.debug("candidate is ", candidate);
+        props.log.debug(`/api/voter/${voter._doc._id}/${candidate._id}`);
+        axios.post(`/api/voter/${voter._doc._id}/${candidate._id}`)
         .then(function(response){
             props.log.debug("vote submitted and response is ", response);
         })
         .catch(function(error) {
             props.log.error(error);
         });
+
+        // Now that the vote is updated in the database, since we're not retrieveing the voter object
+        // that we're working with (i.e., it will still have "hasvoted" as null), update the voter
+        // object directly to show that this voter has voted.
+        voter._doc.hasvoted = true;
 
         return <VoteSubmitted candidate={candidate} log={props.log} />;
     }
