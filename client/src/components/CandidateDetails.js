@@ -90,7 +90,7 @@ function Candidate(props) {
 
     // Active component id 1
     const renderAllCandidates = () => {
-        return <ViewCandidates />;
+        return <ViewCandidates log={props.log}/>;
     }
 
     // Active component id 2

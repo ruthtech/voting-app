@@ -112,5 +112,5 @@ Thanks to the following:
 * Icon of Canada flag (circle) made by [Roundicons](https://www.flaticon.com/authors/roundicons) from [Flaticon](https://www.flaticon.com/)
 * Canada flag on the login page made by [Freepik](https://www.flaticon.com/authors/freepik) from [Flaticon](https://www.flaticon.com)
 * Latitude and longitude manual lookup [latlong.net](https://www.latlong.net/)
-* Article [Best Practices for Client-Side Logging and Error Handling in React](https://www.loggly.com/blog/best-practices-for-client-side-logging-and-error-handling-in-react/) for guidance on how to send React logging messages to the server. (This means that even if a voter doesn't know how to get and submit any log error messages, the logs still have them.)
+* Article [Best Practices for Client-Side Logging and Error Handling in React](https://www.loggly.com/blog/best-practices-for-client-side-logging-and-error-handling-in-react/) for guidance on how to send React logging messages to the server. (This means that even if a voter doesn't know how to get and submit any React log error messages, the logs still have them.)
   

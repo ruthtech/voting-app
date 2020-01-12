@@ -55,12 +55,12 @@ function App() {
         if(!newUser.isAdmin) {
           // If the user is an administrator, they don't have an address etc. They just need to run the simulation.
           const userSubset = {
-            name: newUser._doc.name,
-            district: newUser._doc.location.district,
-            street: newUser._doc.location.street,
-            city: newUser._doc.location.city,
-            postcode: newUser._doc.location.postcode,
-            username: newUser._doc.login.username
+            name: newUser.name,
+            district: newUser.location.district,
+            street: newUser.location.street,
+            city: newUser.location.city,
+            postcode: newUser.location.postcode,
+            username: newUser.login.username
           }
           log.info("App Context ", JSON.stringify(userSubset)); 
         }

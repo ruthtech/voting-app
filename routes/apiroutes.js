@@ -1,6 +1,9 @@
 const express = require("express");
 const router = express.Router();
-var voter = require("../controllers/votercontroller");
+const Voter = require("../controllers/voterController");
+const Simulator = require('../controllers/simulationController');
+const Candidate = require("../controllers/candidateController");
+const Address = require("../controllers/addressController"); // Not a controller because it does not speak with a database, just mapbox
 const log = require('loglevel');
 require('dotenv').config();
 
@@ -11,7 +14,7 @@ if(process.env.LOGGING_LEVEL) {
 router.get("/api/login/:username/:password", async function(req, res) {
   try {
     const user = {
-      isVerified: await voter.verifyUser(
+      isVerified: await Voter.verifyUser(
         req.params.username,
         req.params.password
       )
@@ -32,7 +35,7 @@ router.get("/api/login/:username/:password", async function(req, res) {
 router.get("/api/candidates/:postcode", async function(req, res) {
   try {
     const candidates = {
-      candidateList: await voter.findCandidates(
+      candidateList: await Candidate.findCandidates(
         req.params.postcode.replace(/\s/g, "")
       )
     };
@@ -49,25 +52,34 @@ router.get("/api/candidates/:postcode", async function(req, res) {
 });
 
 // Vote for a candidate and log event that user has voted
-router.post("/api/voter/:voterid/:candidateId", async function(req, res) {
+router.put("/api/voter/:voterid/:candidateId", async function(req, res) {
   try {
-    console.log("apiroutes entering a vote ");
-    console.log(`/api/voter/${req.params.voterid}/${req.params.candidateId}`);
+    log.debug(`/api/voter/${req.params.voterid}/${req.params.candidateId}`);
     const newVoteTally = {
-      votecast: await voter.enterVote(req.params.voterid, req.params.candidateId)
+      voter: await Voter.enterVote(req.params.voterid),
+      votecast: await Candidate.enterVote(req.params.candidateId)
     };
+    res.status(200);
     res.send(newVoteTally);
   } catch (err) {
     log.error(`/api/voter/${req.params.voterid}/${req.params.candidateId}`);
     log.error(err);
+    res.status(500);
     res.send(err);
   }
 });
 
-//
-router.post("/api/run/simulator", async function(req, res) {
-  voter.runSimulation();
+// Put instead of post because we are updating records, not creating new ones
+router.put("/api/simulator/run", async function(req, res) {
+  res.status(200);
+  res.send(Simulator.runSimulation());
 });
+
+router.put("/api/simulator/reset", async function(req, res) {
+  res.status(200);
+  res.send(Simulator.resetSimulation());
+});
+
 // Return the candidate with the given id
 // router.get("/api/candidate/:id", async function(req, res) {
 //   try {
@@ -97,7 +109,7 @@ router.put("/api/updateAddress/:username/:streetno/:streetname/:city/:province/:
       const province = decodeURI(req.params.province);
       const postcode = decodeURI(req.params.postcode); 
 
-      let user = await voter.updateAddress(username, streetNo, streetName, city, province, postcode);
+      let user = await Voter.updateAddress(username, streetNo, streetName, city, province, postcode);
 
       res.status(200);
       res.send(user);
@@ -115,7 +127,7 @@ router.put("/api/updateAddress/:username/:streetno/:streetname/:city/:province/:
 /* 
   If the address is valid, return it.
 
-  Otherwise return the closest valid address.
+  Otherwise return the closest existing address.
 */
 router.get("/api/address/:streetno/:streetname/:city/:province/:postcode", async function (req, res) {
   try {
@@ -125,8 +137,7 @@ router.get("/api/address/:streetno/:streetname/:city/:province/:postcode", async
     const province = decodeURI(req.params.province);
     const postcode = decodeURI(req.params.postcode); 
 
-    // false means do not update the address in the database if it's invalid. Edit District Confirm may not click "Save"; they may click "Edit".
-    let address = await voter.getValidAddress(streetNo, streetName, city, province, postcode, false); 
+    let address = await Address.getValidAddress(streetNo, streetName, city, province, postcode); 
 
     res.status(200);
     res.send(address);
@@ -140,6 +151,9 @@ router.get("/api/address/:streetno/:streetname/:city/:province/:postcode", async
   return res;
 });
 
+// Take logging messages from React and include them in the server log so that we can see 
+// the order of operations. Plus if the user never opens the debug tools in their browser
+// the React error messages would be lost if they weren't sent here. 
 router.post("/logger", async function(req, res) {
   const logs = req.body.logs;
   for (const logEntry of logs) {

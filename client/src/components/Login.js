@@ -28,6 +28,7 @@ function Login(props) {
       if(!user.data.isVerified) {
         // Either the UUID was not found or the password is incorrect.
         // The page will continue to show this Login page until a user is found & verified.
+        props.log.error(`No user found with username ${username} and that password.`);
         handleLogin(null);
         return;
       }
@@ -35,6 +36,7 @@ function Login(props) {
       // Success
       handleLogin(user.data.isVerified);
     } catch ( err ) {
+      props.log.error(`Error while retrieving username ${username} and that password.`);
       props.log.error(err);
 
       // null means that no user is logged in.

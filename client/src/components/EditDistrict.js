@@ -24,10 +24,12 @@ class EditDistrict extends Component {
       const log = this.context.log;
       // Check if the address is valid or not. If it's not, replace it with the nearest valid address.
       // escape is deprecated and doesn't work on the Quebec city names with accents. Use encodeURI instead.
-      log.debug(`EditDistrict about to call /api/address/${encodeURI(this.state.location.streetNo)}/${encodeURI(this.state.location.streetName)}/${encodeURI(this.state.location.city)}/${encodeURI(this.state.location.province)}/${encodeURI(this.state.location.postcode.replace(/\s/g, ""))}`);
-      let newLocation = await axios.get(`/api/address/${encodeURI(this.state.location.streetNo)}/${encodeURI(this.state.location.streetName)}/${encodeURI(this.state.location.city)}/${encodeURI(this.state.location.province)}/${encodeURI(this.state.location.postcode.replace(/\s/g, ""))}`);
+      log.debug(`EditDistrict about to call /api/address/${encodeURI(this.state.location.street.number)}/${encodeURI(this.state.location.street.name)}/${encodeURI(this.state.location.city)}/${encodeURI(this.state.location.state)}/${encodeURI(this.state.location.postcode.replace(/\s/g, ""))}`);
+      let newLocation = await axios.get(`/api/address/${encodeURI(this.state.location.street.number)}/${encodeURI(this.state.location.street.name)}/${encodeURI(this.state.location.city)}/${encodeURI(this.state.location.state)}/${encodeURI(this.state.location.postcode.replace(/\s/g, ""))}`);
       log.debug("EditDistrict, newLocation is ", newLocation.data);
       this.setState({ location: newLocation.data });
+      log.debug("EditDistrict, after new location state is ", this.state.location);
+      this.setState({ activeComponentId: 1 });; // switch to the Edit District Confirm page
     } catch( err ) {
       log.error(err);
     }
@@ -42,14 +44,12 @@ class EditDistrict extends Component {
   renderConfirm = () => {
     const voter = this.context.user;
     const log = this.context.log;
-    log.debug("EditDistrict about to confirm, location is ", this.state.location);
-    return <EditDistrictConfirm location={this.state.location} username={voter._doc.login.username} log={log}/>
+    log.debug("EditDistrict about to confirm, latitude is " + this.state.location.coordinates.latitude + " and longitude are " + this.state.location.coordinates.longitude);
+    return <EditDistrictConfirm location={this.state.location} username={voter.login.username} log={log}/>
   };
 
   // active component id 0
   renderDefault = () => {
-    const log = this.context.log;
-    log.debug("EditDistrict rendering page, location is ", this.state.location);
     return (
       <div className="container-fluid bg-almostWhite full-screen">
           <div className="row">
@@ -62,10 +62,19 @@ class EditDistrict extends Component {
               <Form>
                   <Form.Group id="formBasicAddress">
                     <Form.Label id="streetNoLabel" className="entry-field-label">Street Number</Form.Label>
-                    <Form.Control id="streetNo" type="number" value={this.state.location.streetNo} onChange={event => this.setState({ location: {...this.state.location, streetNo:event.target.value}})} />
-
+                    <Form.Control id="streetNo" type="number" value={this.state.location.street.number} onChange={
+                      event => {
+                        let newLocation = {...this.state.location};
+                        newLocation.street.number = event.target.value;
+                        this.setState({ location: newLocation});
+                      }} />
                     <Form.Label className="entry-field-label">Address</Form.Label>
-                    <Form.Control type="text" value={this.state.location.streetName} onChange={event => this.setState({ location: {...this.state.location, streetName:event.target.value}})}/>
+                    <Form.Control type="text" value={this.state.location.street.name} onChange={
+                      event => {
+                        let newLocation = {...this.state.location};
+                        newLocation.street.name = event.target.value;
+                        this.setState({ location: newLocation});
+                      }} />
                   </Form.Group>
 
                   <Form.Group id="formBasicCity">
@@ -78,21 +87,21 @@ class EditDistrict extends Component {
                     <Form.Control type="text" value={this.state.location.postcode} onChange={event => this.setState({ location: {...this.state.location, postcode:event.target.value}})}/>
                   </Form.Group>
 
-                  <Form.Group value={this.state.location.province} className="right-align-div">
+                  <Form.Group value={this.state.location.state} className="right-align-div">
                     <DropdownButton id="provinceDropdown" title="Province/Territory" variant="secondary">
-                      <Dropdown.Item id="Alberta" onClick={() => {this.setState({ location: {...this.state.location, province:'Alberta'}})}}>Alberta</Dropdown.Item>
-                      <Dropdown.Item id="BritishColumbia" onClick={() => this.setState({ location: {...this.state.location, province:'British Columbia'}})}>British Columbia</Dropdown.Item>
-                      <Dropdown.Item id="Manitoba" onClick={() => this.setState({ location: {...this.state.location, province:'Manitoba'}})}>Manitoba</Dropdown.Item>
-                      <Dropdown.Item id="NewBrunswick" onClick={() => this.setState({ location: {...this.state.location, province:'New Brunswick'}})}>New Brunswick</Dropdown.Item>
-                      <Dropdown.Item id="NewfoundlandandLabrador" onClick={() => this.setState({ location: {...this.state.location, province:'Newfoundland and Labrador'}})}>Newfoundland and Labrador</Dropdown.Item>
-                      <Dropdown.Item id="NorthwestTerritories" onClick={() => this.setState({ location: {...this.state.location, province:'Northwest Territories'}})}>Northwest Territories</Dropdown.Item>
-                      <Dropdown.Item id="NovaScotia" onClick={() => this.setState({ location: {...this.state.location, province:'Nova Scotia'}})}>Nova Scotia</Dropdown.Item>
-                      <Dropdown.Item id="Nunavut" onClick={() => this.setState({ location: {...this.state.location, province:'Nunavut'}})}>Nunavut</Dropdown.Item>
-                      <Dropdown.Item id="Ontario" onClick={() => this.setState({ location: {...this.state.location, province:'Ontario'}})}>Ontario</Dropdown.Item>
-                      <Dropdown.Item id="PrinceEdwardIsland" onClick={() => this.setState({ location: {...this.state.location, province:'Prince Edward Island'}})}>Prince Edward Island</Dropdown.Item>
-                      <Dropdown.Item id="Quebec" onClick={() => this.setState({ location: {...this.state.location, province:'Quebec'}})}>Quebec</Dropdown.Item>
-                      <Dropdown.Item id="Saskatchewan" onClick={() => this.setState({ location: {...this.state.location, province:'Saskatchewan'}})}>Saskatchewan</Dropdown.Item>
-                      <Dropdown.Item id="Yukon" onClick={() => this.setState({ location: {...this.state.location, province:'Yukon'}})}>Yukon</Dropdown.Item>
+                      <Dropdown.Item id="Alberta" onClick={() => {this.setState({ location: {...this.state.location, state:'Alberta'}})}}>Alberta</Dropdown.Item>
+                      <Dropdown.Item id="BritishColumbia" onClick={() => this.setState({ location: {...this.state.location, state:'British Columbia'}})}>British Columbia</Dropdown.Item>
+                      <Dropdown.Item id="Manitoba" onClick={() => this.setState({ location: {...this.state.location, state:'Manitoba'}})}>Manitoba</Dropdown.Item>
+                      <Dropdown.Item id="NewBrunswick" onClick={() => this.setState({ location: {...this.state.location, state:'New Brunswick'}})}>New Brunswick</Dropdown.Item>
+                      <Dropdown.Item id="NewfoundlandandLabrador" onClick={() => this.setState({ location: {...this.state.location, state:'Newfoundland and Labrador'}})}>Newfoundland and Labrador</Dropdown.Item>
+                      <Dropdown.Item id="NorthwestTerritories" onClick={() => this.setState({ location: {...this.state.location, state:'Northwest Territories'}})}>Northwest Territories</Dropdown.Item>
+                      <Dropdown.Item id="NovaScotia" onClick={() => this.setState({ location: {...this.state.location, state:'Nova Scotia'}})}>Nova Scotia</Dropdown.Item>
+                      <Dropdown.Item id="Nunavut" onClick={() => this.setState({ location: {...this.state.location, state:'Nunavut'}})}>Nunavut</Dropdown.Item>
+                      <Dropdown.Item id="Ontario" onClick={() => this.setState({ location: {...this.state.location, state:'Ontario'}})}>Ontario</Dropdown.Item>
+                      <Dropdown.Item id="PrinceEdwardIsland" onClick={() => this.setState({ location: {...this.state.location, state:'Prince Edward Island'}})}>Prince Edward Island</Dropdown.Item>
+                      <Dropdown.Item id="Quebec" onClick={() => this.setState({ location: {...this.state.location, state:'Quebec'}})}>Quebec</Dropdown.Item>
+                      <Dropdown.Item id="Saskatchewan" onClick={() => this.setState({ location: {...this.state.location, state:'Saskatchewan'}})}>Saskatchewan</Dropdown.Item>
+                      <Dropdown.Item id="Yukon" onClick={() => this.setState({ location: {...this.state.location, state:'Yukon'}})}>Yukon</Dropdown.Item>
                     </DropdownButton>
                   </Form.Group>
 
@@ -104,9 +113,8 @@ class EditDistrict extends Component {
                     <Button variant="secondary w-50 ml-3" type="submit" 
                       onClick={(event) => {
                         this.handleFormSubmit(event); // Check that the address exists and send it, or the closest matching existing address, to the confirmation page.
-                        this.setState({ activeComponentId: 1 });; // switch to the Edit District Confirm page
                       }}>
-                      Save
+                      Next
                     </Button>
                   </Form.Group>
                 </Form>

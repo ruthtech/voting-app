@@ -23,7 +23,7 @@ function ViewCandidates(props) {
           }
   
           if(activeComponentId === 0) {
-            let postcode = voter._doc.location.postcode.replace(/\s/g, "");
+            let postcode = voter.location.postcode.replace(/\s/g, "");
             props.log.debug(`/api/candidates/${postcode}`);
             const candidates = await axios.get(`/api/candidates/${postcode}`);
             props.log.debug("View Candidates found ", candidates);
@@ -32,8 +32,8 @@ function ViewCandidates(props) {
           }
         }
         catch( err ) {
-            props.log.error(err);
-            setCandidates([]);
+          props.log.error(err);
+          setCandidates([]);
         }
       }
       loadCandidates();

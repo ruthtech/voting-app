@@ -13,12 +13,12 @@ function EditDistrictConfirm(props) {
 
     const handleFormSubmit = async (handleLogin) => {
       try {
-        let newUser = await axios.put(`/api/updateAddress/${encodeURI(username)}/${encodeURI(location.streetNo)}/${encodeURI(location.streetName)}/${encodeURI(location.city)}/${encodeURI(location.province)}/${encodeURI(location.postcode)}`);
+        let newUser = await axios.put(`/api/updateAddress/${encodeURI(username)}/${encodeURI(location.street.number)}/${encodeURI(location.street.name)}/${encodeURI(location.city)}/${encodeURI(location.state)}/${encodeURI(location.postcode)}`);
         
         setLocation(newUser.data); // Update this UI page with the new address. (If the address was invalid then the closest match was returned.)
 
         handleLogin(newUser.data); // Update the user in the context.
-
+        // And since we don't retrieve the user from the database gain, update the user in the context with the new data.
       } catch ( err ) {
         props.log.error(err);
       }
@@ -26,7 +26,6 @@ function EditDistrictConfirm(props) {
 
     // active component id 1
     const renderEditDistrict = () => {
-      props.debug("location is ", location);
       return <EditDistrict location={location}/>;
     };
 
@@ -37,6 +36,7 @@ function EditDistrictConfirm(props) {
 
     // active component id 0
     const renderDefault = (handleLogin) => {
+      props.log.debug("EditDistrictConfirm render default location is ", location);
       return (
         <div className="container-fluid bg-almostWhite full-screen">
         <div className="row pt-3">
@@ -51,7 +51,7 @@ function EditDistrictConfirm(props) {
         </div>
         <div className="row">
           <div className="col bg-white centre-align-div">
-            <p>{location.streetNo} {location.streetName}, {location.city}, {location.province}, {location.postcode}</p>
+            <p>{location.street.number} {location.street.name}, {location.city}, {location.state}, {location.postcode}</p>
           </div>
         </div>
         <div className="row">

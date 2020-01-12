@@ -29,8 +29,8 @@ function Vote(props) {
         }
   
         if(activeComponentId === 0) {
-          props.log.debug(voter._doc);
-          let postcode = voter._doc.location.postcode.replace(/\s/g, "");
+          props.log.debug(voter);
+          let postcode = voter.location.postcode.replace(/\s/g, "");
           props.log.debug(`Vote loadCandidates with /api/candidates/${postcode}`);
           const candidates = await axios.get(`/api/candidates/${postcode}`);
           props.log.debug("Vote loadCandidates after ", candidates.data);
@@ -67,7 +67,7 @@ function Vote(props) {
       <div className="container-fluid bg-almostWhite full-screen">
         <div className="row pt-3">
           <div className="col">
-            <h1>Vote in District {voter._doc.location.district}</h1>
+            <h1>Vote in District {voter.location.district}</h1>
           </div>
         </div>
         <div className="row pt-3 pb-3">

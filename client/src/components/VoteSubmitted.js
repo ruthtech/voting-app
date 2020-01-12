@@ -3,7 +3,6 @@ import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
 import UserContext from '../utils/UserContext';
 import Landing from "./Landing";
-import axios from 'axios';
 import './style.css';
 
 function VoteSubmitted(props) {

@@ -24,10 +24,10 @@ class Landing extends Component {
     if(this.state.activeComponentId === 0) {
       const voter = this.context.user;
       const log = this.context.log;
-      const voterLatitude = voter._doc.location.coordinates.latitude;
-      const voterLongitude = voter._doc.location.coordinates.longitude;
-      const districtBoundaries = voter._doc.location.districtBoundaries;
-      log.debug("voter location is ", voter._doc.location);
+      const voterLatitude = voter.location.coordinates.latitude;
+      const voterLongitude = voter.location.coordinates.longitude;
+      const districtBoundaries = voter.location.districtBoundaries;
+      log.debug("Landing componentDidMount voter location is ", voter.location);
 
       const newMap = new mapboxgl.Map({
         container: this.mapContainer,
@@ -36,11 +36,11 @@ class Landing extends Component {
         zoom: 12
       });
 
-      log.debug("district boundaries are ", districtBoundaries);
+      log.trace("Landing componentDidMount district boundaries are ", districtBoundaries);
 
       newMap.on('load', () => {
         newMap.addLayer({
-          'id': voter._doc.location.district,
+          'id': voter.location.district,
           'type': 'fill',
           'source': {
             'type': 'geojson',
@@ -64,8 +64,8 @@ class Landing extends Component {
   componentDidUpdate() {
     if(this.state.activeComponentId === 0) {
       let voter = this.context.user;
-      const voterLatitude = voter._doc.location.coordinates.latitude;
-      const voterLongitude = voter._doc.location.coordinates.longitude;
+      const voterLatitude = voter.location.coordinates.latitude;
+      const voterLongitude = voter.location.coordinates.longitude;
 
       this.state.map.setCenter([voterLongitude, voterLatitude]);
     }
@@ -77,7 +77,7 @@ class Landing extends Component {
       <div className="container-fluid full-screen">
         <div className="row">
             <div className="col-8 col-sm-9 mt-3 ml-3 bg-white text-center pt-2 mapFormWidget">
-                Your district is {voter._doc.location.district}
+                Your district is {voter.location.district}
             </div>
             <div className="col-3 col-sm-2 mt-3">
               <Button variant="secondary w-100" 
@@ -97,7 +97,7 @@ class Landing extends Component {
             <div className="col">
                 <Button variant="secondary w-100"
                     onClick={ () => { 
-                      this.setState({ activeComponentId: 4 })}} disabled={voter._doc.hasvoted==='true'}>
+                      this.setState({ activeComponentId: 4 })}} disabled={voter.hasvoted==='true'}>
                     Vote</Button>
             </div>
         </div>
@@ -113,15 +113,7 @@ class Landing extends Component {
   // active component 2
   renderEditDistrict = () => {
     const voter = this.context.user;
-    const location = {
-      streetNo: voter._doc.location.street.number,
-      streetName: voter._doc.location.street.name,
-      city: voter._doc.location.city,
-      province: voter._doc.location.state,
-      postcode: voter._doc.location.postcode
-    };
-  
-    return <EditDistrict location={location}/>;
+    return <EditDistrict location={voter.location}/>;
   };
 
   

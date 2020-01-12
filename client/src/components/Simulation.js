@@ -65,8 +65,8 @@ class Simulation extends Component {
 
   componentDidUpdate() {
     //   let voter = this.context.user;
-    //   const voterLatitude = voter._doc.location.coordinates.latitude;
-    //   const voterLongitude = voter._doc.location.coordinates.longitude;
+    //   const voterLatitude = voter.location.coordinates.latitude;
+    //   const voterLongitude = voter.location.coordinates.longitude;
 
     this.state.map.setCenter([ottawaLong, ottawaLat]);
   }

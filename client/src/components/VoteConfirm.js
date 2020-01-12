@@ -54,35 +54,37 @@ function VoteConfirm(props) {
     }
 
     // active component id 2
-    const renderConfirm = () => {
+    const renderConfirm = (handleLogin) => {
         // Submit the vote
         // /api/voter/:voterid/:candidateId
         props.log.debug("candidate is ", candidate);
-        props.log.debug(`/api/voter/${voter._doc._id}/${candidate._id}`);
-        axios.post(`/api/voter/${voter._doc._id}/${candidate._id}`)
+        props.log.debug(`/api/voter/${voter._id}/${candidate._id}`);
+        axios.put(`/api/voter/${voter._id}/${candidate._id}`)
         .then(function(response){
             props.log.debug("vote submitted and response is ", response);
+
+            // Now that the vote is updated in the database, since we're not retrieving the voter object
+            // that we're working with (i.e., it will still have "hasvoted" as null), update the voter
+            // object directly to show that this voter has voted. Since Mongoose has this as a String, 
+            // keep it as a string instead of a boolean.
+            voter.hasvoted = 'true';
+            handleLogin(voter);
         })
         .catch(function(error) {
             props.log.error(error);
         });
 
-        // Now that the vote is updated in the database, since we're not retrieveing the voter object
-        // that we're working with (i.e., it will still have "hasvoted" as null), update the voter
-        // object directly to show that this voter has voted.
-        voter._doc.hasvoted = true;
-
         return <VoteSubmitted candidate={candidate} log={props.log} />;
     }
 
-    const renderActiveComponent = () => {
+    const renderActiveComponent = (handleLogin) => {
         switch(activeComponentId) {
             case(1): {
                 return renderEditVote();
             }
 
             case(2): {
-                return renderConfirm();
+                return renderConfirm(handleLogin);
             }
 
             case(0):
@@ -95,7 +97,7 @@ function VoteConfirm(props) {
     return (
       <UserContext.Consumer>
       {
-        ({user}) => renderActiveComponent()
+        ({handleLogin}) => renderActiveComponent(handleLogin)
       }
       </UserContext.Consumer>
     );
