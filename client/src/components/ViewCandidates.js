@@ -39,6 +39,34 @@ function ViewCandidates(props) {
       loadCandidates();
     }, [voter]);
 
+    const loadPartyColour = (candidate) => {
+      switch(candidate.party_affiliation) {
+        case('New Democratic Party'): {
+          return 'ndp'; // the name of the class in the style.css file
+        }
+
+        case('Green Party of Canada'): {
+          return 'green';
+        }
+
+        case('Conservative Party of Canada'): {
+          return 'pc';
+        }
+
+        case('Liberal Party of Canada'): {
+          return 'liberal';
+        }
+
+        case('Bloc Qu�b�cois'): {
+          return 'bloc';
+        }
+
+        default: {
+          return 'other';
+        }
+      }
+    }
+
     const renderDefault = () => {
       return (
         <div className="container-fluid bg-almostWhite">
@@ -73,12 +101,12 @@ function ViewCandidates(props) {
   
     const renderCandidateThumbnail = (candidate) => {
       return (
-        <div key={candidate.id} className="col-12 col-sm-4 mt-3">
-        <Card className={candidate.party}>         
+        <div key={candidate.id} className="col-12 mt-3">
+        <Card className={loadPartyColour(candidate)}>         
           {/* <Card.Img variant="top" src={candidate.pictureURL}   /> */}
-          <Card.Title>{candidate.first_name} {candidate.last_name}</Card.Title>
+          <Card.Title>{decodeURI(candidate.first_name)} {decodeURI(candidate.last_name)}</Card.Title>
           <Card.Text>
-          {candidate.party_affiliation}
+          {decodeURI(candidate.party_affiliation)}
           </Card.Text>
           <button className="btn btn-secondary" 
             onClick={(event) => {

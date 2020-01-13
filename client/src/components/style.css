@@ -84,28 +84,33 @@ body {
 
 
 /* Start political party colours */
+.pc, .green, .bloc, .liberal, .ndp, .other {
+  color: white;
+  padding-top: 1rem!important;
+  text-align: center!important;
+}
+
 .pc {
   background-color: #244982;
-  color: white;
 }
 
 .green {
   background-color: #4e9a2f;
-  color: white;
 }
 
 .bloc {
   background-color: #143d73;
-  color: white;
 }
 
 .liberal {
   background-color: #cd2003;
-  color: white;
 }
 
 .ndp {
   background-color: #ec8200;
-  color: white;
+}
+
+.other {
+  background-color: lightslategray;
 }
 /* End political party colours */
