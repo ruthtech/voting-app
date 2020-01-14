@@ -4,7 +4,7 @@ import Button from 'react-bootstrap/Button';
 // import Card from 'react-bootstrap/Card';
 import Landing from './Landing';
 import ViewCandidates from './ViewCandidates';
-import "./style.css";
+import "./assets/css/style.css";
 
 function Candidate(props) {
     const [candidate] = useState(props.candidate);

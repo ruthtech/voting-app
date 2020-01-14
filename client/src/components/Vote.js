@@ -11,7 +11,7 @@ import Landing from './Landing';
 // When not debugging, comment out the below import.
 // import { ottawaCentreCandidatesList } from '../debugReact'; 
 
-import "./style.css";
+import "./assets/css/style.css";
 
 
 function Vote(props) {

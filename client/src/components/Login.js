@@ -6,7 +6,7 @@ import Form from 'react-bootstrap/Form';
 import axios from 'axios';
 import UserContext from '../utils/UserContext';
 import CanadaFlag from './assets/media/canada-flag.svg';
-import "./style.css";
+import "./assets/css/style.css";
 
 function Login(props) {
   const [username, setUsername] = useState();

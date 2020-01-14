@@ -7,7 +7,7 @@ import axios from 'axios';
 import UserContext from '../utils/UserContext';
 import EditDistrictConfirm from './EditDistrictConfirm';
 import Landing from './Landing';
-import "./style.css";
+import "./assets/css/style.css";
 import log from 'loglevel';
 
 class EditDistrict extends Component {
@@ -24,11 +24,11 @@ class EditDistrict extends Component {
       const log = this.context.log;
       // Check if the address is valid or not. If it's not, replace it with the nearest valid address.
       // escape is deprecated and doesn't work on the Quebec city names with accents. Use encodeURI instead.
-      log.debug(`EditDistrict about to call /api/address/${encodeURI(this.state.location.street.number)}/${encodeURI(this.state.location.street.name)}/${encodeURI(this.state.location.city)}/${encodeURI(this.state.location.state)}/${encodeURI(this.state.location.postcode.replace(/\s/g, ""))}`);
+      log.info(`EditDistrict about to call /api/address/${encodeURI(this.state.location.street.number)}/${encodeURI(this.state.location.street.name)}/${encodeURI(this.state.location.city)}/${encodeURI(this.state.location.state)}/${encodeURI(this.state.location.postcode.replace(/\s/g, ""))}`);
       let newLocation = await axios.get(`/api/address/${encodeURI(this.state.location.street.number)}/${encodeURI(this.state.location.street.name)}/${encodeURI(this.state.location.city)}/${encodeURI(this.state.location.state)}/${encodeURI(this.state.location.postcode.replace(/\s/g, ""))}`);
-      log.debug("EditDistrict, newLocation is ", newLocation.data);
+      log.info("EditDistrict, newLocation is ", newLocation.data);
       this.setState({ location: newLocation.data });
-      log.debug("EditDistrict, after new location state is ", this.state.location);
+      log.info("EditDistrict, after new location state is ", this.state.location);
       this.setState({ activeComponentId: 1 });; // switch to the Edit District Confirm page
     } catch( err ) {
       log.error(err);
@@ -44,7 +44,7 @@ class EditDistrict extends Component {
   renderConfirm = () => {
     const voter = this.context.user;
     const log = this.context.log;
-    log.debug("EditDistrict about to confirm, latitude is " + this.state.location.coordinates.latitude + " and longitude are " + this.state.location.coordinates.longitude);
+    log.info("EditDistrict about to confirm, latitude is " + this.state.location.coordinates.latitude + " and longitude are " + this.state.location.coordinates.longitude);
     return <EditDistrictConfirm location={this.state.location} username={voter.login.username} log={log}/>
   };
 

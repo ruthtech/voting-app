@@ -3,7 +3,7 @@ import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
 import UserContext from '../utils/UserContext';
 import Landing from "./Landing";
-import './style.css';
+import "./assets/css/style.css";
 
 function VoteSubmitted(props) {
     const [candidate] = useState(props.candidate);

@@ -1,7 +1,7 @@
 import React, {useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import axios from 'axios';
-import "./style.css";
+import "./assets/css/style.css";
 import Landing from './Landing';
 import EditDistrict from './EditDistrict';
 import UserContext from '../utils/UserContext';

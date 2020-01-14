@@ -6,7 +6,7 @@ import LoadingSpinner from './LoadingSpinner';
 import Landing from './Landing';
 import CandidateDetails from './CandidateDetails';
 import Card from 'react-bootstrap/Card';
-import "./style.css";
+import "./assets/css/style.css";
 
 function ViewCandidates(props) {
     const [candidates, setCandidates] = useState([]);

@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import UserContext from '../utils/UserContext';
 import 'mapbox-gl/dist/mapbox-gl.css';
-import "./style.css";
+import "./assets/css/style.css";
 import mapboxgl from 'mapbox-gl';
 import Button from 'react-bootstrap/Button';
 import EditDistrict from "./EditDistrict";
