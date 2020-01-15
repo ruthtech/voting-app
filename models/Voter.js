@@ -3,7 +3,6 @@ const Schema = mongoose.Schema;
 
 const voterSchema = new Schema({
   _id: [Schema.Types.ObjectId],
-  isAdmin: { type: Boolean, default: false },
   name: {
     title: { type: String },
     first: { type: String },
