@@ -24,15 +24,27 @@ class EditDistrict extends Component {
       const log = this.context.log;
       // Check if the address is valid or not. If it's not, replace it with the nearest valid address.
       // escape is deprecated and doesn't work on the Quebec city names with accents. Use encodeURI instead.
-      log.info(`EditDistrict about to call /api/address/${encodeURI(this.state.location.street.number)}/${encodeURI(this.state.location.street.name)}/${encodeURI(this.state.location.city)}/${encodeURI(this.state.location.state)}/${encodeURI(this.state.location.postcode.replace(/\s/g, ""))}`);
+      console.log(`EditDistrict about to call /api/address/${encodeURI(this.state.location.street.number)}/${encodeURI(this.state.location.street.name)}/${encodeURI(this.state.location.city)}/${encodeURI(this.state.location.state)}/${encodeURI(this.state.location.postcode.replace(/\s/g, ""))}`);
       let newLocation = await axios.get(`/api/address/${encodeURI(this.state.location.street.number)}/${encodeURI(this.state.location.street.name)}/${encodeURI(this.state.location.city)}/${encodeURI(this.state.location.state)}/${encodeURI(this.state.location.postcode.replace(/\s/g, ""))}`);
-      log.info("EditDistrict, newLocation is ", newLocation.data);
+      console.log("EditDistrict, newLocation is ", newLocation.data);
       this.setState({ location: newLocation.data });
-      log.info("EditDistrict, after new location state is ", this.state.location);
+      console.log("EditDistrict, after new location state is ", this.state.location);
       this.setState({ activeComponentId: 1 });; // switch to the Edit District Confirm page
     } catch( err ) {
       log.error(err);
     }
+  }
+
+  checkInvalidInput() {
+    // Check that the user isn't making the address blank or something that cannot be sent to the server
+    console.log(this.state.location);
+    if(this.state.location.street.number === "") return true;
+    if(this.state.location.street.name.trim() === "") return true;
+    if(this.state.location.city.trim() === "") return true;
+    if(this.state.location.postcode.trim() === "") return true;
+    if(this.state.location.state.trim() === "") return true;
+
+    return false;
   }
 
   // active component id 2
@@ -44,7 +56,7 @@ class EditDistrict extends Component {
   renderConfirm = () => {
     const voter = this.context.user;
     const log = this.context.log;
-    log.info("EditDistrict about to confirm, latitude is " + this.state.location.coordinates.latitude + " and longitude are " + this.state.location.coordinates.longitude);
+    console.log("EditDistrict about to confirm, latitude is " + this.state.location.coordinates.latitude + " and longitude are " + this.state.location.coordinates.longitude);
     return <EditDistrictConfirm location={this.state.location} username={voter.login.username} log={log}/>
   };
 
@@ -113,7 +125,7 @@ class EditDistrict extends Component {
                     <Button variant="secondary w-50 ml-3" type="submit" 
                       onClick={(event) => {
                         this.handleFormSubmit(event); // Check that the address exists and send it, or the closest matching existing address, to the confirmation page.
-                      }}>
+                      }} disabled={this.checkInvalidInput()}>
                       Next
                     </Button>
                   </Form.Group>
