@@ -56,6 +56,7 @@ class Landing extends Component {
       const voterLongitude = voter.location.coordinates.longitude;
 
       this.state.map.setCenter([voterLongitude, voterLatitude]);
+      this.context.log.debug("Landing componentDidUpdate map is ", this.state.map);
 
       if(this.districtChanged(voter.location.district)) {
         let districtLayerId = voter.location.district.replace(/\s/g, "");
