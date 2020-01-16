@@ -65,7 +65,6 @@ Front end:
   * [React](https://reactjs.org/)
   * [Create-React-App](https://github.com/facebook/create-react-app)
   * [mapbox](https://www.mapbox.com/)
-  * [dotenv](https://www.npmjs.com/package/dotenv)
   * [loglevel](https://www.npmjs.com/package/loglevel)
   * [loglevel-plugin-remote](https://github.com/kutuluk/loglevel-plugin-remote)
 

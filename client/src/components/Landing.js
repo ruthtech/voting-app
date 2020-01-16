@@ -38,7 +38,18 @@ class Landing extends Component {
 
       let districtLayerId = voter.location.district.replace(/\s/g, "");
 
-
+      // Originally I had taken out the 'add layer on load' because it worked
+      // without that event listener on my local production environment.
+      //
+      // On Heroku the entire map was blue. Not even the standard mapbox tiles were loaded.
+      // 
+      // I tried changing the code in the udpateMap to listen to both load and data
+      // ('load data' instead of 'data'). The docs said that this would work but it didn't.
+      // 
+      // Putting the explicit "listen to load event" back into componentDidMount 
+      // while leaving the 'data' event listener for the subsequent style updates did 
+      // the trick. It now works both on Heroku and in my local production environment. 
+      //
       newMap.on('load', () => {
         if(newMap.getLayer(districtLayerId) === undefined) {
           newMap.addLayer({
