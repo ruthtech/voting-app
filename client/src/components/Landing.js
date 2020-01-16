@@ -36,12 +36,36 @@ class Landing extends Component {
         zoom: 12
       });
 
+      let districtLayerId = voter.location.district.replace(/\s/g, "");
+
+
+      newMap.on('load', () => {
+        if(newMap.getLayer(districtLayerId) === undefined) {
+          newMap.addLayer({
+            'id': districtLayerId,
+            'type': 'fill',
+            'source': {
+              'type': 'geojson',
+              'data': {
+                'type': 'Feature',
+                'geometry': voter.location.districtBoundaries
+              }
+            },
+            'layout': {},
+            'paint': {
+              'fill-color': '#D3D3D3',
+              'fill-opacity': 0.8
+            }
+          });
+        }
+      });
+
+      this.district = voter.location.district;
+
       // Unfortunately the DOM must be rendered before we can create the map 
       // (and set the state) because it's a mapbox requirement that the DOM container 
       // must exist and be passed in to create the map.
       this.setState({ map: newMap }); // districtUpdated can be safely set to false because by this time the new district has been added as a layer to the map
-
-      this.updateMap();
     }
   }
 
@@ -70,7 +94,7 @@ class Landing extends Component {
         // When adding layers dynamically to a mapbox style, listen to the 'data' event
         // and add the new layers during that event because the load event is only 
         // fired once during the map lifespan. 
-        this.state.map.on('load data', () => {
+        this.state.map.on('data', () => {
           if(this.state.map.getLayer(districtLayerId) === undefined) {
             this.state.map.addLayer({
               'id': districtLayerId,
