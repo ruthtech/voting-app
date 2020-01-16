@@ -21,10 +21,6 @@ class Landing extends Component {
 
   district = ""; // If the district changes, the map needs a new layer added and then the map needs to be refreshed. 
 
-  constructor() {
-    super();
-  }
-
   componentDidMount() {
     if(this.state.activeComponentId === 0) {
       const voter = this.context.user;
@@ -43,11 +39,17 @@ class Landing extends Component {
       // Unfortunately the DOM must be rendered before we can create the map 
       // (and set the state) because it's a mapbox requirement that the DOM container 
       // must exist and be passed in to create the map.
-      this.setState({ map: newMap, district: voter.location.district}); // districtUpdated can be safely set to false because by this time the new district has been added as a layer to the map
+      this.setState({ map: newMap }); // districtUpdated can be safely set to false because by this time the new district has been added as a layer to the map
+
+      this.updateMap();
     }
   }
 
   componentDidUpdate() {
+    this.updateMap();
+  }
+
+  updateMap() {
     // If the voter's new address is in a different voting district, add the new voting district shaded area
     // to the map and centre on it.
     const voter = this.context.user;
@@ -67,10 +69,8 @@ class Landing extends Component {
         // 
         // When adding layers dynamically to a mapbox style, listen to the 'data' event
         // and add the new layers during that event because the load event is only 
-        // fired once during the map lifespan. This also works for adding the first
-        // layer and omitting the "add layer" for the "load" event means that we 
-        // have only the code below to maintain.
-        this.state.map.on('data', () => {
+        // fired once during the map lifespan. 
+        this.state.map.on('load data', () => {
           if(this.state.map.getLayer(districtLayerId) === undefined) {
             this.state.map.addLayer({
               'id': districtLayerId,
