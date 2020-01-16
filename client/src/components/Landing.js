@@ -7,12 +7,11 @@ import Button from 'react-bootstrap/Button';
 import EditDistrict from "./EditDistrict";
 import ViewCandidates from './ViewCandidates';
 import Vote from './Vote';
-import log from "loglevel";
 
 mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_API_TOKEN;
 
-const ottawaLat = 45.416667;
-const ottawaLong = -75.7;
+// const ottawaLat = 45.416667;
+// const ottawaLong = -75.7;
 
 class Landing extends Component {
   state = {
@@ -21,6 +20,10 @@ class Landing extends Component {
   };
 
   district = ""; // If the district changes, the map needs a new layer added and then the map needs to be refreshed. 
+
+  constructor() {
+    super();
+  }
 
   componentDidMount() {
     if(this.state.activeComponentId === 0) {
