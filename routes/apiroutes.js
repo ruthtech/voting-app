@@ -206,4 +206,30 @@ router.post("/logger", async function(req, res) {
   res.send({});
 });
 
+// This should not be called by anyone other than the developers of this tool. 
+// It is temporary and should only need to be called once.
+// When the voter database was created, randomuser.me was used to generate values.
+// Unfortunately randomuser.me addresses do not exist. That means that we can't generate
+// a map or figure out what district a user votes in.
+// This method will kick off a script that loads every record in the database, reads its
+// address to see if it exists, and if it does updates its latitude, longitude, address, etc.
+//
+// The unnecessary data (e.g. timezones) will be deleted.
+//
+router.put("/fixdb", async function(req, res) {
+   try {
+     let success = await Voter.fixDatabase();
+     if(success) {
+       res.status(200);
+     } else {
+       res.status(500);
+     }
+     res.send(success);
+   }
+   catch ( error ) {
+     res.status(500);
+     res.send(error);
+   }
+});
+
 module.exports = router;

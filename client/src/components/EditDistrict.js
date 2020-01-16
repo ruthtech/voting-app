@@ -24,11 +24,11 @@ class EditDistrict extends Component {
       const log = this.context.log;
       // Check if the address is valid or not. If it's not, replace it with the nearest valid address.
       // escape is deprecated and doesn't work on the Quebec city names with accents. Use encodeURI instead.
-      console.log(`EditDistrict about to call /api/address/${encodeURI(this.state.location.street.number)}/${encodeURI(this.state.location.street.name)}/${encodeURI(this.state.location.city)}/${encodeURI(this.state.location.state)}/${encodeURI(this.state.location.postcode.replace(/\s/g, ""))}`);
+      log.debug(`EditDistrict about to call /api/address/${encodeURI(this.state.location.street.number)}/${encodeURI(this.state.location.street.name)}/${encodeURI(this.state.location.city)}/${encodeURI(this.state.location.state)}/${encodeURI(this.state.location.postcode.replace(/\s/g, ""))}`);
       let newLocation = await axios.get(`/api/address/${encodeURI(this.state.location.street.number)}/${encodeURI(this.state.location.street.name)}/${encodeURI(this.state.location.city)}/${encodeURI(this.state.location.state)}/${encodeURI(this.state.location.postcode.replace(/\s/g, ""))}`);
-      console.log("EditDistrict, newLocation is ", newLocation.data);
+      log.debug("EditDistrict, newLocation is ", newLocation.data);
       this.setState({ location: newLocation.data });
-      console.log("EditDistrict, after new location state is ", this.state.location);
+      log.debug("EditDistrict, after new location state is ", this.state.location);
       this.setState({ activeComponentId: 1 });; // switch to the Edit District Confirm page
     } catch( err ) {
       log.error(err);
@@ -37,7 +37,6 @@ class EditDistrict extends Component {
 
   checkInvalidInput() {
     // Check that the user isn't making the address blank or something that cannot be sent to the server
-    console.log(this.state.location);
     if(this.state.location.street.number === "") return true;
     if(this.state.location.street.name.trim() === "") return true;
     if(this.state.location.city.trim() === "") return true;
@@ -56,7 +55,7 @@ class EditDistrict extends Component {
   renderConfirm = () => {
     const voter = this.context.user;
     const log = this.context.log;
-    console.log("EditDistrict about to confirm, latitude is " + this.state.location.coordinates.latitude + " and longitude are " + this.state.location.coordinates.longitude);
+    log.debug("EditDistrict about to confirm, latitude is " + this.state.location.coordinates.latitude + " and longitude are " + this.state.location.coordinates.longitude);
     return <EditDistrictConfirm location={this.state.location} username={voter.login.username} log={log}/>
   };
 

@@ -5,7 +5,7 @@ mongoose.connect(process.env.MONGODB_URI || `mongodb://localhost/${databaseUrl}`
 const log = require('loglevel');
 require('dotenv').config();
 
-if(process.env.LOGGING_LEVEL === 'info') {
+if(process.env.LOGGING_LEVEL === 'debug') {
   mongoose.set('debug', true);
 }
 

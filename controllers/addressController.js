@@ -115,7 +115,10 @@ function initializeStreet(address, feature) {
   }
   
   // e.g. Avenue of Nations
-  address.street.number = 0;
+  if(!anyNumber(address.street.number)) {
+    // We need a default number. If the user's number can't be found but everything else is okay then assume the user's number is correct.
+    address.street.number = 0;
+  }
   address.street.name = beforeFirstComma;
   return address;
 }
@@ -197,13 +200,20 @@ async function getValidAddress(streetNo, streetName, city, province, postcode) {
     let response = null;
     // Unfortunately mapbox doesn't return the street name or number if the postal code is valid.
     // This means that the user can enter a valid postal code and a street that doesn't exist. 
+    // if(address.postcode !== null && address.postcode !== "") {
+    //   address.postcode = address.postcode.replace(/\s/g, ""); 
+    //   const postcodeSearch = address.postcode + ".json?types=postcode";
+    //   let latLongURL = `${URLstart}${postcodeSearch}${otherParms}`;
+    //   response = await axios.get(latLongURL);
+    // }
+
 
     // Although searching on the postal code first gives us the district that we need, 
     // let's search on the address because we need to verify the entire address anyway,
     // and mapbox returns the postcode for a valid addrss.
 
     // Call mapbox again to see if the street exists.
-    const eAddress = encodeURI(streetNo + " " + streetName);
+    const eAddress = encodeURI(streetNo + " " + streetName + " " + city + " " + province);
     let addressURL = `${URLstart}${eAddress}.json?country=CA${otherParms}`;
     response = await axios.get(addressURL);
 
@@ -213,6 +223,7 @@ async function getValidAddress(streetNo, streetName, city, province, postcode) {
     let wasAddressFound = false;
     for(let i=0; i<response.data.features.length; i++) {
       let tempFeature = response.data.features[i];
+      // Any number of features can be returned and in any order. Instead of picking
       log.debug("Debug getValidAddress, before 6 details are c ", tempFeature);
       for(let j=0; j<tempFeature.context.length; j++) {
         // O(N-squared) performance if this were ever large. Usually it's <5 features and <5 contexts. Wish there was another (faster) way to find the information.

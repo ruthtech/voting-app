@@ -1,4 +1,4 @@
-import React, {useState } from 'react';
+import React, { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import axios from 'axios';
 import "./assets/css/style.css";
@@ -7,18 +7,14 @@ import EditDistrict from './EditDistrict';
 import UserContext from '../utils/UserContext';
 
 function EditDistrictConfirm(props) {
-  const [location, setLocation] = useState(props.location);
-  const [username] = useState(props.username);
   const [activeComponentId, setActiveComponentId] = useState(0); // 0 is render default (this confirmation page) and 1 is go back and edit (edit district), 2 is for landing
 
     const handleFormSubmit = async (handleLogin) => {
       try {
-        let newUser = await axios.put(`/api/updateAddress/${encodeURI(username)}/${encodeURI(location.street.number)}/${encodeURI(location.street.name)}/${encodeURI(location.city)}/${encodeURI(location.state)}/${encodeURI(location.postcode)}`);
-        
-        setLocation(newUser.data); // Update this UI page with the new address. (If the address was invalid then the closest match was returned.)
-
+        let newUser = await axios.put(`/api/updateAddress/${encodeURI(props.username)}/${encodeURI(props.location.street.number)}/${encodeURI(props.location.street.name)}/${encodeURI(props.location.city)}/${encodeURI(props.location.state)}/${encodeURI(props.location.postcode)}`);
+        props.log.debug("EditDistrictConfirm, newUser.data ", newUser.data);
         handleLogin(newUser.data); // Update the user in the context.
-        // And since we don't retrieve the user from the database gain, update the user in the context with the new data.
+        props.log.debug("EditDistrictConfirm after handleLogin"); 
       } catch ( err ) {
         props.log.error(err);
       }
@@ -26,7 +22,7 @@ function EditDistrictConfirm(props) {
 
     // active component id 1
     const renderEditDistrict = () => {
-      return <EditDistrict location={location}/>;
+      return <EditDistrict location={props.location}/>;
     };
 
     // active component id 2
@@ -36,7 +32,7 @@ function EditDistrictConfirm(props) {
 
     // active component id 0
     const renderDefault = (handleLogin) => {
-      props.log.debug("EditDistrictConfirm render default location is ", location);
+      props.log.debug("EditDistrictConfirm render default location is ", props.location);
       return (
         <div className="container-fluid bg-almostWhite full-screen">
         <div className="row pt-3">
@@ -51,7 +47,7 @@ function EditDistrictConfirm(props) {
         </div>
         <div className="row">
           <div className="col bg-white centre-align-div">
-            <p>{location.street.number} {location.street.name}, {location.city}, {location.state}, {location.postcode}</p>
+            <p>{props.location.street.number} {props.location.street.name}, {props.location.city}, {props.location.state}, {props.location.postcode}</p>
           </div>
         </div>
         <div className="row">

@@ -7,18 +7,20 @@ import Button from 'react-bootstrap/Button';
 import EditDistrict from "./EditDistrict";
 import ViewCandidates from './ViewCandidates';
 import Vote from './Vote';
+import log from "loglevel";
 
 mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_API_TOKEN;
 
-// const ottawaLat = 45.416667;
-// const ottawaLong = -75.7;
+const ottawaLat = 45.416667;
+const ottawaLong = -75.7;
 
 class Landing extends Component {
-  // Setting the component's initial state
   state = {
     activeComponentId: 0,
     map: null
   };
+
+  district = ""; // If the district changes, the map needs a new layer added and then the map needs to be refreshed. 
 
   componentDidMount() {
     if(this.state.activeComponentId === 0) {
@@ -26,7 +28,6 @@ class Landing extends Component {
       const log = this.context.log;
       const voterLatitude = voter.location.coordinates.latitude;
       const voterLongitude = voter.location.coordinates.longitude;
-      const districtBoundaries = voter.location.districtBoundaries;
       log.debug("Landing componentDidMount voter location is ", voter.location);
 
       const newMap = new mapboxgl.Map({
@@ -36,39 +37,63 @@ class Landing extends Component {
         zoom: 12
       });
 
-      log.trace("Landing componentDidMount district boundaries are ", districtBoundaries);
-
-      newMap.on('load', () => {
-        newMap.addLayer({
-          'id': voter.location.district,
-          'type': 'fill',
-          'source': {
-            'type': 'geojson',
-            'data': {
-              'type': 'Feature',
-              'geometry': districtBoundaries
-            }
-          },
-          'layout': {},
-          'paint': {
-            'fill-color': '#D3D3D3',
-            'fill-opacity': 0.8
-          }
-        });
-      });
-
-      this.setState({ map: newMap });
+      // Unfortunately the DOM must be rendered before we can create the map 
+      // (and set the state) because it's a mapbox requirement that the DOM container 
+      // must exist and be passed in to create the map.
+      this.setState({ map: newMap, district: voter.location.district}); // districtUpdated can be safely set to false because by this time the new district has been added as a layer to the map
     }
   }
 
   componentDidUpdate() {
-    if(this.state.activeComponentId === 0) {
-      let voter = this.context.user;
+    // If the voter's new address is in a different voting district, add the new voting district shaded area
+    // to the map and centre on it.
+    const voter = this.context.user;
+    if((this.state.map !== null) && (this.state.map.isSourceLoaded)) {
       const voterLatitude = voter.location.coordinates.latitude;
       const voterLongitude = voter.location.coordinates.longitude;
 
       this.state.map.setCenter([voterLongitude, voterLatitude]);
+
+      if(this.districtChanged(voter.location.district)) {
+        let districtLayerId = voter.location.district.replace(/\s/g, "");
+        // When constructing a mapbox map, the first time that you create a style
+        // and a layer, you may listen to the 'load' event and add the layer during that
+        // event. This ensures that the style has finished loading before you change
+        // it by adding a new layer.
+        // 
+        // When adding layers dynamically to a mapbox style, listen to the 'data' event
+        // and add the new layers during that event because the load event is only 
+        // fired once during the map lifespan. This also works for adding the first
+        // layer and omitting the "add layer" for the "load" event means that we 
+        // have only the code below to maintain.
+        this.state.map.on('data', () => {
+          if(this.state.map.getLayer(districtLayerId) === undefined) {
+            this.state.map.addLayer({
+              'id': districtLayerId,
+              'type': 'fill',
+              'source': {
+                'type': 'geojson',
+                'data': {
+                  'type': 'Feature',
+                  'geometry': voter.location.districtBoundaries
+                }
+              },
+              'layout': {},
+              'paint': {
+                'fill-color': '#D3D3D3',
+                'fill-opacity': 0.8
+              }
+            });
+          };
+
+          this.district = voter.location.district;
+        });
+      }
     }
+  }
+
+  districtChanged(newDistrict) {
+    return this.district !== newDistrict;
   }
   
   renderDefault = () => {
@@ -113,7 +138,7 @@ class Landing extends Component {
   // active component 2
   renderEditDistrict = () => {
     const voter = this.context.user;
-    return <EditDistrict location={voter.location}/>;
+    return <EditDistrict location={voter.location} />;
   };
 
   

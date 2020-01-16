@@ -21,17 +21,17 @@ A browser. Chrome was used for testing.
 
 Manual tests were run as documented below.
 
-### Invalid Input Tested
+### Invalid input tested
 1. Wrong password entered
 2. Wrong userid entered
+3. On the "Edit District" page, if the user enters a street that doesn't exist, or postal code, etc., on the next "Edit District Confirm" page is an alternative address proposed?
 
 ### Function Tests
-1. Can user log in?
-2. Can user edit their address and see the map update?
-3. Can user vote? 
-4. Can user view candidates for their district?
+1. Can the user log in?
+2. Can the user edit their address and see the map update?
+3. Can the user vote? 
+4. Can the user view candidates for their district?
 5. Can the user see their voting district shaded on the map?
-
 
 Navigate to https://arcane-mountain-21933.herokuapp.com/ and log in with userid "happyfrog374" and password "technics".
 
@@ -43,7 +43,9 @@ Our Trello board shows our Kanban
 
 
 ## Deployment
-View this application on Heroku.  https://arcane-mountain-21933.herokuapp.com/ Log in with userid "happyfrog374" and password "technics".
+View this application on Heroku.  https://arcane-mountain-21933.herokuapp.com/ Log in with userid "happyfrog374" and password "technics". 
+
+The code to run the simulation of voting across Canada is a work in progress. Log in to the same URL above with userid "admin" and password "admin" to see what the UI will look like. 
 
 ## Built With
 Development Tools:
@@ -98,7 +100,7 @@ This project does not use versions at this time.
    * React Front end (React, Bootstrap, React-Bootstrap, create-react-app)
    * [dotenv](https://www.npmjs.com/package/dotenv)
    * [logging](https://www.npmjs.com/package/loglevel) and [React logging](https://github.com/kutuluk/loglevel-plugin-remote)
-   * Server: created express server skeleton, endpoint creation and implementation, code that checks if the voters' addresses exist. (And if the invalid address is in the database, the voter's record is updated to the most likely real address.)
+   * Server: created express server skeleton, endpoint creation and implementation, and updated the addresses in the database, which didn't exist in real life, and have mapbox generate the closest existing address. From this updated address the map is generated.
    * Database/Mongoose:
        * Debugged and modified the connection to MongoDB and Mongoose models for Heroku
    * Deployment to Heroku
