@@ -18,20 +18,32 @@ A browser. Chrome was used for testing.
 
 
 ## Running the tests
-
-Manual tests were run as documented below.
-
-### Invalid input tested
-1. Wrong password entered
-2. Wrong userid entered
-3. On the "Edit District" page, if the user enters a street that doesn't exist, or postal code, etc., on the next "Edit District Confirm" page is an alternative address proposed?
+There are no automated tests at this time. Manual tests were run as documented below.
 
 ### Function Tests
-1. Can the user log in?
-2. Can the user edit their address and see the map update?
-3. Can the user vote? 
-4. Can the user view candidates for their district?
-5. Can the user see their voting district shaded on the map?
+1. LOGIN
+    * Can the user log in with a valid userid and password?
+    * Can the user login in, with "admin" as the userid and "admin" as the password, and see the Simluation page instead of the Landing page?
+    * Is the user prevented from logging in with an unknown userid?
+    * Is the user prevented from logging in with an unknown password?
+2. SIMULATION (admin only)
+    * Does clicking the "Simulate" button update the district's shaded area on the map with a party colour?
+    * Does clicking "Reset" change all shaded areas back to grey?
+3. VIEW CANDIDATE (voter only)
+    * On the Landing page, click "View Candidates" > "Home". Is the user taken back to the Landing?
+    * On the Landing page, click "View Candidates" > click on a candidate > do the generated links open a web page (no 404)?
+    * "View Candidates" > Click on a candidate > "View Candidates". Is the page listing all candidates shown?
+4. VOTE (voter only)
+    * "Vote" > Click "Home". Is the Landing page shown?
+    * "Vote" > Click on a candidate, click "Vote" > Click "Edit". User changes their choice, clicks "Vote". Is the candidate updated? 
+    * "Vote" > Click on a candidate, confirm the vote. Is a confirmation page shown? When the user navigates back to the Landing, is the Vote button disabled?
+5. EDIT DISTRICT (voter only)
+    * "Edit District" > "Home". Is the Landing page shown?
+    * "Edit District" > Change nothing, click Next, click Confirm. Is the same address shown on the confirmation page and when the user sees the Landing again is the same district shown?
+    * "Edit District" > Change address to an invalid address (e.g. 1 Foo). Click "Next". Is the address changed to the closest existing address? When the user clicks Confirm, is that corrected address saved, the district of that address named and shaded?
+    * "Edit District" > Start to change the address but click "Home" instead of saving it. Is the original address preserved?
+    * "Edit District" > Save new valid address to the database. Is the district and shaded area updated to the new address?
+    * "Edit District" > Change address. Afterwards click "Edit District" again. Is the expected (new) address shown?
 
 Navigate to https://arcane-mountain-21933.herokuapp.com/ and log in with userid "happyfrog374" and password "technics".
 
@@ -89,19 +101,25 @@ This project does not use versions at this time.
    * Investigation into opennorth to find the information about political candidates [opennorth](https://represent.opennorth.ca)
    * Investigation into randomuser.me to generate information for population of database [randomuser.me](https://randomuser.me/)
    * Server: endpoint creation and implementation, connected endpoints to backend database
-   * Database/Mongoose: 
-      * creation of MongoDB database and collections [MongoDB](https://www.mongodb.com/)
-      * initialization of MongoDB from randomuser.me data
-      * creation of the models (Mongoose) [Mongoose](https://www.npmjs.com/package/mongoose)
+   * MongoDB/Mongoose: 
+      * Creation of MongoDB database and collections [MongoDB](https://www.mongodb.com/)
+      * Initial population of MongoDB from randomuser.me data
+      * Creation of the models (Mongoose) [Mongoose](https://www.npmjs.com/package/mongoose)
 
 * Ruth Lee [https://github.com/ruthtech]
-   * [mapbox](https://www.mapbox.com/)
-   * React Front end (React, Bootstrap, React-Bootstrap, create-react-app)
+   * Investigation into mapbox for reverse geocoding from address
+   * Investigation into mapbox for generating a map and a shaded polygon area (voting district) on a map as part of the UI
+   * Investigation into loglevel and loglevel-plugin-remote to implement logging in both the back end and front end
+   * Investigation into Heroku configuration to enable and disable log levels
+   * INvestigation into good web API design ("Web API Design: Crafting Interfaces that Developers Love" by Brian Mulloy)
+   * Front end (React, Bootstrap, React-Bootstrap, create-react-app)
+   * [mapbox](https://www.mapbox.com/) (front end and server)
    * [dotenv](https://www.npmjs.com/package/dotenv)
    * [logging](https://www.npmjs.com/package/loglevel) and [React logging](https://github.com/kutuluk/loglevel-plugin-remote)
-   * Server: created express server skeleton, endpoint creation and implementation, and updated the addresses in the database, which didn't exist in real life, and have mapbox generate the closest existing address. From this updated address the map is generated.
-   * Database/Mongoose:
+   * Server: creation of express server skeleton that initially returned mock data instead of database records, endpoint creation and implementation, and created the script that updated the randomuser.me addresses in the database.
+   * MongoDB/Mongoose:
        * Debugged and modified the connection to MongoDB and Mongoose models for Heroku
+       * Updated population of MongoDB, changing any randomuser.me address that didn't exist into the closest existing address including postal code, longitude and latitude. (mapbox determined what was the closest address.)
    * Deployment to Heroku
 
 ## License

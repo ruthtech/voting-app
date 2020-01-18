@@ -11,19 +11,28 @@ if(process.env.LOGGING_LEVEL) {
   log.setLevel(process.env.LOGGING_LEVEL);
 }
 
-router.get("/api/login/:username/:password", async function(req, res) {
+// Retrieve the voter with the given username and password.
+// If no such voter is found, return an object with isVerified: false.
+// If the voter is found, isVerified will point to that voter object.
+//
+// This has to be post/put/patch instead of get in order to transfer data
+// to this endpoint via the request body instead of the URL. Better to transfer
+// data via the body in order to not expose the password in plain text.
+// 
+router.post("/api/v1/login", async function(req, res) {
   try {
+    // Move the password into the request body to make it harder to hack.
     const user = {
       isVerified: await Voter.verifyUser(
-        req.params.username,
-        req.params.password
+        req.body.username,
+        req.body.password
       )
     };
     // console.log("apiroutes Does user have a distrct? ", user);
     res.send(user);
   } catch (err) {
     // Internal error on the server side.
-    log.error("/api/login/:username/:password");
+    log.error("/api/v1/voters/", req.body.username);
     log.error(err);
     res.status(500);
     res.send(err);
@@ -32,7 +41,7 @@ router.get("/api/login/:username/:password", async function(req, res) {
 });
 
 // Return all of the candidates for a given district
-router.get("/api/candidates/:postcode", async function(req, res) {
+router.get("/api/v1/candidates/:postcode", async function(req, res) {
   try {
     const candidates = {
       candidateList: await Candidate.findCandidates(
@@ -43,7 +52,7 @@ router.get("/api/candidates/:postcode", async function(req, res) {
     res.send(candidates);
   } catch (err) {
     // Internal error on the server side.
-    log.error("/api/candidates/:postcode");
+    log.error("/api/v1/candidates/:postcode");
     log.error(err);
     res.status(500);
     res.send(err);
@@ -51,31 +60,34 @@ router.get("/api/candidates/:postcode", async function(req, res) {
   return res;
 });
 
-// Vote for a candidate and log event that user has voted
-router.put("/api/voter/:voterid/:candidateId", async function(req, res) {
+// Voter votes for a candidate.
+router.put("/api/v1/candidates/:candidateId", async function(req, res) {
+  const candidateId = req.params.candidateId;
   try {
-    log.debug(`/api/voter/${req.params.voterid}/${req.params.candidateId}`);
+    const voterId = req.body.voterId;
+    log.debug(`/api/v1/candidates/${candidateId}`);
     const newVoteTally = {
-      voter: await Voter.enterVote(req.params.voterid),
-      votecast: await Candidate.enterVote(req.params.candidateId)
+      voter: await Voter.enterVote(voterId),
+      votecast: await Candidate.enterVote(candidateId)
     };
     res.status(200);
     res.send(newVoteTally);
   } catch (err) {
-    log.error(`/api/voter/${req.params.voterid}/${req.params.candidateId}`);
+    log.error(`/api/v1/candidates/:${candidateId}`);
     log.error(err);
     res.status(500);
     res.send(err);
   }
 });
 
-// Put instead of post because we are updating records, not creating new ones
-router.put("/api/simulator/run", async function(req, res) {
+// Update each district with a RNG to indicate which person/party won the district.
+router.put("/api/v1/simulator/run", async function(req, res) {
   res.status(200);
   res.send(Simulator.runSimulation());
 });
 
-router.put("/api/simulator/reset", async function(req, res) {
+// Update each district to indicate that no vote has happened yet. 
+router.put("/api/v1/simulator/reset", async function(req, res) {
   res.status(200);
   res.send(Simulator.resetSimulation());
 });
@@ -99,15 +111,17 @@ router.put("/api/simulator/reset", async function(req, res) {
 // });
 
 // Given a user and address, update the user's address. District, latitude, and longitude will be calculated.
-router.put("/api/updateAddress/:username/:streetno/:streetname/:city/:province/:postcode",
+router.put("/api/v1/voters/:username",
   async function(req, res) {
     try {
       const username = decodeURI(req.params.username);
-      const streetNo = decodeURI(req.params.streetno);
-      const streetName = decodeURI(req.params.streetname);
-      const city = decodeURI(req.params.city);
-      const province = decodeURI(req.params.province);
-      const postcode = decodeURI(req.params.postcode); 
+      const streetNo = decodeURI(req.body.streetNo);
+      const streetName = decodeURI(req.body.streetName);
+      const city = decodeURI(req.body.city);
+      const province = decodeURI(req.body.province);
+      const postcode = decodeURI(req.body.postcode); 
+
+      log.debug(`apiroutes /api/v1/voters/:username ${username} ${streetNo} ${streetName} ${city} ${province} ${postcode}`);
 
       let user = await Voter.updateAddress(username, streetNo, streetName, city, province, postcode);
 
@@ -115,7 +129,7 @@ router.put("/api/updateAddress/:username/:streetno/:streetname/:city/:province/:
       res.send(user);
     } catch (err) {
       // Internal error on the server side.
-      log.error("/api/updateAddress/:username/:streetno/:streetname/:city/:province/:postcode");
+      log.error("/api/v1/voters/:username");
       log.error(err);
       res.status(500);
       res.send(err);
@@ -129,13 +143,13 @@ router.put("/api/updateAddress/:username/:streetno/:streetname/:city/:province/:
 
   Otherwise return the closest existing address.
 */
-router.get("/api/address/:streetno/:streetname/:city/:province/:postcode", async function (req, res) {
+router.post("/api/v1/verifyAddress", async function (req, res) {
   try {
-    const streetNo = decodeURI(req.params.streetno);
-    const streetName = decodeURI(req.params.streetname);
-    const city = decodeURI(req.params.city);
-    const province = decodeURI(req.params.province);
-    const postcode = decodeURI(req.params.postcode); 
+    const streetNo = decodeURI(req.body.streetNo);
+    const streetName = decodeURI(req.body.streetName);
+    const city = decodeURI(req.body.city);
+    const province = decodeURI(req.body.province);
+    const postcode = decodeURI(req.body.postcode); 
 
     let address = await Address.getValidAddress(streetNo, streetName, city, province, postcode); 
 
@@ -143,7 +157,8 @@ router.get("/api/address/:streetno/:streetname/:city/:province/:postcode", async
     res.send(address);
   } catch (err) {
     // Internal error on the server side.
-    log.error("/api/address/:streetno/:streetname/:city/:province/:postcode");
+    log.error("/api/v1/verifyAddress");
+    log.error(req.body);
     log.error(err);
     res.status(500);
     res.send(err);
@@ -151,10 +166,12 @@ router.get("/api/address/:streetno/:streetname/:city/:province/:postcode", async
   return res;
 });
 
+// This should not be called by anyone other than the developers of this tool.
+// 
 // Take logging messages from React and include them in the server log so that we can see 
 // the order of operations. Plus if the user never opens the debug tools in their browser
 // the React error messages would be lost if they weren't sent here. 
-router.post("/logger", async function(req, res) {
+router.post("/internal/v1/logger", async function(req, res) {
   const logs = req.body.logs;
   for (const logEntry of logs) {
     const level = logEntry.level;
@@ -207,16 +224,18 @@ router.post("/logger", async function(req, res) {
 });
 
 // This should not be called by anyone other than the developers of this tool. 
-// It is temporary and should only need to be called once.
+// It should only need to be called once.
+// 
 // When the voter database was created, randomuser.me was used to generate values.
 // Unfortunately randomuser.me addresses do not exist. That means that we can't generate
 // a map or figure out what district a user votes in.
 // This method will kick off a script that loads every record in the database, reads its
-// address to see if it exists, and if it does updates its latitude, longitude, address, etc.
+// address to see if it exists, and if it does, the script updates the record's
+// latitude, longitude, address, etc.
 //
 // The unnecessary data (e.g. timezones) will be deleted.
 //
-router.put("/fixdb", async function(req, res) {
+router.put("/internal/v1/fixdb", async function(req, res) {
    try {
      let success = await Voter.fixDatabase();
      if(success) {

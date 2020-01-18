@@ -19,7 +19,7 @@ const customJSON = log => ({
   stacktrace: log.stacktrace
 });
 
-remote.apply(log, { format: customJSON, url: '/logger' });
+remote.apply(log, { format: customJSON, url: '/internal/v1/logger' });
 
 function App() {
   const [user, setUser] = useState( null );

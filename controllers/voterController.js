@@ -63,7 +63,9 @@ const updateAddress = async function(username, streetNo, streetName, city, provi
         }
       }
     };
+    log.debug(`voterController updateAddress before ${data}`);
     data = await convertToValidAddress(data, true); // force update 
+    log.debug(`voterController updateAddress after ${data}`);
 
     let dataClone = addressController.findDistrictNameAndBoundaries(data);
 

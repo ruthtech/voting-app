@@ -31,8 +31,9 @@ function Vote(props) {
         if(activeComponentId === 0) {
           props.log.debug(voter);
           let postcode = voter.location.postcode.replace(/\s/g, "");
-          props.log.debug(`Vote loadCandidates with /api/candidates/${postcode}`);
-          const candidates = await axios.get(`/api/candidates/${postcode}`);
+          const query = `/api/v1/candidates/${postcode}`;
+          props.log.debug(`Vote loadCandidates with ${query}`);
+          const candidates = await axios.get(query);
           props.log.debug("Vote loadCandidates after ", candidates.data);
           setCandidates(candidates.data.candidateList);
 

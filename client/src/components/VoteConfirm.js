@@ -56,10 +56,16 @@ function VoteConfirm(props) {
     // active component id 2
     const renderConfirm = (handleLogin) => {
         // Submit the vote
-        // /api/voter/:voterid/:candidateId
+        const query = `/api/v1/candidates/${candidate._id}`;
         props.log.debug("candidate is ", candidate);
-        props.log.debug(`/api/voter/${voter._id}/${candidate._id}`);
-        axios.put(`/api/voter/${voter._id}/${candidate._id}`)
+        props.log.debug(query);
+        axios({
+            method: 'put',
+            url: query,
+            data: {
+                voterId: voter._id
+            }
+        })
         .then(function(response){
             props.log.debug("vote submitted and response is ", response);
 

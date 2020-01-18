@@ -11,7 +11,24 @@ function EditDistrictConfirm(props) {
 
     const handleFormSubmit = async (handleLogin) => {
       try {
-        let newUser = await axios.put(`/api/updateAddress/${encodeURI(props.username)}/${encodeURI(props.location.street.number)}/${encodeURI(props.location.street.name)}/${encodeURI(props.location.city)}/${encodeURI(props.location.state)}/${encodeURI(props.location.postcode)}`);
+        const username = encodeURI(props.username);
+        const streetNo = encodeURI(props.location.street.number);
+        const streetName = encodeURI(props.location.street.name);
+        const city = encodeURI(props.location.city);
+        const province = encodeURI(props.location.state);
+        const postcode = encodeURI(props.location.postcode.replace(/\s/g, ""));
+        let newUser = await axios({
+          method: 'put',
+          url: '/api/v1/voters/' + username,
+          data: {
+            streetNo: streetNo,
+            streetName: streetName,
+            city: city,
+            province: province,
+            postcode: postcode
+          }
+        });
+    
         props.log.debug("EditDistrictConfirm, newUser.data ", newUser.data);
         handleLogin(newUser.data); // Update the user in the context.
         props.log.debug("EditDistrictConfirm after handleLogin"); 

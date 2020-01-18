@@ -7,7 +7,6 @@ import ViewCandidates from './ViewCandidates';
 import "./assets/css/style.css";
 
 function Candidate(props) {
-    const [candidate] = useState(props.candidate);
     const [activeComponentId, setActiveComponentId] = useState(0); // 0 is for candidate details, 1 is for list of candidates, 2 is for Landing
 
     const getPartyWebsite = (party_affiliation) => {
@@ -40,6 +39,7 @@ function Candidate(props) {
 
     // Active component Id 0
     const renderCandidateDetails = () => {
+        const candidate = props.candidate;
         return (
             <div className="container-fluid full-screen bg-almostWhite">
                 <div className="row">

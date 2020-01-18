@@ -13,9 +13,14 @@ import log from 'loglevel';
 class EditDistrict extends Component {
   // Location data is not escaped until right before it is sent to axios. 
   // Sending in location instead of user/voter because the query to the server to find out if the address exists isn't associated with a user. 
-  state = {
-    location: this.props.location,
-    activeComponentId: 0 // 0 means render default form, 1 means EditDistrictConfirm
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      location: JSON.parse(JSON.stringify(props.location)), // Create a deep copy of the location instead of modifying the location directly. This way if the user cancels before saving the original address is preserved.
+      activeComponentId: 0 // 0 means render default form, 1 means EditDistrictConfirm
+    }
+  
   }
 
   handleFormSubmit = async (event) => {
@@ -24,8 +29,26 @@ class EditDistrict extends Component {
       const log = this.context.log;
       // Check if the address is valid or not. If it's not, replace it with the nearest valid address.
       // escape is deprecated and doesn't work on the Quebec city names with accents. Use encodeURI instead.
-      log.debug(`EditDistrict about to call /api/address/${encodeURI(this.state.location.street.number)}/${encodeURI(this.state.location.street.name)}/${encodeURI(this.state.location.city)}/${encodeURI(this.state.location.state)}/${encodeURI(this.state.location.postcode.replace(/\s/g, ""))}`);
-      let newLocation = await axios.get(`/api/address/${encodeURI(this.state.location.street.number)}/${encodeURI(this.state.location.street.name)}/${encodeURI(this.state.location.city)}/${encodeURI(this.state.location.state)}/${encodeURI(this.state.location.postcode.replace(/\s/g, ""))}`);
+
+      const streetNo = encodeURI(this.state.location.street.number);
+      const streetName = encodeURI(this.state.location.street.name);
+      const city = encodeURI(this.state.location.city);
+      const province = encodeURI(this.state.location.state);
+      const postcode = encodeURI(this.state.location.postcode.replace(/\s/g, ""));
+
+
+      log.debug(`EditDistrict about to call /api/v1/verifyAddress/${streetNo}/${streetName}/${city}/${province}/${postcode}`);
+      let newLocation = await axios({
+        method: 'post',
+        url: '/api/v1/verifyAddress',
+        data: {
+          streetNo: streetNo,
+          streetName: streetName,
+          city: city,
+          province: province,
+          postcode: postcode
+        }
+      });
       log.debug("EditDistrict, newLocation is ", newLocation.data);
       this.setState({ location: newLocation.data });
       log.debug("EditDistrict, after new location state is ", this.state.location);
@@ -48,6 +71,8 @@ class EditDistrict extends Component {
 
   // active component id 2
   renderBack = () => {
+    console.log("location is ", this.state.location);
+    console.log("props location is ", this.props.location);
     return <Landing />;
   };
 

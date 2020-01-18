@@ -24,8 +24,9 @@ function ViewCandidates(props) {
   
           if(activeComponentId === 0) {
             let postcode = voter.location.postcode.replace(/\s/g, "");
-            props.log.debug(`/api/candidates/${postcode}`);
-            const candidates = await axios.get(`/api/candidates/${postcode}`);
+            const query = `/api/v1/candidates/${postcode}`;
+            props.log.debug(query);
+            const candidates = await axios.get(query);
             props.log.debug("View Candidates found ", candidates);
             setCandidates(candidates.data.candidateList);
             setActiveComponentId(2);

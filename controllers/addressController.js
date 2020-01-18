@@ -14,9 +14,6 @@ if(process.env.DEVELOPMENT_MAPBOX_APIKEY) {
   log.trace("votercontroller using development API key");
   TOKEN = process.env.DEVELOPMENT_MAPBOX_APIKEY;
 } 
-const URLstart = `https://api.mapbox.com/geocoding/v5/mapbox.places/`;
-const otherParms = `&access_token=${TOKEN}&cachebuster=1571367145365&autocomplete=true`;
-log.trace("votercontroller otherParms is ", otherParms);
 
 const houseOfCommonsLocation = {
   street: {
@@ -194,10 +191,14 @@ async function getValidAddress(streetNo, streetName, city, province, postcode) {
     },
     wasInvalid: false // assume by default that the address exists. Set to false only if we find a problem with it.
   };
-  log.trace("getValidAddress, address is 1 ", address);
+  log.debug("getValidAddress, address is 1 ", address);
 
   try {
     let response = null;
+    const URLstart = `https://api.mapbox.com/geocoding/v5/mapbox.places/`;
+    const otherParms = `&access_token=${TOKEN}&cachebuster=1571367145365&autocomplete=true`;
+    log.debug("votercontroller otherParms is ", otherParms);
+
     // Unfortunately mapbox doesn't return the street name or number if the postal code is valid.
     // This means that the user can enter a valid postal code and a street that doesn't exist. 
     // if(address.postcode !== null && address.postcode !== "") {
@@ -213,9 +214,11 @@ async function getValidAddress(streetNo, streetName, city, province, postcode) {
     // and mapbox returns the postcode for a valid addrss.
 
     // Call mapbox again to see if the street exists.
-    const eAddress = encodeURI(streetNo + " " + streetName + " " + city + " " + province);
+    const eAddress = encodeURI(streetNo + " " + streetName + " " + city + " " + province + " " + postcode);
     let addressURL = `${URLstart}${eAddress}.json?country=CA${otherParms}`;
+    log.debug(addressURL);
     response = await axios.get(addressURL);
+    log.debug("addressController getValidAddress response length is ", response.data.features.length);
 
     // Focus on features with postal codes. 
     // We cannot find a voting district without the postal code. 
@@ -255,14 +258,19 @@ async function getValidAddress(streetNo, streetName, city, province, postcode) {
     }
 
     if(populateCityFromFeature) return address;
+    log.warn("response data when some fields are from the default location ", response.data);
 
     // None of the features have postal codes. Populate what we can.
+    if(response.data.features.length === 0) {
+      // With no information, return the House of Commons so that the UI doesn't blow up.
+      // It has to have something to render. 
+      return { ...defaultLocation };
+    }
 
     // We found an address in Canada. 
     // Sometimes the format looks like this: "place_name": 'Wayerton, New Brunswick, Canada',
     address = initializeStreet(address, response.data.features[0]);
     address = initializeCityProvinceFromString(address, response.data.features[0].place_name);
-    log.warn("response data when some fields are from the default location ", response.data);
 
     return address;
   } catch ( error ) {

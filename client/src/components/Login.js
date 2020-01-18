@@ -23,8 +23,16 @@ function Login(props) {
         return;
       }
 
-      let query = `/api/login/${username}/${password}`;
-      const user = await axios.get(query);
+      const query = `/api/v1/login`;
+      const user = await axios({
+        method: 'post',
+        url: query,
+        data: {
+          username: username,
+          password: password
+        }
+      });
+
       if(!user.data.isVerified) {
         // Either the UUID was not found or the password is incorrect.
         // The page will continue to show this Login page until a user is found & verified.
