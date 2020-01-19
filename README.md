@@ -111,7 +111,7 @@ This project does not use versions at this time.
    * Investigation into mapbox for generating a map and a shaded polygon area (voting district) on a map as part of the UI
    * Investigation into loglevel and loglevel-plugin-remote to implement logging in both the back end and front end
    * Investigation into Heroku configuration to enable and disable log levels
-   * INvestigation into good web API design ("Web API Design: Crafting Interfaces that Developers Love" by Brian Mulloy)
+   * Investigation into good web API design ("Web API Design: Crafting Interfaces that Developers Love" by Brian Mulloy)
    * Front end (React, Bootstrap, React-Bootstrap, create-react-app)
    * [mapbox](https://www.mapbox.com/) (front end and server)
    * [dotenv](https://www.npmjs.com/package/dotenv)

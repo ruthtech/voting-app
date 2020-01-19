@@ -50,26 +50,26 @@ class Landing extends Component {
       // while leaving the 'data' event listener for the subsequent style updates did 
       // the trick. It now works both on Heroku and in my local production environment. 
       //
-      // newMap.on('load', () => {
-      //   if(newMap.getLayer(districtLayerId) === undefined) {
-      //     newMap.addLayer({
-      //       'id': districtLayerId,
-      //       'type': 'fill',
-      //       'source': {
-      //         'type': 'geojson',
-      //         'data': {
-      //           'type': 'Feature',
-      //           'geometry': voter.location.districtBoundaries
-      //         }
-      //       },
-      //       'layout': {},
-      //       'paint': {
-      //         'fill-color': '#D3D3D3',
-      //         'fill-opacity': 0.8
-      //       }
-      //     });
-      //   }
-      // });
+      newMap.on('load', () => {
+        if(newMap.getLayer(districtLayerId) === undefined) {
+          newMap.addLayer({
+            'id': districtLayerId,
+            'type': 'fill',
+            'source': {
+              'type': 'geojson',
+              'data': {
+                'type': 'Feature',
+                'geometry': voter.location.districtBoundaries
+              }
+            },
+            'layout': {},
+            'paint': {
+              'fill-color': '#D3D3D3',
+              'fill-opacity': 0.8
+            }
+          });
+        }
+      });
 
       this.district = voter.location.district;
 
@@ -81,7 +81,7 @@ class Landing extends Component {
   }
 
   componentDidUpdate() {
-//    this.updateMap();
+    this.updateMap();
   }
 
   updateMap() {
