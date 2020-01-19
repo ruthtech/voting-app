@@ -81,7 +81,7 @@ class Landing extends Component {
   }
 
   componentDidUpdate() {
-    this.updateMap();
+//    this.updateMap();
   }
 
   updateMap() {
