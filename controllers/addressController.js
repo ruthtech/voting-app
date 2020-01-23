@@ -11,7 +11,7 @@ if(process.env.LOGGING_LEVEL) {
 if(process.env.DEVELOPMENT_MAPBOX_APIKEY) {
   // running locally. Switch to the local mapbox API key and read what level of logging we want.
   // Available levels are the following: 'trace', 'debug', 'info', 'warn', 'error'
-  log.trace("votercontroller using development API key");
+  log.trace("addressController using development API key");
   TOKEN = process.env.DEVELOPMENT_MAPBOX_APIKEY;
 } 
 
@@ -427,6 +427,7 @@ async function getDistrictBoundaries(districtData) {
 module.exports = {
   getValidAddress : getValidAddress,
   defaultLocation : defaultLocation,
-  findDistrictNameAndBoundaries : findDistrictNameAndBoundaries
+  findDistrictNameAndBoundaries : findDistrictNameAndBoundaries,
+  getPostalCode : getPostalCode
 };
 

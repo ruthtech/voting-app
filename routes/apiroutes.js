@@ -3,7 +3,8 @@ const router = express.Router();
 const Voter = require("../controllers/voterController");
 const Simulator = require('../controllers/simulationController');
 const Candidate = require("../controllers/candidateController");
-const Address = require("../controllers/addressController"); // Not a controller because it does not speak with a database, just mapbox
+const Address = require("../controllers/addressController"); 
+const District = require("../controllers/districtController");
 const log = require('loglevel');
 require('dotenv').config();
 
@@ -81,15 +82,44 @@ router.put("/api/v1/candidates/:candidateId", async function(req, res) {
 });
 
 // Update each district with a RNG to indicate which person/party won the district.
-router.put("/api/v1/simulator/run", async function(req, res) {
-  res.status(200);
-  res.send(Simulator.runSimulation());
+router.put("/api/v1/simulation/run", async function(req, res) {
+  try {
+    console.log("apiroutes simulation run");
+    let districts = await Simulator.runSimulation();
+    console.log("districts length: ", districts.length);
+    res.status(200);
+    res.send(districts);
+  } catch ( error ) {
+    res.status(500);
+    res.send(error);
+  }
 });
 
 // Update each district to indicate that no vote has happened yet. 
-router.put("/api/v1/simulator/reset", async function(req, res) {
-  res.status(200);
-  res.send(Simulator.resetSimulation());
+router.put("/api/v1/simulation/reset", async function(req, res) {
+  try {
+    console.log("apiroutes simulation reset");
+    let result = await Simulator.resetSimulation();
+    console.log("simulation reset result: ", result);
+    res.status(200);
+    res.send(result);
+  } catch ( error ) {
+    res.status(500);
+    res.send(error);
+  }
+});
+
+router.get("/api/v1/districts", async function(req, res) {
+  try {
+    console.log("/api/v1/districts");
+    let success = await District.getDistricts();
+    res.status(200);
+    res.send(success);
+  }
+  catch ( error ) {
+    res.status(500);
+    res.send(error);
+  }
 });
 
 // Return the candidate with the given id
@@ -249,6 +279,18 @@ router.put("/internal/v1/fixdb", async function(req, res) {
      res.status(500);
      res.send(error);
    }
+});
+
+router.put("/internal/v1/initDistricts", async function(req, res) {
+  try {
+    let numRecordsInserted = await District.initializeDistricts();
+    res.status(200);
+    res.send(numRecordsInserted.toString());
+  }
+  catch ( error ) {
+    res.status(500);
+    res.send(error);
+  }
 });
 
 module.exports = router;

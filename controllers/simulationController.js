@@ -1,4 +1,5 @@
 const DistrictModel = require('../models/District');
+const districtController = require("./districtController");
 const log = require('loglevel');
 require('dotenv').config();
 
@@ -8,63 +9,54 @@ if(process.env.LOGGING_LEVEL) {
 }
 
 const runSimulation = async function() {
-  // Generate based on district, not voters, because there is no guarantee that randomuser.me 
-  // generated people in each district. In fact, we now know that randomuser.me generated addresses
-  // that don't exist.
+  try {
+    // Generate based on district, not voters, because there is no guarantee that randomuser.me 
+    // generated people in each district. In fact, we now know that randomuser.me generated addresses
+    // that don't exist.
 
-  // Load all of the districts from the database. 
+    // Load all of the districts from the database. 
 
-  // For each district:
-  //   1. Choose a number of 'votes' to count.
-  //   2. Load the district boundaries from the model.
-  //   3. Load the party colour that corresponds to the winning party, unknown party, or independent
-  //   4. Colour in the district that that colour.
+    // For each district:
+    //   1. Randomly generate a number. This number corresponds to the array index of the parties in the database.
+    //   2. Load the district boundaries from the model.
+    //   3. Load the party colour that corresponds to the winning party, unknown party, or independent
+    //   4. Colour the district with hat colour.
 
-  // for await (const voterList of VoterModel.findOne()) {
-  //   let postcode = voterList.location.postcode.replace(/\s/g, "");
-  //   await setInterval(async function() {
-  //     //   await console.log(
-  //     //     `https://represent.opennorth.ca/postcodes/${postcode}/?sets=federal-electoral-districts&format=json`
-  //     //   );
-  //     let district = await axios.get(
-  //       `https://represent.opennorth.ca/postcodes/${postcode}/?sets=federal-electoral-districts&format=json`
-  //     );
-  //     await console.log(
-  //       "District is ",
-  //       district.data.representatives_centroid[0].district_name
-  //     );
+    let districts = await districtController.getDistricts();
+    log.debug("runSimulation districts length is ", districts.length);
+    for(let i=0; i<districts.length; i++) {
+      let district = districts[i];
+      let parties = district.parties[0]; // parties was stored in the database as an array of arrays 
+      // Generate a random number between 0 and party.length-1
+      // Math.floor will round down, meaning we would get a number between 0 and the length
+      // Math.ceil would round up, meaning a number between 1 and party.length
+      // The generated index represents the party that was voted in.
+      var partyIndex = Math.floor(Math.random() * (parties.length));
 
-  //     //   let candidateList = await db.candidate.find({
-  //     //     district_name: district.data.representatives_centroid[0].district_name
-  //     //   });
-  //     //   console.log("Candidate list is ", candidateList);
+      // Update the database document with the winner
+      await districtController.enterPartySeat(district, parties[partyIndex]);
+    }
 
-  //     //   if (candidateList.length > 0) {
-  //     //     let newVoteTally = await db.candidate.findOneAndUpdate(
-  //     //       {
-  //     //         _id:
-  //     //           candidateList[Math.floor(Math.random() * candidateList.length)]
-  //     //             ._id
-  //     //       },
-  //     //       { $inc: { votes_for: 1 } }
-  //     //     );
+    return districts; // Return districts so that the UI knows which party 'won'
+  } catch ( error ) {
+    log.error(error);
 
-  //     //     let voteCast = await db.voter.findOneAndUpdate(
-  //     //       { _id: voterList._id },
-  //     //       { $set: { hasvoted: true } }
-  //     //     );
-  //     // Math.floor(Math.random() * candidateList.length);
-  //     //   }
-  //     console.log(voterList.name);
-  //   }, 60000);
-  // }
-
-  return true; // simulation run
-};
+    return [];
+  }
+}
 
 // Set the votes back to 0 so that we can run the simulation again
 const resetSimulation = async function() {
-  return true; // simulation reset
+  try {
+    await districtController.resetPartySeats();
+
+    return true; // simulation reset
+  } catch ( error ) {
+    log.error(error);
+
+    return false;
+  }
+
 }
 
 module.exports = {
