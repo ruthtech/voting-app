@@ -54,8 +54,8 @@ async function initializeDistricts() {
     numberRecordsInserted += districtsToSave.length;
     DistrictModel.collection.insertMany(districtsToSave, function (err, docs) {
       if (err){ 
-        console.log(err);
-        console.log("Error when inserting documents to Collection");
+        log.error("Error when inserting documents to Collection");
+        log.error(err);
       }
 
       log.debug("districtController docs inserted ", docs);
@@ -63,11 +63,11 @@ async function initializeDistricts() {
 
     // nextURL is  /boundaries/federal-electoral-districts/?limit=20&offset=20
     let nextURL = boundaryData.data.meta.next;
-    console.log("nextURL is ", nextURL);
+    log.debug("nextURL is ", nextURL);
     hasNext = (nextURL !== null);
     if(hasNext) {
       boundariesURLQuery = `https://represent.opennorth.ca${nextURL}`;
-      console.log("boundariesURLQuery is ", boundariesURLQuery);
+      log.debug("boundariesURLQuery is ", boundariesURLQuery);
     }
   }
 

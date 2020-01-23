@@ -84,9 +84,7 @@ router.put("/api/v1/candidates/:candidateId", async function(req, res) {
 // Update each district with a RNG to indicate which person/party won the district.
 router.put("/api/v1/simulation/run", async function(req, res) {
   try {
-    console.log("apiroutes simulation run");
     let districts = await Simulator.runSimulation();
-    console.log("districts length: ", districts.length);
     res.status(200);
     res.send(districts);
   } catch ( error ) {
@@ -98,11 +96,9 @@ router.put("/api/v1/simulation/run", async function(req, res) {
 // Update each district to indicate that no vote has happened yet. 
 router.put("/api/v1/simulation/reset", async function(req, res) {
   try {
-    console.log("apiroutes simulation reset");
-    let result = await Simulator.resetSimulation();
-    console.log("simulation reset result: ", result);
+    let districts = await Simulator.resetSimulation();
     res.status(200);
-    res.send(result);
+    res.send(districts);
   } catch ( error ) {
     res.status(500);
     res.send(error);
@@ -111,7 +107,6 @@ router.put("/api/v1/simulation/reset", async function(req, res) {
 
 router.get("/api/v1/districts", async function(req, res) {
   try {
-    console.log("/api/v1/districts");
     let success = await District.getDistricts();
     res.status(200);
     res.send(success);

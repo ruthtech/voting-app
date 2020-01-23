@@ -49,16 +49,11 @@ const runSimulation = async function() {
 // Set the votes back to 0 so that we can run the simulation again
 const resetSimulation = async function() {
   try {
-    console.log("Simulation controller reset simulation");
     await districtController.resetPartySeats();
-    console.log("Simulation controller here");
     let districts = await districtController.getDistricts();
-    console.log("Simulation controller here2");
     return districts; // simulation reset
   } catch ( error ) {
     log.error(error);
-    console.log(error);
-    console.log("simluation controller here3");
     return false;
   }
 
