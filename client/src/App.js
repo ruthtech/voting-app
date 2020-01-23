@@ -12,7 +12,7 @@ import Simulation from './components/Simulation';
 
 const level = (process.env.REACT_APP_LOGGING_LEVEL) ? process.env.REACT_APP_LOGGING_LEVEL : 'info';
 log.setLevel(level);
-log.info("App mapbox access token is ", process.env.REACT_APP_MAPBOX_API_TOKEN);
+log.trace("App mapbox access token is ", process.env.REACT_APP_MAPBOX_API_TOKEN);
 const customJSON = log => ({
   msg: log.message,
   level: level,
@@ -39,7 +39,7 @@ function App() {
   if(user === null) {
     component = <Login log={log}/>
   } else if(user.isAdmin === true) {
-    component = <Simulation />
+    component = <Simulation log={log} />
   } else {
     component = <Landing />
   }

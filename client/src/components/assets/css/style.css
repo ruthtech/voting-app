@@ -113,4 +113,13 @@ body {
 .other {
   background-color: lightslategray;
 }
+
+.bold {
+  font-weight: bold;
+}
+
+.hide {
+  visibility: hidden;
+}
+
 /* End political party colours */
