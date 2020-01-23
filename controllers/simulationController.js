@@ -35,6 +35,7 @@ const runSimulation = async function() {
 
       // Update the database document with the winner
       await districtController.enterPartySeat(district, parties[partyIndex]);
+      district.seat = parties[partyIndex]; // set the local copy as well
     }
 
     return districts; // Return districts so that the UI knows which party 'won'
@@ -48,12 +49,16 @@ const runSimulation = async function() {
 // Set the votes back to 0 so that we can run the simulation again
 const resetSimulation = async function() {
   try {
+    console.log("Simulation controller reset simulation");
     await districtController.resetPartySeats();
-
-    return true; // simulation reset
+    console.log("Simulation controller here");
+    let districts = await districtController.getDistricts();
+    console.log("Simulation controller here2");
+    return districts; // simulation reset
   } catch ( error ) {
     log.error(error);
-
+    console.log(error);
+    console.log("simluation controller here3");
     return false;
   }
 

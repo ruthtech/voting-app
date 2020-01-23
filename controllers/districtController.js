@@ -19,7 +19,7 @@ async function enterPartySeat(district, partyName) {
 
 // Set all seats in the database back to the default (null)
 async function resetPartySeats() {
-  DistrictModel.updateMany(
+  await DistrictModel.updateMany(
     {}, // No filter means update every document in the collection
     { $set: { 'seat': null } }
   );
