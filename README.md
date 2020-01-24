@@ -117,8 +117,7 @@ This project does not use versions at this time.
       * Creation of the models (Mongoose) [Mongoose](https://www.npmjs.com/package/mongoose)
 
 * Ruth Lee [https://github.com/ruthtech]
-   * Investigation into mapbox for reverse geocoding from address
-   * Investigation into mapbox for generating a map and a shaded polygon area (voting district) on a map as part of the UI
+   * Investigation into mapbox for reverse geocoding from address, also for generating a map and a shaded polygon area (voting district) on a map as part of the UI
    * Investigation into loglevel and loglevel-plugin-remote to implement logging in both the back end and front end
    * Investigation into Heroku configuration to enable and disable log levels
    * Investigation into good web API design ("Web API Design: Crafting Interfaces that Developers Love" by Brian Mulloy)
