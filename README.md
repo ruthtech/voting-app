@@ -61,7 +61,7 @@ View this application on Heroku.  https://arcane-mountain-21933.herokuapp.com/
 To view the "Vote online" code, log in with userid "happyfrog374" and password "technics". 
 
 ### Simulation of a Vote
-The code to run the simulation of voting across Canada is a work in progress. Log in to the same URL above with userid "admin" and password "admin". 
+Log in to the same URL above with userid "admin" and password "admin". 
   * The simulation map is generated based on the opennorth data, which doesn't list voting districts in all areas of Canada. It's also the 2015 federal election data, which is the latest year in the opennorth database as of this writing.
   * After you click "Simulate Vote" it's fun to look at the yellow shaded areas. Those are the ones that list parties that would never win typically. (The 'Pirate Party of Canada' won Vancouver East once. Would pirates want to raid the Treasury?) To see who won, hover over the district with your mouse.
   * To see the list of parties that could be generated on the map, view [Registered Political Parties and Parties Eligible for Registration](https://www.elections.ca/content.aspx?section=pol&dir=par&document=index&lang=e)
