@@ -27,7 +27,7 @@ There are no automated tests at this time. Manual tests were run as documented b
     * Is the user prevented from logging in with an unknown userid?
     * Is the user prevented from logging in with an unknown password?
 2. SIMULATION (admin only)
-    * Does clicking the "Simulate" button update the district's shaded area on the map with a party colour?
+    * Does clicking the "Simulate" button update the district's shaded areas on the map with a party colour?
     * Does clicking "Reset" change all shaded areas back to grey?
 3. VIEW CANDIDATE (voter only)
     * On the Landing page, click "View Candidates" > "Home". Is the user taken back to the Landing?
@@ -55,9 +55,16 @@ Our Trello board shows our Kanban
 
 
 ## Deployment
-View this application on Heroku.  https://arcane-mountain-21933.herokuapp.com/ Log in with userid "happyfrog374" and password "technics". 
+View this application on Heroku.  https://arcane-mountain-21933.herokuapp.com/ 
 
-The code to run the simulation of voting across Canada is a work in progress. Log in to the same URL above with userid "admin" and password "admin" to see what the UI will look like. 
+### Vote Online
+To view the "Vote online" code, log in with userid "happyfrog374" and password "technics". 
+
+### Simulation of a Vote
+The code to run the simulation of voting across Canada is a work in progress. Log in to the same URL above with userid "admin" and password "admin". 
+  * The simulation map is generated based on the opennorth data, which doesn't list voting districts in all areas of Canada. It's also the 2015 federal election data, which is the latest year in the opennorth database as of this writing.
+  * After you click "Simulate Vote" it's fun to look at the yellow shaded areas. Those are the ones that list parties that would never win typically. (The 'Pirate Party of Canada' won Vancouver East once. Would pirates want to raid the Treasury?) To see who won, hover over the district with your mouse.
+  * To see the list of parties that could be generated on the map, view [Registered Political Parties and Parties Eligible for Registration](https://www.elections.ca/content.aspx?section=pol&dir=par&document=index&lang=e)
 
 ## Built With
 Development Tools:
@@ -70,6 +77,7 @@ Development Tools:
   * [Studio 3T](https://studio3t.com/)
   * [Figma](https://www.figma.com)
   * [Trello](https://trello.com/)
+  * [GIMP](https://www.gimp.org/)
 
 Front end:
   * [Bootstrap](https://getbootstrap.com)
@@ -116,10 +124,11 @@ This project does not use versions at this time.
    * [mapbox](https://www.mapbox.com/) (front end and server)
    * [dotenv](https://www.npmjs.com/package/dotenv)
    * [logging](https://www.npmjs.com/package/loglevel) and [React logging](https://github.com/kutuluk/loglevel-plugin-remote)
-   * Server: creation of express server skeleton that initially returned mock data instead of database records, endpoint creation and implementation, and created the script that updated the randomuser.me addresses in the database.
+   * Server: creation of express server skeleton that initially returned mock data instead of database records, endpoint creation and implementation, and created the scripts that bulk updated or bulk populated the voter and district collections in the database.
    * MongoDB/Mongoose:
        * Debugged and modified the connection to MongoDB and Mongoose models for Heroku
        * Updated population of MongoDB, changing any randomuser.me address that didn't exist into the closest existing address including postal code, longitude and latitude. (mapbox determined what was the closest address.)
+       * Created district collection in MongoDB from the opennorth data. Updated Mongoose model to match.
    * Deployment to Heroku
 
 ## License
@@ -133,5 +142,7 @@ Thanks to the following:
 * Latitude and longitude manual lookup [latlong.net](https://www.latlong.net/)
 * Article [Best Practices for Client-Side Logging and Error Handling in React](https://www.loggly.com/blog/best-practices-for-client-side-logging-and-error-handling-in-react/) for guidance on how to send React logging messages to the server. (This means that even if a voter doesn't know how to get and submit any React log error messages, the logs still have them.)
 * Article/Book [Web API Design: Crafting Interfaces that Developers Love](https://pages.apigee.com/rs/apigee/images/api-design-ebook-2012-03.pdf) by Brian Mulloy of apigee
+* [Tristen Brown](https://blog.mapbox.com/mapbox-gl-js-react-764da6cc074a) Mapbox tooltip code [mapbox-react-examples](https://github.com/mapbox/mapbox-react-examples/tree/master/react-tooltip) The code used to create tooltips on hover over the Simulation map was copied from that GitHub repository. The code was modified slightly to show the tooltip only for voting district features. 
+* [Elections data](https://represent.opennorth.ca/) Represent Civic Information API ("opennorth") provided all of the information that was used to find the voting districts, candidates running in those districts, and the districts' geographical boundaries.
 
   

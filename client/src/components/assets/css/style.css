@@ -122,4 +122,9 @@ body {
   visibility: hidden;
 }
 
+.simulation-tooltip {
+  min-width: 125px;
+  min-height: 40px;
+}
+
 /* End political party colours */
