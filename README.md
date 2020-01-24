@@ -1,5 +1,5 @@
 # Voting Application
-Enable eligible voters to vote online and view election results. 
+Enable eligible voters to vote online. Simulate and view election results. 
 
 ## Getting Started
 All of the files can be loaded with your browser. Copy the files to your local directory and open localhost:5000.
