@@ -36,13 +36,18 @@ class Simulation extends Component {
   };
 
   tooltipContainer;
+  tooltipReference; // keep track of the old tooltip and destroy it before allocating another one. 
 
   constructor(props) {
     super(props);
   }
 
   setTooltip(features) {
-    ReactDOM.render(
+    // Release the memory used by the last tooltip because we use only one tooltip at a time.
+    ReactDOM.unmountComponentAtNode(document.getElementById('mapbox-tooltip'));
+
+    // Then allocate the new tooltip
+    this.tooltipReference = ReactDOM.render(
       <Tooltip features={features}/>,
       this.tooltipContainer
     );
@@ -60,6 +65,7 @@ class Simulation extends Component {
 
       // Container to put React generated content in.
       this.tooltipContainer = document.createElement('div');
+      this.tooltipContainer.setAttribute('id', 'mapbox-tooltip');
       const tooltip = new mapboxgl.Marker(
         this.tooltipContainer, {
         offset: [-25, 0]
@@ -112,6 +118,18 @@ class Simulation extends Component {
       this.setState({ map: newMap });  
     } catch ( error ) {
       this.props.log.error("Error while creating blank map for simulation");
+      this.props.log.error(error);
+    }
+  }
+
+  componentWillUnmount() {
+    // Remove every created DOM node. and destroy the map. Destroying the map
+    // will remove the event listeners on the map.
+    try {
+      this.tooltipContainer.remove();
+      this.state.map.destroy();
+    } catch ( error ) {
+      this.props.log.error("Error while freeing resources in componentWillUnmount");
       this.props.log.error(error);
     }
   }
