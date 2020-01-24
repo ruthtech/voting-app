@@ -143,7 +143,7 @@ Thanks to the following:
 * Latitude and longitude manual lookup [latlong.net](https://www.latlong.net/)
 * Article [Best Practices for Client-Side Logging and Error Handling in React](https://www.loggly.com/blog/best-practices-for-client-side-logging-and-error-handling-in-react/) for guidance on how to send React logging messages to the server. (This means that even if a voter doesn't know how to get and submit any React log error messages, the logs still have them.)
 * Article/Book [Web API Design: Crafting Interfaces that Developers Love](https://pages.apigee.com/rs/apigee/images/api-design-ebook-2012-03.pdf) by Brian Mulloy of apigee
-* [Tristen Brown](https://blog.mapbox.com/mapbox-gl-js-react-764da6cc074a) Mapbox tooltip code [mapbox-react-examples](https://github.com/mapbox/mapbox-react-examples/tree/master/react-tooltip) The code used to create tooltips on hover over the Simulation map was copied from that GitHub repository. The code was modified slightly to show the tooltip only for voting district features. 
+* [Tristen Brown](https://blog.mapbox.com/mapbox-gl-js-react-764da6cc074a) Mapbox tooltip code [mapbox-react-examples](https://github.com/mapbox/mapbox-react-examples/tree/master/react-tooltip) The code used to create tooltips on hover over the Simulation map was copied from that GitHub repository. The code was modified slightly to show the tooltip only for voting district features. Also had to add some memory management because it created a memory leak on Heroku.
 * [Elections data](https://represent.opennorth.ca/) Represent Civic Information API ("opennorth") provided all of the information that was used to find the voting districts, candidates running in those districts, and the districts' geographical boundaries.
 
   
