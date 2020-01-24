@@ -11,7 +11,12 @@ A browser. Chrome was used for testing.
 1. Go to https://github.com/ruthtech/voting-app and click on the "Clone or Download" button. 
 2. Choose "Download ZIP". 
 3. Unzip into a directory. If you're on Windows, open File Explorer and navigate to the download directory. Select the ZIP file, right click, and choose "Extract All". Accept the default location.
-4. Once the file is unzipped, navigate to voting-app-master. 
+4. Install MongoDB. Create a database, "voting", with four collections: candidate, district, party, and voter. Import the values from the "db" folder into each collection. 
+   * candidates.csv populates candidate
+   * districts.json populates district
+   * parties.json populates party
+   * voters.json populates voter
+5. Once the file is unzipped, navigate to voting-app-master. 
    * Type "npm install" to install the prerequisites. 
    * Type "npm start" to start the Express server.
    * Use your browser to open "localhost:5000".
