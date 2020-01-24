@@ -58,6 +58,7 @@ Our Trello board shows our Kanban
 View this application on Heroku.  https://arcane-mountain-21933.herokuapp.com/ 
 
 ### Vote Online
+![./demo/voteonline.png](./demo/voteonline.png)
 To view the "Vote online" code, log in with userid "happyfrog374" and password "technics". 
 
 ### Simulation of a Vote
@@ -112,7 +113,7 @@ This project does not use versions at this time.
    * Server: endpoint creation and implementation, connected endpoints to backend database
    * MongoDB/Mongoose: 
       * Creation of MongoDB database and collections [MongoDB](https://www.mongodb.com/)
-      * Initial population of MongoDB from randomuser.me data
+      * Initial population of MongoDB from randomuser.me data and opennorth data
       * Creation of the models (Mongoose) [Mongoose](https://www.npmjs.com/package/mongoose)
 
 * Ruth Lee [https://github.com/ruthtech]
